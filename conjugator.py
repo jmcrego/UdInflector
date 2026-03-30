@@ -90,6 +90,8 @@ if __name__ == "__main__":
     prompts = []
     if args.term and args.pos:
         prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, args.pos, args.term, tokenizer)
+        for prompt in prompts:
+            print(f"{args.language}, {args.term}, {args.pos}\n{prompt}\n\n")
 
     if args.tsv:
         with open(args.tsv, 'r') as f:
@@ -97,7 +99,7 @@ if __name__ == "__main__":
                 term, pos = line.strip().split('\t')
                 prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, pos, term, tokenizer)
                 for prompt in prompts:
-                    print(f"{args.language}, {term}, {pos}\n{prompt.text}\n{prompt.ids}\n\n")
+                    print(f"{args.language}, {term}, {pos}\n{prompt}\n\n")
 
     # generate conjugations/inflections in batches 
     # from vllm import LLM
