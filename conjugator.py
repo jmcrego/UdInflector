@@ -7,7 +7,7 @@ PROMPT_PREFIX_IDS = None  # will be set after loading tokenizer
 PROMPT_PREFIX = """You are a professional linguist specializing in conjugation/inflection.
 
 Task:
-- Output ONLY a Python list with conjugated/inflected forms of the term given its Part-Of-Speech (POS).
+- Output ONLY a Python list with conjugated/inflected forms of the term given its Part-Of-Speech (POS) and language.
 - For verbs:
   * Provide the correct number of form conjugations for the given tense.
   * Provide all inflection combinations when applicable (masculine, feminine, singular, plural).
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
     parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt (output only)")
     parser.add_argument('--max_model_len', type=int, default=512, help="Maximum sequence length for model input (prompt + output)")
-    parser.add_argument('--batch_size', type=int, default=2, help="Batch size for generation")
+    parser.add_argument('--max_num_seqs', type=int, default=512, help="Maximum number of sequences to generate per prompt (batch size)")
     parser.add_argument('--dtype', type=str, default='auto', help="Data type for model (e.g. 'auto', 'float16', 'bfloat16')")
     parser.add_argument('--gpu_memory_utilization', type=float, default=0.95, help="Fraction of GPU memory to use (0-1, e.g. 0.95 for 95%)")
     args = parser.parse_args()
@@ -155,23 +155,30 @@ if __name__ == "__main__":
     # generate conjugations/inflections in batches 
     from vllm import LLM, SamplingParams, TokensPrompt
 
-    llm: LLM = LLM(model=args.model, max_model_len=args.max_model_len, dtype=args.dtype, gpu_memory_utilization=args.gpu_memory_utilization)
+    llm: LLM = LLM(
+        model=args.model,
+        max_model_len=args.max_model_len, 
+        max_num_seqs=args.max_num_seqs,
+        gpu_memory_utilization=args.gpu_memory_utilization,
+        dtype=args.dtype, 
+    )
     print(f"Loaded model {args.model} with dtype {args.dtype}")
-    sampling_params = SamplingParams(
+    sampling_params: SamplingParams = SamplingParams(
         max_tokens=args.max_tokens,
         temperature=0.0,   # deterministic
-        top_p=1.0,
+        top_p=1.0,         # no nucleus sampling
         stop=["\n"]        # optional but helpful
     )
 
     with open(args.out, "w") as of:
-        for b in range(0, len(prompts), args.batch_size):
-                batch_prompts = [TokensPrompt(prompt_token_ids=p["prompt_ids"]) for p in prompts[b:b+args.batch_size]]
-                #batch_prompts = [p["prompt"] for p in prompts[b:b+args.batch_size]]
-                outputs = llm.generate(batch_prompts, sampling_params=sampling_params)
-                for i, output in enumerate(outputs):
-                    prompts[b+i]["output"] = get_list_from_string(output.outputs[0].text.strip())
-                    of.write(json.dumps(prompts[b+i]) + "\n")
-                    of.flush()
+        batch_prompts = [
+            TokensPrompt(prompt_token_ids=p["prompt_ids"])
+            for p in prompts
+        ]                
+        outputs = llm.generate(batch_prompts, sampling_params=sampling_params)
+        for i, output in enumerate(outputs):
+            prompts[i]["output"] = get_list_from_string(output.outputs[0].text.strip())
+            of.write(json.dumps(prompts[i]) + "\n")
+            of.flush()
 
 
