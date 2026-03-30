@@ -27,7 +27,7 @@ Output: ['parlé', 'parlée', 'parlés', 'parlées']
 Input: English, noun, box
 Output: ['box', 'boxes']
 
-Input: Spanish, adj, bonito, adj
+Input: Spanish, adj, bonito
 Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
 
 Input: English, verb, to live, infinitive
