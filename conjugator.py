@@ -148,6 +148,7 @@ if __name__ == "__main__":
     # generate conjugations/inflections in batches 
     from vllm import LLM
     llm: LLM = LLM(model=args.model, dtype=args.dtype)
+    print(f"Loaded model {args.model} with dtype {args.dtype}")
 
 
     with open(args.out, "w") as of:
