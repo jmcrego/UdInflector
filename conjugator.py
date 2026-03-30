@@ -85,13 +85,25 @@ def generate_prompts(language: str, pos: str, term: str, tokenizer):
 
     return prompts
 
+def filter_list(forms: list[str]) -> list[str]:
+    # use final word if multiple words
+    # avoid duplicates
+    new_forms = []
+    for form in forms:
+        form = form.strip().split(" ")[-1] 
+        if form in new_forms:
+            continue
+        new_forms.append(form)
+    return new_forms
+
+
 def get_list_from_string(text: str) -> list[str]:
     try:
         data_filtered = text.strip()
         if data_filtered.startswith('[') and data_filtered.endswith(']'):
             data = ast.literal_eval(data_filtered)
             if isinstance(data, list) and all(isinstance(item, str) for item in data):
-                return data
+                return filter_list(data)
     except Exception as e:
         pass
     return []
