@@ -141,8 +141,7 @@ if __name__ == "__main__":
                 prompts += new_prompts
                 uds += [ud] * len(new_prompts)
 
-
-    print(f"Generated {len(prompts)} prompts from {nlines} lines. Starting generation...")
+    print(f"Generated {len(prompts)} prompts from {nlines} glossary lines. Starting generation...")
 
     #check if running on V100, A100 or H100 and set dtype accordingly
     if args.dtype == 'auto':
