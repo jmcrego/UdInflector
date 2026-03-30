@@ -1,4 +1,5 @@
-from vllm import TokensPrompt
+
+from transformers import AutoTokenizer
 
 PROMPT_PREFIX = """You are a professional linguist specializing in conjugation/inflection.
 
@@ -51,17 +52,19 @@ TENSES = {
 # ------------------------------
 # Generate prompt
 # ------------------------------
-def generate_prompts(PROMPT_PREFIX_IDS: TokensPrompt, language: str, pos: str, term: str, llm = None):
+def generate_prompts(PROMPT_PREFIX_IDS, language: str, pos: str, term: str, tokenizer):
 
     prompts = []
 
     if pos == "verb":
         for tense in TENSES[language]:
             dynamic_text = f"{language}, {pos}, {term}, {tense}\nOutput:"
-            prompts.append(PROMPT_PREFIX_IDS + TokensPrompt.from_text(dynamic_text, llm.tokenizer))
+            dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
+            prompts.append(PROMPT_PREFIX_IDS + dynamic_text_ids)
     else:
         dynamic_text = f"{language}, {pos}, {term}\nOutput:"
-        prompts.append(PROMPT_PREFIX_IDS + TokensPrompt.from_text(dynamic_text, llm.tokenizer))
+        dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
+        prompts.append(PROMPT_PREFIX_IDS + dynamic_text_ids)
 
     return prompts
 
@@ -80,20 +83,19 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Load only the LLM tokenizer
-    from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     # Tokenize the static prompt prefix once since it's the same for all entries
-    PROMPT_PREFIX_IDS = TokensPrompt.from_text(PROMPT_PREFIX, tokenizer)
+    PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX, return_tensors=None)["input_ids"]
 
-    prompts: list[TokensPrompt] = []
+    prompts = []
     if args.term and args.pos:
-        prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, args.pos, args.term, llm=None)
+        prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, args.pos, args.term, tokenizer)
 
     if args.tsv:
         with open(args.tsv, 'r') as f:
             for line in f:
                 term, pos = line.strip().split('\t')
-                prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, pos, term, llm=llm)
+                prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, pos, term, tokenizer)
                 for prompt in prompts:
                     print(f"{args.language}, {term}, {pos}\n{prompt.text}\n{prompt.ids}\n\n")
 
