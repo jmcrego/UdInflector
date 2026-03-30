@@ -33,6 +33,9 @@ Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
 Input: English, verb, to live, infinitive
 Output: ['to live']
 
+Input: English, verb, to speak, infinitive / gerund / past participle
+Output: ['to speak', 'speaking', 'spoken']
+
 Input: Spanish, verb, granizar, imperativo
 Output: []
 
@@ -40,7 +43,7 @@ Input: """
 
 TENSES = {
     "French": [
-        "infinitif, gérondif, participe",
+        "infinitif / gérondif / participe",
         "présent indicatif",
         "imparfait indicatif",
         "impératif",
@@ -51,7 +54,7 @@ TENSES = {
         "subjonctif imparfait"
     ],
     "Spanish": [
-        "infinitivo, gerundio, participio",
+        "infinitivo / gerundio / participio",
         "presente indicativo",
         "pretérito indefinido",
         "imperativo",
@@ -62,7 +65,7 @@ TENSES = {
         "subjuntivo imperfecto"
     ],
     "English": [
-        "infinitive, gerund, past participle",
+        "infinitive / gerund / past participle",
         "present simple",
         "past simple",
         "imperative",
