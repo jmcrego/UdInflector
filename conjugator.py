@@ -170,7 +170,7 @@ if __name__ == "__main__":
                 #batch_prompts = [p["prompt"] for p in prompts[b:b+args.batch_size]]
                 outputs = llm.generate(batch_prompts, sampling_params=sampling_params)
                 for i, output in enumerate(outputs):
-                    prompts[b+i]["output"] = get_list_from_string(output.text.strip())
+                    prompts[b+i]["output"] = get_list_from_string(output.outputs[0].text.strip())
                     of.write(json.dumps(prompts[b+i]) + "\n")
                     of.flush()
 
