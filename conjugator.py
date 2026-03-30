@@ -1,5 +1,6 @@
 
 import json
+import ast
 from transformers import AutoTokenizer
 
 PROMPT_PREFIX = """You are a professional linguist specializing in conjugation/inflection.
@@ -83,6 +84,16 @@ def generate_prompts(PROMPT_PREFIX_IDS, language: str, pos: str, term: str, toke
 
     return prompts
 
+def get_list_from_string(text: str) -> list[str]:
+    try:
+        data_filtered = text.strip()
+        if data_filtered.startswith('[') and data_filtered.endswith(']'):
+            data = ast.literal_eval(data_filtered)
+            if isinstance(data, list) and all(isinstance(item, str) for item in data):
+                return data
+    except Exception as e:
+        pass
+    return []
 
 # ------------------------------
 # Example usage
@@ -126,7 +137,7 @@ if __name__ == "__main__":
                 batch_prompts = [p["prompt_ids"] for p in prompts[b:b+args.batch_size]]
                 outputs = llm.generate(batch_prompts, max_tokens=args.max_tokens)
                 for i, output in enumerate(outputs):
-                    prompts[b+i]["output"] = output.text.strip()
+                    prompts[b+i]["output"] = get_list_from_string(output.text.strip())
                     of.write(json.dumps(prompts[b+i]) + "\n")
 
 
