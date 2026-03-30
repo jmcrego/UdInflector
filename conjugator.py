@@ -109,7 +109,7 @@ if __name__ == "__main__":
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
     parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt")
     parser.add_argument('--batch_size', type=int, default=2, help="Batch size for generation")
-    parser.add_argument('--dtype', type=str, default='float16', help="Data type for model (e.g. 'float16', 'bfloat16')")
+    parser.add_argument('--dtype', type=str, default='auto', help="Data type for model (e.g. 'auto', 'float16', 'bfloat16')")
     args = parser.parse_args()
 
     # Load only the LLM tokenizer
@@ -126,6 +126,24 @@ if __name__ == "__main__":
             for line in f:
                 term, pos = line.strip().split('\t')
                 prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, pos, term, tokenizer)
+
+
+    #check if running on V100, A100 or H100 and set dtype accordingly
+    if args.dtype == 'auto':
+        import torch
+        if torch.cuda.is_available():
+            gpu_name = torch.cuda.get_device_name(0)
+            print(f"Running on GPU: {gpu_name}")
+            if "V100" in gpu_name:
+                args.dtype = 'float16'
+            elif "A100" in gpu_name or "H100" in gpu_name:
+                args.dtype = 'bfloat16'
+            else:
+                print("Unknown GPU type, defaulting to float16")
+                args.dtype = 'float16'
+        else:
+            print("No GPU detected, defaulting to float16")
+            args.dtype = 'float16'
 
     # generate conjugations/inflections in batches 
     from vllm import LLM
