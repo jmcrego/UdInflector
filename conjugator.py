@@ -108,7 +108,7 @@ if __name__ == "__main__":
     parser.add_argument('--out', type=str, default="conjugation_outputs.jsonl", help="Output Jsonl file to save conjugations/inflections")
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
     parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt")
-    parser.add_argument('--batch_size', type=int, default=8, help="Batch size for generation")
+    parser.add_argument('--batch_size', type=int, default=4, help="Batch size for generation")
     parser.add_argument('--dtype', type=str, default='float16', help="Data type for model (e.g. 'float16', 'bfloat16')")
     args = parser.parse_args()
 
