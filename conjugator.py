@@ -84,6 +84,8 @@ if __name__ == "__main__":
     parser.add_argument('--pos', type=str, required=False, choices=['verb', 'noun', 'adj'], help="Part of speech (e.g. 'verb', 'noun', 'adj')")
     parser.add_argument('--tsv', type=str, required=False, help="Path to TSV file with terms to inflect (columns: term, pos)")
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
+    parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt")
+    parser.add_argument('--batch_size', type=int, default=8, help="Batch size for generation")
     args = parser.parse_args()
 
     # Load only the LLM tokenizer
@@ -102,5 +104,11 @@ if __name__ == "__main__":
                 prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, pos, term, tokenizer)
 
     # generate conjugations/inflections in batches 
-    # from vllm import LLM
-    # llm: LLM = LLM(model=args.model)
+    from vllm import LLM
+    llm: LLM = LLM(model=args.model)
+
+    for i in range(0, len(prompts), args.batch_size):
+        batch_prompts = prompts[i:i+args.batch_size]
+        outputs = llm.generate(batch_prompts, max_tokens=args.max_tokens)
+        for output in outputs:
+            print(output.text.strip())
