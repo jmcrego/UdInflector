@@ -29,4 +29,6 @@ TSV=resources/UD-enfr.tsv
 
 #python udinflector.py resources/UD-enfr.tsv --model $MODEL --lang English
 #python udinflector.py resources/UD-fren.tsv --model $MODEL --lang French
-PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python conjugator.py --language French --term chanter --pos verb
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python conjugator.py --tsv $TSV --model $MODEL --language English
+
+
