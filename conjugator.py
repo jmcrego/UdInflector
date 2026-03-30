@@ -61,10 +61,13 @@ def generate_prompts(PROMPT_PREFIX_IDS, language: str, pos: str, term: str, toke
             dynamic_text = f"{language}, {pos}, {term}, {tense}\nOutput:"
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
             prompts.append(PROMPT_PREFIX_IDS + dynamic_text_ids)
+            print(f"{language}, {pos}, {tense}:\n{dynamic_text}\n{dynamic_text_ids}")
+
     else:
         dynamic_text = f"{language}, {pos}, {term}\nOutput:"
         dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
         prompts.append(PROMPT_PREFIX_IDS + dynamic_text_ids)
+        print(f"{language}, {pos}:\n{dynamic_text}\n{dynamic_text_ids}")
 
     return prompts
 
@@ -90,16 +93,12 @@ if __name__ == "__main__":
     prompts = []
     if args.term and args.pos:
         prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, args.pos, args.term, tokenizer)
-        for prompt in prompts:
-            print(f"{args.language}, {args.term}, {args.pos}\n{prompt}\n\n")
 
     if args.tsv:
         with open(args.tsv, 'r') as f:
             for line in f:
                 term, pos = line.strip().split('\t')
                 prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, pos, term, tokenizer)
-                for prompt in prompts:
-                    print(f"{args.language}, {term}, {pos}\n{prompt}\n\n")
 
     # generate conjugations/inflections in batches 
     # from vllm import LLM
