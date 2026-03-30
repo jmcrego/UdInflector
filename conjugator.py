@@ -3,6 +3,7 @@ import json
 import ast
 from transformers import AutoTokenizer
 
+PROMPT_PREFIX_IDS = None  # will be set after loading tokenizer
 PROMPT_PREFIX = """You are a professional linguist specializing in conjugation/inflection.
 
 Task:
@@ -54,7 +55,7 @@ TENSES = {
 # ------------------------------
 # Generate prompt
 # ------------------------------
-def generate_prompts(PROMPT_PREFIX_IDS, language: str, pos: str, term: str, tokenizer):
+def generate_prompts(language: str, pos: str, term: str, tokenizer):
 
     prompts = []
 
@@ -67,6 +68,7 @@ def generate_prompts(PROMPT_PREFIX_IDS, language: str, pos: str, term: str, toke
                 "pos": pos, 
                 "term": term, 
                 "tense": tense, 
+                "prompt": PROMPT_PREFIX + dynamic_text,
                 "prompt_ids": PROMPT_PREFIX_IDS + dynamic_text_ids
             }
             prompts.append(d)
@@ -78,6 +80,7 @@ def generate_prompts(PROMPT_PREFIX_IDS, language: str, pos: str, term: str, toke
             "language": language, 
             "pos": pos, 
             "term": term, 
+            "prompt": PROMPT_PREFIX + dynamic_text,
             "prompt_ids": PROMPT_PREFIX_IDS + dynamic_text_ids
         }
         prompts.append(d)
@@ -117,17 +120,18 @@ if __name__ == "__main__":
     # Load only the LLM tokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     # Tokenize the static prompt prefix once since it's the same for all entries
+    global PROMPT_PREFIX_IDS
     PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX, return_tensors=None)["input_ids"]
 
     prompts = []
     if args.term and args.pos:
-        prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, args.pos, args.term, tokenizer)
+        prompts += generate_prompts(args.language, args.pos, args.term, tokenizer)
 
     if args.tsv:
         with open(args.tsv, 'r') as f:
             for line in f:
                 term, pos = line.strip().split('\t')
-                prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, pos, term, tokenizer)
+                prompts += generate_prompts(args.language, pos, term, tokenizer)
 
 
     print(f"Generated {len(prompts)} prompts. Starting generation...")
@@ -150,7 +154,7 @@ if __name__ == "__main__":
             args.dtype = 'float16'
 
     # generate conjugations/inflections in batches 
-    from vllm import LLM, SamplingParams
+    from vllm import LLM, SamplingParams, TokensPrompt
 
     llm: LLM = LLM(model=args.model, max_model_len=args.max_model_len, dtype=args.dtype, gpu_memory_utilization=args.gpu_memory_utilization)
     print(f"Loaded model {args.model} with dtype {args.dtype}")
@@ -163,7 +167,8 @@ if __name__ == "__main__":
 
     with open(args.out, "w") as of:
         for b in range(0, len(prompts), args.batch_size):
-                batch_prompts = [p["prompt_ids"] for p in prompts[b:b+args.batch_size]]
+                batch_prompts = [TokensPrompt(prompt_token_ids=p["prompt_ids"]) for p in prompts[b:b+args.batch_size]]
+                #batch_prompts = [p["prompt"] for p in prompts[b:b+args.batch_size]]
                 outputs = llm.generate(batch_prompts, sampling_params=sampling_params)
                 for i, output in enumerate(outputs):
                     prompts[b+i]["output"] = get_list_from_string(output.text.strip())
