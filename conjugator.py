@@ -111,6 +111,7 @@ if __name__ == "__main__":
     parser.add_argument('--max_model_len', type=int, default=512, help="Maximum sequence length for model input (prompt + output)")
     parser.add_argument('--batch_size', type=int, default=2, help="Batch size for generation")
     parser.add_argument('--dtype', type=str, default='auto', help="Data type for model (e.g. 'auto', 'float16', 'bfloat16')")
+    parser.add_argument('--gpu_memory_utilization', type=float, default=0.95, help="Fraction of GPU memory to use (0-1, e.g. 0.95 for 95%)")
     args = parser.parse_args()
 
     # Load only the LLM tokenizer
@@ -150,7 +151,7 @@ if __name__ == "__main__":
 
     # generate conjugations/inflections in batches 
     from vllm import LLM
-    llm: LLM = LLM(model=args.model, max_model_len=args.max_model_len, dtype=args.dtype)
+    llm: LLM = LLM(model=args.model, max_model_len=args.max_model_len, dtype=args.dtype, gpu_memory_utilization=args.gpu_memory_utilization)
     print(f"Loaded model {args.model} with dtype {args.dtype}")
 
 
