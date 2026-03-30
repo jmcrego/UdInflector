@@ -1,6 +1,4 @@
 #!/bin/bash
-export LC_ALL=C.UTF-8
-export LANG=C.UTF-8
 
 #SBATCH --job-name=udinflector
 #SBATCH --output=./logs/%u.%x.%j.out
