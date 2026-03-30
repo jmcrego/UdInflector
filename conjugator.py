@@ -128,6 +128,8 @@ if __name__ == "__main__":
                 prompts += generate_prompts(PROMPT_PREFIX_IDS, args.language, pos, term, tokenizer)
 
 
+    print(f"Generated {len(prompts)} prompts. Starting generation...")
+
     #check if running on V100, A100 or H100 and set dtype accordingly
     if args.dtype == 'auto':
         import torch
