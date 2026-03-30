@@ -1,4 +1,5 @@
 
+import json
 from transformers import AutoTokenizer
 
 PROMPT_PREFIX = """You are a professional linguist specializing in conjugation/inflection.
@@ -60,15 +61,25 @@ def generate_prompts(PROMPT_PREFIX_IDS, language: str, pos: str, term: str, toke
         for tense in TENSES[language]:
             dynamic_text = f"{language}, {pos}, {term}, {tense}\nOutput:"
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
-            prompts.append(PROMPT_PREFIX_IDS + dynamic_text_ids)
-            print(f"{dynamic_text}\n{dynamic_text_ids}")
-
+            d = {
+                "language": language, 
+                "pos": pos, 
+                "term": term, 
+                "tense": tense, 
+                "prompt_ids": PROMPT_PREFIX_IDS + dynamic_text_ids
+            }
+            prompts.append(d)
 
     else:
         dynamic_text = f"{language}, {pos}, {term}\nOutput:"
         dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
-        prompts.append(PROMPT_PREFIX_IDS + dynamic_text_ids)
-        print(f"{dynamic_text}\n{dynamic_text_ids}")
+        d = {
+            "language": language, 
+            "pos": pos, 
+            "term": term, 
+            "prompt_ids": PROMPT_PREFIX_IDS + dynamic_text_ids
+        }
+        prompts.append(d)
 
     return prompts
 
@@ -83,6 +94,7 @@ if __name__ == "__main__":
     parser.add_argument('--term', type=str, required=False, help="Term to inflect (e.g. 'parler', 'box', 'bonito')")
     parser.add_argument('--pos', type=str, required=False, choices=['verb', 'noun', 'adj'], help="Part of speech (e.g. 'verb', 'noun', 'adj')")
     parser.add_argument('--tsv', type=str, required=False, help="Path to TSV file with terms to inflect (columns: term, pos)")
+    parser.add_argument('--out', type=str, default="conjugation_outputs.jsonl", help="Output Jsonl file to save conjugations/inflections")
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
     parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt")
     parser.add_argument('--batch_size', type=int, default=8, help="Batch size for generation")
@@ -108,8 +120,13 @@ if __name__ == "__main__":
     from vllm import LLM
     llm: LLM = LLM(model=args.model, dtype=args.dtype)
 
-    for i in range(0, len(prompts), args.batch_size):
-        batch_prompts = prompts[i:i+args.batch_size]
-        outputs = llm.generate(batch_prompts, max_tokens=args.max_tokens)
-        for output in outputs:
-            print(output.text.strip())
+
+    with open(args.out, "w") as of:
+        for b in range(0, len(prompts), args.batch_size):
+                batch_prompts = [p["prompt_ids"] for p in prompts[b:b+args.batch_size]]
+                outputs = llm.generate(batch_prompts, max_tokens=args.max_tokens)
+                for i, output in enumerate(outputs):
+                    prompts[b+i]["output"] = output.text.strip()
+                    of.write(json.dumps(prompts[b+i]) + "\n")
+
+
