@@ -21,7 +21,7 @@
 #scp -v -3 UD-enfr.tsv ujt99zo@jean-zay.idris.fr:/linkhome/rech/genata01/ujt99zo/work/josep/UdInflector/
 
 module purge
-module load arch/h100 #this module must be loaded before pytorch-gpu                                                                                                                                                                                    
+#module load arch/h100 #this module must be loaded before pytorch-gpu                                                                                                                                                                                    
 module load pytorch-gpu/py3/2.6.0
 
 MODEL=/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-8B #Qwen3-32B Qwen3-8B
