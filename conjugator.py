@@ -2,7 +2,7 @@
 import ast
 
 PROMPT_PREFIX_IDS = None  # will be set after loading tokenizer
-PROMPT_PREFIX = """You are a professional linguist specializing in conjugation/inflection.
+PROMPT_PREFIX = """You are a professional linguist specializing in inflection (including verb conjugation).
 
 Task:
 - Output ONLY a Python list with conjugated/inflected forms of the term given its Part-Of-Speech (POS) and language.
@@ -39,15 +39,39 @@ Output: []
 Input: """
 
 TENSES = {
-    "French": ["infinitif", "présent indicatif", "imparfait indicatif", "impératif", "futur simple", "passé composé", 
-                "subjonctif présent", "conditionnel présent", "plus-que-parfait", "futur antérieur", 
-                "passé simple", "passé antérieur", "subjonctif imparfait", "conditionnel passé"],
-    "Spanish": ["infinitivo", "presente indicativo", "pretérito indicativo", "imperativo", "futuro simple", 
-                "pretérito perfecto compuesto", "subjuntivo presente", "condicional simple", "pretérito pluscuamperfecto", 
-                "futuro perfecto", "pretérito indefinido", "pretérito anterior", "subjuntivo imperfecto", "condicional compuesto"],
-    "English": ["infinitive", "present simple", "past simple", "imperative", "future simple", "present perfect", 
-                "present subjunctive", "conditional simple", "past perfect", "future perfect", 
-                "past simple (literary)", "past perfect (literary)", "past subjunctive", "conditional perfect"],
+    "French": [
+        "infinitif, gérondif, participe",
+        "présent indicatif",
+        "imparfait indicatif",
+        "impératif",
+        "futur simple",
+        "subjonctif présent",
+        "conditionnel présent",
+        "passé simple",
+        "subjonctif imparfait"
+    ],
+    "Spanish": [
+        "infinitivo, gerundio, participio",
+        "presente indicativo",
+        "pretérito indefinido",
+        "imperativo",
+        "futuro simple",
+        "subjuntivo presente",
+        "condicional simple",
+        "pretérito indefinido",
+        "subjuntivo imperfecto"
+    ],
+    "English": [
+        "infinitive, gerund, past participle",
+        "present simple",
+        "past simple",
+        "imperative",
+        "future simple",
+        "present subjunctive",
+        "conditional simple",
+        "past simple (literary)",
+        "past subjunctive"
+    ],
 }
 
 # ------------------------------
