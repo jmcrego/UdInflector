@@ -107,7 +107,8 @@ if __name__ == "__main__":
     parser.add_argument('--tsv', type=str, required=False, help="Path to TSV file with terms to inflect (columns: term, pos)")
     parser.add_argument('--out', type=str, default="conjugation_outputs.jsonl", help="Output Jsonl file to save conjugations/inflections")
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
-    parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt")
+    parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt (output only)")
+    parser.add_argument('--max_seq_len', type=int, default=512, help="Maximum sequence length for model input (prompt + output)")
     parser.add_argument('--batch_size', type=int, default=2, help="Batch size for generation")
     parser.add_argument('--dtype', type=str, default='auto', help="Data type for model (e.g. 'auto', 'float16', 'bfloat16')")
     args = parser.parse_args()
@@ -149,7 +150,7 @@ if __name__ == "__main__":
 
     # generate conjugations/inflections in batches 
     from vllm import LLM
-    llm: LLM = LLM(model=args.model, dtype=args.dtype)
+    llm: LLM = LLM(model=args.model, max_seq_len=args.max_seq_len, dtype=args.dtype)
     print(f"Loaded model {args.model} with dtype {args.dtype}")
 
 
