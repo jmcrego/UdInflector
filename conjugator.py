@@ -139,5 +139,6 @@ if __name__ == "__main__":
                 for i, output in enumerate(outputs):
                     prompts[b+i]["output"] = get_list_from_string(output.text.strip())
                     of.write(json.dumps(prompts[b+i]) + "\n")
+                    of.flush()
 
 
