@@ -150,15 +150,21 @@ if __name__ == "__main__":
             args.dtype = 'float16'
 
     # generate conjugations/inflections in batches 
-    from vllm import LLM
+    from vllm import LLM, SamplingParams
+
     llm: LLM = LLM(model=args.model, max_model_len=args.max_model_len, dtype=args.dtype, gpu_memory_utilization=args.gpu_memory_utilization)
     print(f"Loaded model {args.model} with dtype {args.dtype}")
-
+    sampling_params = SamplingParams(
+        max_tokens=args.max_tokens,
+        temperature=0.0,   # deterministic
+        top_p=1.0,
+        stop=["\n"]        # optional but helpful
+    )
 
     with open(args.out, "w") as of:
         for b in range(0, len(prompts), args.batch_size):
                 batch_prompts = [p["prompt_ids"] for p in prompts[b:b+args.batch_size]]
-                outputs = llm.generate(batch_prompts, max_tokens=args.max_tokens)
+                outputs = llm.generate(batch_prompts, sampling_params=sampling_params)
                 for i, output in enumerate(outputs):
                     prompts[b+i]["output"] = get_list_from_string(output.text.strip())
                     of.write(json.dumps(prompts[b+i]) + "\n")
