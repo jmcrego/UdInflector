@@ -186,6 +186,7 @@ if __name__ == "__main__":
 
     with open(args.out, "w") as of:
         for i, output in enumerate(outputs):
+            print(f"Output[{i}]: {output.outputs[0].text.strip()}")
             prompts[i]["output"] = get_list_from_string(output.outputs[0].text.strip())
             of.write(
                 f"idx: {i}, {prompts[i]['language']}, {prompts[i]['pos']}, {prompts[i]['term']}, {prompts[i].get('tense', '-')}\t{prompts[i]['output']}\t{uds[i]}\n"
