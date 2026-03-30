@@ -65,6 +65,7 @@ def generate_prompts(PROMPT_PREFIX_IDS: TokensPrompt, language: str, pos: str, t
 
     return prompts
 
+
 # ------------------------------
 # Example usage
 # ------------------------------
