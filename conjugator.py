@@ -63,6 +63,7 @@ def generate_prompts(PROMPT_PREFIX_IDS, language: str, pos: str, term: str, toke
             prompts.append(PROMPT_PREFIX_IDS + dynamic_text_ids)
             print(f"{dynamic_text}\n{dynamic_text_ids}")
 
+
     else:
         dynamic_text = f"{language}, {pos}, {term}\nOutput:"
         dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
