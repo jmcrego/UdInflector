@@ -1,7 +1,6 @@
 
 import json
 import ast
-from transformers import AutoTokenizer
 
 PROMPT_PREFIX_IDS = None  # will be set after loading tokenizer
 PROMPT_PREFIX = """You are a professional linguist specializing in conjugation/inflection.
@@ -121,6 +120,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Load only the LLM tokenizer
+    from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     # Tokenize the static prompt prefix once since it's the same for all entries
     PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX, return_tensors=None)["input_ids"]
