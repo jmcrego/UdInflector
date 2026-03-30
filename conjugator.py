@@ -86,6 +86,7 @@ if __name__ == "__main__":
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
     parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt")
     parser.add_argument('--batch_size', type=int, default=8, help="Batch size for generation")
+    parser.add_argument('--dtype', type=str, default='fp16', help="Data type for model (e.g. 'fp16', 'bf16')")
     args = parser.parse_args()
 
     # Load only the LLM tokenizer
@@ -105,7 +106,7 @@ if __name__ == "__main__":
 
     # generate conjugations/inflections in batches 
     from vllm import LLM
-    llm: LLM = LLM(model=args.model)
+    llm: LLM = LLM(model=args.model, dtype=args.dtype)
 
     for i in range(0, len(prompts), args.batch_size):
         batch_prompts = prompts[i:i+args.batch_size]
