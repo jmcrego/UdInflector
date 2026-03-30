@@ -113,6 +113,9 @@ if __name__ == "__main__":
     parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt (output only)")
     parser.add_argument('--max_model_len', type=int, default=512, help="Maximum sequence length for model input (prompt + output)")
     parser.add_argument('--max_num_seqs', type=int, default=512, help="Maximum number of sequences to generate per prompt (batch size)")
+    parser.add_argument('--temperature', type=float, default=0.0, help="Sampling temperature for generation (0 for deterministic)")
+    parser.add_argument('--top_p', type=float, default=1.0, help="Nucleus sampling top-p value (1.0 for no nucleus sampling)")
+    parser.add_argument('--stop', type=str, nargs='*', default=["\n"], help="List of stop tokens to end generation (use '\\n' for newline)")
     parser.add_argument('--dtype', type=str, default='auto', help="Data type for model (e.g. 'auto', 'float16', 'bfloat16')")
     parser.add_argument('--gpu_memory_utilization', type=float, default=0.95, help="Fraction of GPU memory to use (0-1, e.g. 0.95 for 95%)")
     args = parser.parse_args()
@@ -165,9 +168,9 @@ if __name__ == "__main__":
     print(f"Loaded model {args.model} with dtype {args.dtype}")
     sampling_params: SamplingParams = SamplingParams(
         max_tokens=args.max_tokens,
-        temperature=0.0,   # deterministic
-        top_p=1.0,         # no nucleus sampling
-        stop=["\n"]        # optional but helpful
+        temperature=args.temperature,
+        top_p=args.top_p,
+        stop=args.stop,
     )
 
     with open(args.out, "w") as of:
