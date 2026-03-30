@@ -1,5 +1,4 @@
 
-import json
 import ast
 
 PROMPT_PREFIX_IDS = None  # will be set after loading tokenizer
@@ -166,6 +165,7 @@ if __name__ == "__main__":
         dtype=args.dtype, 
     )
     print(f"Loaded model {args.model} with dtype {args.dtype}")
+
     sampling_params: SamplingParams = SamplingParams(
         max_tokens=args.max_tokens,
         temperature=args.temperature,
@@ -173,15 +173,16 @@ if __name__ == "__main__":
         stop=args.stop,
     )
 
+    batch_prompts = [
+        TokensPrompt(prompt_token_ids=p["prompt_ids"])
+        for p in prompts
+    ]                
+    outputs = llm.generate(batch_prompts, sampling_params=sampling_params)
+
     with open(args.out, "w") as of:
-        batch_prompts = [
-            TokensPrompt(prompt_token_ids=p["prompt_ids"])
-            for p in prompts
-        ]                
-        outputs = llm.generate(batch_prompts, sampling_params=sampling_params)
         for i, output in enumerate(outputs):
             prompts[i]["output"] = get_list_from_string(output.outputs[0].text.strip())
-            of.write(json.dumps(prompts[i]) + "\n")
+            of.write(f"idx: {i}, language: {prompts[i]['language']} ({prompts[i]['pos']}) {prompts[i]['term']} {prompts[i].get('tense', '')} => {prompts[i]['output']}\n")
             of.flush()
 
 
