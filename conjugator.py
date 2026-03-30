@@ -133,14 +133,16 @@ if __name__ == "__main__":
 
     if args.tsv:
         with open(args.tsv, 'r') as f:
+            nlines = 0
             for line in f:
+                nlines += 1
                 term, pos, ud = line.strip().split('\t')
                 new_prompts = generate_prompts(args.language, pos, term, tokenizer)
                 prompts += new_prompts
                 uds += [ud] * len(new_prompts)
 
 
-    print(f"Generated {len(prompts)} prompts. Starting generation...")
+    print(f"Generated {len(prompts)} prompts from {nlines} lines. Starting generation...")
 
     #check if running on V100, A100 or H100 and set dtype accordingly
     if args.dtype == 'auto':
