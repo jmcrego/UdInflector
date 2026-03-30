@@ -125,14 +125,19 @@ if __name__ == "__main__":
     PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX, return_tensors=None)["input_ids"]
 
     prompts = []
+    uds = []
     if args.term and args.pos:
-        prompts += generate_prompts(args.language, args.pos, args.term, tokenizer)
+        new_prompts = generate_prompts(args.language, args.pos, args.term, tokenizer)
+        prompts += new_prompts
+        uds += ["-"] * len(new_prompts)
 
     if args.tsv:
         with open(args.tsv, 'r') as f:
             for line in f:
-                term, pos = line.strip().split('\t')
-                prompts += generate_prompts(args.language, pos, term, tokenizer)
+                term, pos, ud = line.strip().split('\t')
+                new_prompts = generate_prompts(args.language, pos, term, tokenizer)
+                prompts += new_prompts
+                uds += [ud] * len(new_prompts)
 
 
     print(f"Generated {len(prompts)} prompts. Starting generation...")
@@ -187,6 +192,7 @@ if __name__ == "__main__":
                     f" {prompts[i]['pos']},"
                     f" {prompts[i]['term']},"
                     f" {prompts[i].get('tense', '-')}]"
-                    f" => {prompts[i]['output']}\n", flush=True)
+                    f"\t{prompts[i]['output']}"
+                    f"\t{uds[i]}\n", flush=True)
 
 
