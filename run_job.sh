@@ -1,4 +1,6 @@
 #!/bin/bash
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
 
 #SBATCH --job-name=udinflector
 #SBATCH --output=./logs/%u.%x.%j.out
@@ -15,9 +17,6 @@
 #
 ##SBATCH -C v100-32g
 ##SBATCH -A eut@v100
-
-export LC_ALL=C.UTF-8
-export LANG=C.UTF-8
 
 #copy data from macbook:
 #scp -v -3 UD-enfr.tsv ujt99zo@jean-zay.idris.fr:/linkhome/rech/genata01/ujt99zo/work/josep/UdInflector/
