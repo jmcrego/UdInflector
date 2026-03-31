@@ -118,11 +118,7 @@ if __name__ == "__main__":
     print(f"Generation completed in {toc - tic:.2f} seconds")
 
     with open(args.out, "w") as of:
-        for i, output in enumerate(outputs):
-            print(f"Output[{i}]: {output.outputs[0].text.strip()}")
-            sample = samples[i]
-            sample["output"] = get_list_from_string(output.outputs[0].text.strip())
-            
-            of.write(
-                f"{sample['language']}, {sample['pos']}, {sample['term']}, {sample['inflection']}\t{sample['output']}\t{sample['ud']}\n"
-            )
+        for i, (sample, output) in enumerate(zip(samples, outputs)):
+            inflections = get_list_from_string(output.outputs[0].text.strip())
+            request = f"{i} {sample['language']}, {sample['pos']}, {sample['term']}, {sample['inflection']}"
+            of.write(f"{sample['ud']}\t{inflections}\t{request}\n")
