@@ -92,9 +92,8 @@ def evaluate(hyp2infl, ref2infl, verbose=False):
     global_precision = total_tp / (total_tp + total_fp) if (total_tp + total_fp) > 0 else 1.0
     global_recall = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 1.0
     global_f1 = 2 * global_precision * global_recall / (global_precision + global_recall) if (global_precision + global_recall) > 0 else 0.0
-    print(f"Global Precision: {global_precision:.3f}")
-    print(f"Global Recall: {global_recall:.3f}")
-    print(f"Global F1: {global_f1:.3f}")
+    global_accuracy = total_tp / (total_tp + total_fp + total_fn) if (total_tp + total_fp + total_fn) > 0 else 1.0
+    print(f"Global Acc: {global_accuracy:.3f} P: {global_precision:.3f} R: {global_recall:.3f} F1: {global_f1:.3f}")
 
     if verbose:
         for term in set(ref2infl.keys()) | set(hyp2infl.keys()):
