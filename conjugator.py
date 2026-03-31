@@ -5,7 +5,8 @@ PROMPT_PREFIX_IDS = None  # will be set after loading tokenizer
 PROMPT_PREFIX = """You are a professional linguist specializing in inflection (including verb conjugation).
 
 Task:
-- Output ONLY a Python list with conjugated/inflected forms of the term given its Part-Of-Speech (POS) and language.
+- Output ONLY a Python list with conjugated/inflected forms of the term
+- Guide your conjugation/inflection based on the part of speech (POS) and language-specific rules for the given term.
 - For verbs:
   * Provide the correct number of form conjugations for the given tense.
   * Provide all inflection combinations when applicable (masculine, feminine, singular, plural).
@@ -18,25 +19,25 @@ Task:
 
 Examples:
 
-Input: French, verb, parler, present indicative
+Input: French verb \'parler\', present indicative
 Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
 
-Input: French, verb, parler, participe passé
+Input: French verb \'parler\', participe passé
 Output: ['parlé', 'parlée', 'parlés', 'parlées']
 
-Input: English, noun, box
+Input: English noun \'box\'
 Output: ['box', 'boxes']
 
-Input: Spanish, adj, bonito
+Input: Spanish adjective \'bonito\'
 Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
 
-Input: English, verb, to live, infinitive
+Input: English verb \'to live\', infinitive
 Output: ['to live']
 
-Input: English, verb, to speak, infinitive / gerund / past participle
-Output: ['to speak', 'speaking', 'spoken']
+Input: English verb \'to speak\', infinitive / gerund / past participle
+Output: ['speak', 'speaking', 'spoken']
 
-Input: Spanish, verb, granizar, imperativo
+Input: Spanish verb \'granizar\', imperativo
 Output: []
 
 Input: """
@@ -65,22 +66,14 @@ TENSES = {
         "subjuntivo imperfecto"
     ],
     "English": [
-        "infinitive / gerund / past participle",
-        "present simple",
-        "past simple",
-        "imperative",
-        "future simple",
-        "present subjunctive",
-        "conditional simple",
-        "past simple (literary)",
-        "past subjunctive"
+        "base form / 3rd person singular present / past simple / past participle / gerund (-ing form)",
     ],
 }
 
 # ------------------------------
 # Generate prompt
 # ------------------------------
-def generate_prompts(language: str, pos: str, term: str, tokenizer):
+def generate_sample(language: str, pos: str, term: str, ud: str, tokenizer):
 
     prompts = []
 
@@ -92,9 +85,10 @@ def generate_prompts(language: str, pos: str, term: str, tokenizer):
                 "language": language, 
                 "pos": pos, 
                 "term": term, 
+                "ud": ud,
                 "tense": tense, 
                 "prompt": PROMPT_PREFIX + dynamic_text,
-                "prompt_ids": PROMPT_PREFIX_IDS + dynamic_text_ids
+                "prompt_ids": PROMPT_PREFIX_IDS + dynamic_text_ids,
             }
             prompts.append(d)
 
@@ -105,6 +99,7 @@ def generate_prompts(language: str, pos: str, term: str, tokenizer):
             "language": language, 
             "pos": pos, 
             "term": term, 
+            "ud": ud,
             "prompt": PROMPT_PREFIX + dynamic_text,
             "prompt_ids": PROMPT_PREFIX_IDS + dynamic_text_ids
         }
@@ -140,11 +135,10 @@ def get_list_from_string(text: str) -> list[str]:
 # ------------------------------
 if __name__ == "__main__":
     import argparse
+    import time
     parser = argparse.ArgumentParser(description="Multilingual Batched Conjugation Generator", formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('tsv', type=str, help="Path to TSV file with terms to inflect (columns: term, pos)")
     parser.add_argument('--language', type=str, required=True, choices=['English', 'French', 'Spanish'], help="Language (e.g. English, French, Spanish)")
-    parser.add_argument('--term', type=str, required=False, help="Term to inflect (e.g. 'parler', 'box', 'bonito')")
-    parser.add_argument('--pos', type=str, required=False, choices=['verb', 'noun', 'adj'], help="Part of speech (e.g. 'verb', 'noun', 'adj')")
-    parser.add_argument('--tsv', type=str, required=False, help="Path to TSV file with terms to inflect (columns: term, pos)")
     parser.add_argument('--out', type=str, default="conjugation_outputs.jsonl", help="Output Jsonl file to save conjugations/inflections")
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
     parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt (output only)")
@@ -164,21 +158,14 @@ if __name__ == "__main__":
     PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX, return_tensors=None)["input_ids"]
 
     prompts = []
-    uds = []
-    if args.term and args.pos:
-        new_prompts = generate_prompts(args.language, args.pos, args.term, tokenizer)
-        prompts += new_prompts
-        uds += ["-"] * len(new_prompts)
 
-    if args.tsv:
-        with open(args.tsv, 'r') as f:
-            nlines = 0
-            for line in f:
-                nlines += 1
-                term, pos, ud = line.strip().split('\t')
-                new_prompts = generate_prompts(args.language, pos, term, tokenizer)
-                prompts += new_prompts
-                uds += [ud] * len(new_prompts)
+    with open(args.tsv, 'r') as f:
+        nlines = 0
+        for line in f:
+            nlines += 1
+            term, pos, ud = line.strip().split('\t')
+            new_prompts = generate_sample(args.language, pos, term, ud, tokenizer)
+            prompts += new_prompts
 
     print(f"Generated {len(prompts)} prompts from {nlines} glossary lines. Starting generation...")
 
@@ -221,15 +208,18 @@ if __name__ == "__main__":
     batch_prompts = [
         TokensPrompt(prompt_token_ids=p["prompt_ids"])
         for p in prompts
-    ]                
+    ]
+    tic = time.perf_counter()
     outputs = llm.generate(batch_prompts, sampling_params=sampling_params)
+    toc = time.perf_counter()
+    print(f"Generation completed in {toc - tic:.2f} seconds")
 
     with open(args.out, "w") as of:
         for i, output in enumerate(outputs):
             print(f"Output[{i}]: {output.outputs[0].text.strip()}")
             prompts[i]["output"] = get_list_from_string(output.outputs[0].text.strip())
             of.write(
-                f"idx: {i}, {prompts[i]['language']}, {prompts[i]['pos']}, {prompts[i]['term']}, {prompts[i].get('tense', '-')}\t{prompts[i]['output']}\t{uds[i]}\n"
+                f"idx: {i}, {prompts[i]['language']}, {prompts[i]['pos']}, {prompts[i]['term']}, {prompts[i].get('tense', '-')}\t{prompts[i]['output']}\t{prompts[i]['ud']}\n"
             )
 
 
