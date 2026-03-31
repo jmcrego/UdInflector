@@ -1,111 +1,24 @@
 
 import ast
+from utils import PROMPT_PREFIX, INFLECTIONS
 
-PROMPT_PREFIX = """You are a professional linguist specializing in term inflection (including verb conjugation).
-
-Task:
-- Output ONLY a Python list with conjugated/inflected forms of the term
-- Guide your conjugation/inflection based on the part of speech (POS) and language-specific rules for the given term.
-- For verbs:
-  * Provide the correct number of form conjugations for the given tense.
-  * Provide all inflection combinations when applicable (masculine, feminine, singular, plural).
-- For nouns/adjectives:
-  * Provide all inflection combinations when applicable (masculine/feminine, singular/plural).
-- Do NOT include pronouns, explanations, or extra text.
-- Ensure correct spelling, accents, and irregular forms.
-- Follow the standard order of forms for each language and POS.
-- If the term is not inflectable or the tense is not applicable, return an empty list.
-
-Examples:
-
-Input: French verb \'parler\', present indicative
-Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
-
-Input: French verb \'parler\', participe passé
-Output: ['parlé', 'parlée', 'parlés', 'parlées']
-
-Input: English noun \'box\'
-Output: ['box', 'boxes']
-
-Input: Spanish adjective \'bonito\'
-Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
-
-Input: English verb \'to live\', infinitive
-Output: ['to live']
-
-Input: English verb \'to speak\', infinitive / gerund / past participle
-Output: ['speak', 'speaking', 'spoken']
-
-Input: Spanish verb \'granizar\', imperativo
-Output: []
-
-Input: """
-
-PROMPT_PREFIX_IDS = None  # will be set after loading tokenizer
-
-TENSES = {
-    "French": [
-        "infinitif / gérondif / participe",
-        "présent indicatif",
-        "imparfait indicatif",
-        "impératif",
-        "futur simple",
-        "subjonctif présent",
-        "conditionnel présent",
-        "passé simple",
-        "subjonctif imparfait"
-    ],
-    "Spanish": [
-        "infinitivo / gerundio / participio",
-        "presente indicativo",
-        "pretérito indefinido",
-        "imperativo",
-        "futuro simple",
-        "subjuntivo presente",
-        "condicional simple",
-        "pretérito indefinido",
-        "subjuntivo imperfecto"
-    ],
-    "English": [
-        "base form / 3rd person singular present / past simple / past participle / gerund (-ing form)",
-    ],
-}
-
-# ------------------------------
-# Generate prompt
-# ------------------------------
-def generate_sample(language: str, pos: str, term: str, ud: str, tokenizer):
+def generate_sample(language: str, pos: str, term: str, ud: str, tokenizer, prompt_prefix_ids):
 
     prompts = []
-
-    if pos == "verb":
-        for tense in TENSES[language]:
-            dynamic_text = f"{language}, {pos}, {term}, {tense}\nOutput:"
+    if pos in INFLECTIONS and language in INFLECTIONS[pos]:
+         for inflection in INFLECTIONS[pos][language]:
+            dynamic_text = f"{language} {pos} '{term}', {inflection}\nOutput:"
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
             d = {
                 "language": language, 
                 "pos": pos, 
                 "term": term, 
                 "ud": ud,
-                "tense": tense, 
+                "inflection": inflection, 
                 "prompt": PROMPT_PREFIX + dynamic_text,
-                "prompt_ids": PROMPT_PREFIX_IDS + dynamic_text_ids,
+                "prompt_ids": prompt_prefix_ids + dynamic_text_ids,
             }
             prompts.append(d)
-
-    else:
-        dynamic_text = f"{language}, {pos}, {term}\nOutput:"
-        dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
-        d = {
-            "language": language, 
-            "pos": pos, 
-            "term": term, 
-            "ud": ud,
-            "prompt": PROMPT_PREFIX + dynamic_text,
-            "prompt_ids": PROMPT_PREFIX_IDS + dynamic_text_ids
-        }
-        prompts.append(d)
-
     return prompts
 
 def filter_list(forms: list[str]) -> list[str]:
@@ -165,7 +78,7 @@ if __name__ == "__main__":
         for line in f:
             nlines += 1
             term, pos, ud = line.strip().split('\t')
-            new_prompts = generate_sample(args.language, pos, term, ud, tokenizer)
+            new_prompts = generate_sample(args.language, pos, term, ud, tokenizer, PROMPT_PREFIX_IDS)
             prompts += new_prompts
 
     print(f"Generated {len(prompts)} prompts from {nlines} glossary lines. Starting generation...")
