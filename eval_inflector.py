@@ -3,13 +3,17 @@ import sys
 import re
 from collections import defaultdict
 
+def fix_pos_in_term(curr_term):
+    curr_term = curr_term.lower()
+    if curr_term.find("(") != -1 and curr_term.find(")") != -1:
+        pos = curr_term[curr_term.find("(")+1:curr_term.find(")")]
+        if pos.startswith("proper noun"):
+            curr_term = curr_term.replace(f"({pos})", "(proper noun)")
+    return curr_term
+
 def parseXML(file):
 
-    total_inflections = 0
-    total_terms = 0
-    total_repetitions = 0
-
-    term2inflections = defaultdict()
+    term2inflections = defaultdict(list)
 
     curr_term = None
     curr_inflections = set()
@@ -25,51 +29,38 @@ def parseXML(file):
         # detect: <source>implement (verb)</source>
         elif re.match(r"<source>(.*)</source>", line):
             curr_term = re.findall(r"<source>(.*)</source>", line)[0]
+            curr_term = fix_pos_in_term(curr_term)
             continue
 
         # detect: </entry>
         elif line == "</entry>":
-            total_inflections += len(curr_inflections)
-            total_terms += 1
-
             # print(out)
-            if curr_term in term2inflections:
-                if term2inflections[curr_term] != curr_inflections:
-                    print(f"Repeated term: {curr_term} => {term2inflections[curr_term]}\n new: {curr_inflections}", file=sys.stderr)
-                    total_repetitions += 1
             term2inflections[curr_term] = curr_inflections
-
             curr_term = None
             curr_inflections = set()
-            total_terms += 1
 
-    print(f"Total terms: {total_terms}", file=sys.stderr)
-    print(f"Total inflections: {total_inflections}", file=sys.stderr)
-    print(f"Total repeated terms: {total_repetitions}", file=sys.stderr)
+    print(f"(XML) Read {len(term2inflections)} terms")
     return term2inflections
 
 
 def parseTSV(file):
 
-    total_inflections = 0
-    total_terms = 0
-
-    term2inflections = defaultdict()
+    term2inflections = defaultdict(list)
 
     for line in open(file, encoding="utf-8"):
         toks = line.strip().split("\t")
-        if len(toks) != 4:
+        if len(toks) != 3:
             continue
-        inflections = toks[2].split(";")
-        term2inflections[f"{toks[0]} ({toks[1]})"] = inflections
-        total_terms += 1
-        total_inflections += len(inflections)
+        inflection = toks[0]
+        ud = toks[2]
+        term = ud.split("|||")[0].strip() #take only first translation (before |||)
+        term = fix_pos_in_term(term)
+        term2inflections[term].append(inflection)
     
-    print(f"Total terms: {total_terms}", file=sys.stderr)
-    print(f"Total inflections: {total_inflections}", file=sys.stderr)
+    print(f"(TSV) Read {len(term2inflections)} terms")
     return term2inflections
 
-def evaluate(hyp2infl, ref2infl, verbose=False):
+def evaluate(ref2infl, hyp2infl, verbose=False):
     # Count intersection of sets of terms in refs and hyps
     intersection = set(ref2infl.keys()) & set(hyp2infl.keys())
     union = set(ref2infl.keys()) | set(hyp2infl.keys())
@@ -96,14 +87,29 @@ def evaluate(hyp2infl, ref2infl, verbose=False):
     print(f"Global Acc: {global_accuracy:.3f} P: {global_precision:.3f} R: {global_recall:.3f} F1: {global_f1:.3f}")
 
     if verbose:
+        # Missing terms in hyps
+        print("\nMissing terms in hyps:")
+        for term in set(ref2infl.keys()) - set(hyp2infl.keys()):
+            print(f"  {term}")
+
+        # Missing terms in refs
+        print("\nMissing terms in refs:")
+        for term in set(hyp2infl.keys()) - set(ref2infl.keys()):
+            print(f"  {term}")
+
         for term in set(ref2infl.keys()) | set(hyp2infl.keys()):
-            print(f"Term: {term}")
             if term not in ref2infl:
                 ref2infl[term] = []
             if term not in hyp2infl:
                 hyp2infl[term] = []
-            print(f"  Refs & !Hyps: {set(ref2infl[term]) - set(hyp2infl[term])}")
-            print(f"  Hyps & !Refs: {set(hyp2infl[term]) - set(ref2infl[term])}")
+            Refs_noHyps = set(ref2infl[term]) - set(hyp2infl[term])
+            Hyps_noRefs = set(hyp2infl[term]) - set(ref2infl[term])
+            if len(Refs_noHyps) > 0 or len(Hyps_noRefs) > 0:
+                print(f"\nTerm: {term}")
+                if len(Refs_noHyps) > 0:
+                    print(f"  Missing in hyps: {Refs_noHyps}")
+                if len(Hyps_noRefs) > 0:
+                    print(f"  Missing in refs: {Hyps_noRefs}")
 
 
 # usage
@@ -119,6 +125,6 @@ if __name__ == "__main__":
 - Example usage: python eval_inflector.py glossary.xml glossary.tsv
 """
     args = parser.parse_args()
-    hyp2infl = parseXML(args.refs_file)
-    ref2infl = parseTSV(args.hyps_file)
-    evaluate(hyp2infl, ref2infl, args.verbose)
+    ref2infl = parseXML(args.refs_file)
+    hyp2infl = parseTSV(args.hyps_file)
+    evaluate(ref2infl, hyp2infl, args.verbose)
