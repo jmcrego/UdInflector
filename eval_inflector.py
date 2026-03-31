@@ -69,44 +69,57 @@ def parseTSV(file):
     print(f"Total inflections: {total_inflections}", file=sys.stderr)
     return term2inflections
 
+def evaluate(hyp2infl, ref2infl, verbose=False):
+    # Count intersection of sets of terms in refs and hyps
+    intersection = set(ref2infl.keys()) & set(hyp2infl.keys())
+    union = set(ref2infl.keys()) | set(hyp2infl.keys())
+    print(f"#terms in refs: {len(ref2infl)}")
+    print(f"#terms in hyps: {len(hyp2infl)}")
+    print(f"#intersection: {len(intersection)}")
+    print(f"missing terms in hyps: {len(set(ref2infl.keys()) - set(hyp2infl.keys()))}")
+
+    # Compute global Precision, Recall, F1 over all terms in the intersection
+    total_tp = 0
+    total_fp = 0
+    total_fn = 0
+    for term in intersection:
+        infl_ref = set(ref2infl[term])
+        infl_hyp = set(hyp2infl[term])
+        total_tp += len(infl_ref & infl_hyp)
+        total_fp += len(infl_hyp - infl_ref)
+        total_fn += len(infl_ref - infl_hyp)
+
+    global_precision = total_tp / (total_tp + total_fp) if (total_tp + total_fp) > 0 else 1.0
+    global_recall = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 1.0
+    global_f1 = 2 * global_precision * global_recall / (global_precision + global_recall) if (global_precision + global_recall) > 0 else 0.0
+    print(f"Global Precision: {global_precision:.3f}")
+    print(f"Global Recall: {global_recall:.3f}")
+    print(f"Global F1: {global_f1:.3f}")
+
+    if verbose:
+        for term in set(ref2infl.keys()) | set(hyp2infl.keys()):
+            print(f"Term: {term}")
+            if term not in ref2infl:
+                ref2infl[term] = []
+            if term not in hyp2infl:
+                hyp2infl[term] = []
+            print(f"  Refs & !Hyps: {set(ref2infl[term]) - set(hyp2infl[term])}")
+            print(f"  Hyps & !Refs: {set(hyp2infl[term]) - set(ref2infl[term])}")
+
 
 # usage
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Parse XML glossary file and extract inflections as JSON.", formatter_class=argparse.RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description="The script evaluates the performance of an inflection generator by comparing its output against a reference dataset.", formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('refs_file', type=str, help='Path to the refs XML file (Systran codging engine output)')
-    parser.add_argument('hyps_file', type=str, help='Path to the hyps TSV file')
+    parser.add_argument('hyps_file', type=str, help='Path to the hyps TSV file (UDInflector output)')
+    parser.add_argument('--verbose', action='store_true', help='Print detailed comparisons for each term')
     parser.epilog = """
 - The XML file should have entries with <source>term (pos)</source> and <inflected>inflection</inflected> tags.
 - Example usage: python eval_inflector.py glossary.xml glossary.tsv
-- Output will be a JSONL file with each line containing a JSON object with 'term' and 'inflections' (list of inflected forms).
 """
     args = parser.parse_args()
     hyp2infl = parseXML(args.refs_file)
     ref2infl = parseTSV(args.hyps_file)
-
-    # Count intersection of sets of terms in refs and hyps
-    intersection = set(ref2infl.keys()) & set(hyp2infl.keys())
-    union = set(ref2infl.keys()) | set(hyp2infl.keys())
-    print(f"Total terms in refs: {len(ref2infl)}", file=sys.stderr)
-    print(f"Total terms in hyps: {len(hyp2infl)}", file=sys.stderr)
-    print(f"Total terms in intersection: {len(intersection)}", file=sys.stderr)
-    print(f"Total terms in union: {len(union)}", file=sys.stderr)
-
-    for term in sorted(intersection):
-        infl_ref = set(ref2infl[term])
-        infl_hyp = set(hyp2infl[term])
-        if infl_ref != infl_hyp:
-            #print inflections in ref not in hyp and vice versa
-            print(f"Term: {term}", file=sys.stderr)
-            print(f"  Inflections in ref not in hyp: {infl_ref - infl_hyp}", file=sys.stderr)
-            print(f"  Inflections in hyp not in ref: {infl_hyp - infl_ref}", file=sys.stderr)
-
-            # print(f"  Refs inflections: {infl_ref}", file=sys.stderr)
-            # print(f"  Hyps inflections: {infl_hyp}", file=sys.stderr)
-
-    # print terms not available in both sets
-    for term in sorted(union - intersection):
-        print(f"Term not available in both sets: {term}", file=sys.stderr)
-
+    evaluate(hyp2infl, ref2infl, args.verbose)

@@ -1,2 +1,3 @@
 transformers
 vllm
+scikit-learn
