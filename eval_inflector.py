@@ -64,7 +64,7 @@ def parseTSV(file):
         if len(toks) != 3:
             continue
         inflections = ast.literal_eval(toks[1]) #['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
-        ud = toks[2] #caractériser (verb) ||| to characterize
+        ud = toks[0] #caractériser (verb) ||| to characterize
         term = ud.split("|||")[0].strip()
         term = fix_pos_in_term(term)
 

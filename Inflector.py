@@ -53,7 +53,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Multilingual Batched Conjugation Generator", formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('tsv', type=str, help="Path to TSV file with terms to inflect (columns: term, pos)")
     parser.add_argument('--language', type=str, required=True, choices=['English', 'French', 'Spanish'], help="Language (e.g. English, French, Spanish)")
-    parser.add_argument('--out', type=str, default="conjugation_outputs.tsv", help="Output Jsonl file to save conjugations/inflections")
+    parser.add_argument('--out', type=str, default=None, help="Output Jsonl file to save conjugations/inflections")
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
     parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt (output only)")
     parser.add_argument('--max_model_len', type=int, default=512, help="Maximum sequence length for model input (prompt + output)")
@@ -64,6 +64,9 @@ if __name__ == "__main__":
     parser.add_argument('--dtype', type=str, default='auto', help="Data type for model (e.g. 'auto', 'float16', 'bfloat16')")
     parser.add_argument('--gpu_memory_utilization', type=float, default=0.95, help="Fraction of GPU memory to use (0-1, e.g. 0.95 for 95%)")
     args = parser.parse_args()
+
+    if args.out is None:
+        args.out = f"{args.tsv}.inflections.tsv"    
 
     # Load only the LLM tokenizer
     from transformers import AutoTokenizer
@@ -114,11 +117,12 @@ if __name__ == "__main__":
 
     tic = time.perf_counter()
     outputs = llm.generate(batch_prompts, sampling_params=sampling_params)
-    toc = time.perf_counter()
-    print(f"Generation completed in {toc - tic:.2f} seconds")
+    print(f"Generation completed in {time.perf_counter() - tic:.2f} seconds")
 
     with open(args.out, "w") as of:
         for i, (sample, output) in enumerate(zip(samples, outputs)):
             output = get_list_from_string(output.outputs[0].text.strip())
             request = f"{i} {sample['language']}, {sample['pos']}, {sample['term']}, {sample['inflection']}"
             of.write(f"{sample['ud']}\t{output}\t{request}\n")
+            print(f"{sample['ud']}\t{output}\t{request}")
+

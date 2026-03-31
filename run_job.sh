@@ -25,7 +25,7 @@ module load arch/h100 #this module must be loaded before pytorch-gpu
 module load pytorch-gpu/py3/2.6.0
 
 MODEL=/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B #Qwen3-32B Qwen3-8B
-TSV=resources/UD-fren.tsv
+TSV=resources/UD.fr2en.tsv
 
 #python udinflector.py resources/UD-enfr.tsv --model $MODEL --lang English
 #python udinflector.py resources/UD-fren.tsv --model $MODEL --lang French
