@@ -99,10 +99,10 @@ INFLECTIONS = {
     },
     "proper noun": {
         "French": [
-            "Repeat the proper noun with an uppercase first letter (maïs → Maïs)",
+            "Repeat the proper noun with an uppercase first letter",
         ],
         "Spanish": [
-            "Repeat the proper noun with an uppercase first letter (maíz → Maíz)",
+            "Repeat the proper noun with an uppercase first letter",
         ],
         "English": [
             "possessive forms",
