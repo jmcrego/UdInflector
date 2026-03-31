@@ -115,7 +115,6 @@ if __name__ == "__main__":
 
     batch_prompts = [TokensPrompt(prompt_token_ids=p["prompt_ids"]) for p in samples]
 
-
     tic = time.perf_counter()
     outputs = llm.generate(batch_prompts, sampling_params=sampling_params)
     print(f"Generation completed in {time.perf_counter() - tic:.2f} seconds")
