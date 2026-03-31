@@ -81,10 +81,10 @@ if __name__ == "__main__":
             new_prompts = generate_sample(args.language, pos, term, ud, tokenizer, PROMPT_PREFIX_IDS)
             samples += new_prompts
 
-    print(f"Generated {len(samples)} prompts from {nlines} glossary lines. Starting generation...")
-    print(f"Example prompt:\n{samples[0]['prompt']}")
-    import sys
-    sys.exit(1)
+    # print(f"Generated {len(samples)} prompts from {nlines} glossary lines. Starting generation...")
+    # print(f"Example prompt:\n{samples[0]['prompt']}")
+    # import sys
+    # sys.exit(1)
 
     #check if running on V100, A100 or H100 and set dtype accordingly
     if args.dtype == 'auto':
