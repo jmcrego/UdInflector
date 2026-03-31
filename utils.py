@@ -97,6 +97,17 @@ INFLECTIONS = {
             "number and possessive forms",
         ]
     },
+    "proper noun": {
+        "French": [
+            "Repeat the proper noun with an uppercase first letter (maïs → Maïs)",
+        ],
+        "Spanish": [
+            "Repeat the proper noun with an uppercase first letter (maíz → Maíz)",
+        ],
+        "English": [
+            "possessive forms",
+        ]
+    },
     "adj": {
         "French": [
             "formes de genre et de nombre",
