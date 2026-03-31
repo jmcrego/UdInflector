@@ -1,25 +1,34 @@
 import json
 import sys
+import ast
 import re
 from collections import defaultdict
 
 def fix_pos_in_term(curr_term):
     curr_term = curr_term.lower()
     if curr_term.find("(") != -1 and curr_term.find(")") != -1:
-        pos = curr_term[curr_term.find("(")+1:curr_term.find(")")]
+        begin = curr_term.find("(")
+        end = curr_term.find(")")
+        
+        pos = curr_term[begin+1:end]
         if pos.startswith("proper noun"):
-            curr_term = curr_term.replace(f"({pos})", "(proper noun)")
+            curr_term = curr_term[:begin] + "(proper noun)"
     return curr_term
 
-def parseXML(file):
+def fix_pos(pos):
+    pos = pos.lower()
+    if pos.startswith("proper noun"):
+        return "proper noun"
+    return pos
 
+def parseXML(file):
     term2inflections = defaultdict(list)
 
     curr_term = None
     curr_inflections = set()
 
     for line in open(file, encoding="utf-8"):
-        line = line.strip()
+        line = line.lower().strip()
 
         # detect: <inflected.*>implement</inflected>
         if re.match(r"<inflected.*>(.*)</inflected>", line):
@@ -44,18 +53,23 @@ def parseXML(file):
 
 
 def parseTSV(file):
+    # idx: 0, French, verb, caractériser, infinitif / gérondif / participe
+    # ['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
+    # caractériser (verb) ||| to characterize
 
     term2inflections = defaultdict(list)
 
     for line in open(file, encoding="utf-8"):
-        toks = line.strip().split("\t")
+        toks = line.lower().strip().split("\t")
         if len(toks) != 3:
             continue
-        inflection = toks[0]
-        ud = toks[2]
-        term = ud.split("|||")[0].strip() #take only first translation (before |||)
+        inflections = ast.literal_eval(toks[1]) #['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
+        ud = toks[2] #caractériser (verb) ||| to characterize
+        term = ud.split("|||")[0].strip()
         term = fix_pos_in_term(term)
-        term2inflections[term].append(inflection)
+
+        for inflection in inflections:
+            term2inflections[term].append(inflection)
     
     print(f"(TSV) Read {len(term2inflections)} terms")
     return term2inflections
