@@ -119,6 +119,6 @@ if __name__ == "__main__":
 
     with open(args.out, "w") as of:
         for i, (sample, output) in enumerate(zip(samples, outputs)):
-            inflections = get_list_from_string(output.outputs[0].text.strip())
+            output = get_list_from_string(output.outputs[0].text.strip())
             request = f"{i} {sample['language']}, {sample['pos']}, {sample['term']}, {sample['inflection']}"
-            of.write(f"{sample['ud']}\t{inflections}\t{request}\n")
+            of.write(f"{sample['ud']}\t{output}\t{request}\n")
