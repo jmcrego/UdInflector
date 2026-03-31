@@ -113,7 +113,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="The script evaluates the performance of an inflection generator by comparing its output against a reference dataset.", formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('refs_file', type=str, help='Path to the refs XML file (Systran codging engine output)')
     parser.add_argument('hyps_file', type=str, help='Path to the hyps TSV file (UDInflector output)')
-    parser.add_argument('--verbose', action='store_true', help='Print detailed comparisons for each term')
+    parser.add_argument('--verbose', action='store_true', help='Print detailed evaluations for each term')
     parser.epilog = """
 - The XML file should have entries with <source>term (pos)</source> and <inflected>inflection</inflected> tags.
 - Example usage: python eval_inflector.py glossary.xml glossary.tsv
