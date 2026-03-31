@@ -1,8 +1,7 @@
 
 import ast
 
-PROMPT_PREFIX_IDS = None  # will be set after loading tokenizer
-PROMPT_PREFIX = """You are a professional linguist specializing in inflection (including verb conjugation).
+PROMPT_PREFIX = """You are a professional linguist specializing in term inflection (including verb conjugation).
 
 Task:
 - Output ONLY a Python list with conjugated/inflected forms of the term
@@ -41,6 +40,8 @@ Input: Spanish verb \'granizar\', imperativo
 Output: []
 
 Input: """
+
+PROMPT_PREFIX_IDS = None  # will be set after loading tokenizer
 
 TENSES = {
     "French": [
