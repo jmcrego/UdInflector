@@ -7,40 +7,46 @@ Task:
 - Only provide inflections that exist in the given language.
 - Do NOT include pronouns, explanations, or extra text.
 - Ensure correct spelling, accents, and irregular forms.
-- Preserve the natural grammatical order of forms: base → derived forms; masculine → feminine; singular → plural.
 - Preserve the natural grammatical order of forms: base → derived forms; masculine → feminine; singular → plural. For verbs, also follow the standard tense sequence for the language.
 - If the term is not inflectable as required, return an empty list.
 
 Examples:
 
-Input: French verb \'parler\', present indicative
+Input: French verb \'parler\'
+Forms: present indicative
 Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
 
-Input: French verb \'parler\', participe passé
+Input: French verb \'parler\'
+Forms: participe passé
 Output: ['parlé', 'parlée', 'parlés', 'parlées']
 
-Input: English noun \'box\' number and possessive forms
+Input: English noun \'box\'
+Forms: number and possessive forms
 Output: ['box', 'boxes', "box's", "boxes'"]
 
-Input: English adj \'big\' comparative/superlative forms
+Input: English adj \'big\'
+Forms: comparative/superlative forms
 Output: ['big', 'bigger', 'biggest']
 
-Input: Spanish adj \'bonito\' formas de género y número
+Input: Spanish adj \'bonito\'
+Forms: formas de género y número
 Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
 
-Input: English verb \'speak\', base form / 3rd person singular present / simple past / past participle / present participle (-ing)
+Input: English verb \'speak\'
+Forms: base form, 3rd person singular present, simple past, past participle, present participle (-ing)
 Output: ['speak', 'speaks', 'spoke', 'spoken', 'speaking']
 
-Input: Spanish verb \'granizar\', imperativo
+Input: Spanish verb \'granizar\'
+Forms: imperativo
 Output: []
 
-Input: """
+"""
 
 
 INFLECTIONS = {
     "verb": {
         "French": [
-            "infinitif / participe présent / participe passé",
+            "infinitif, participe présent, participe passé",
             "présent indicatif",
             "imparfait indicatif",
             "impératif",
@@ -51,7 +57,7 @@ INFLECTIONS = {
             "subjonctif imparfait"
         ],
         "Spanish": [
-            "infinitivo / gerundio / participio",
+            "infinitivo, gerundio, participio",
             "presente indicativo",
             "pretérito indefinido",
             "imperativo",
@@ -61,7 +67,7 @@ INFLECTIONS = {
             "subjuntivo imperfecto"
         ],
         "English": [
-            "base form / 3rd person singular present / simple past / past participle / present participle (-ing)"
+            "base form, 3rd person singular present, simple past, past participle, present participle (-ing)"
         ]
     },
     "noun": {
