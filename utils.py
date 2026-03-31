@@ -108,6 +108,17 @@ INFLECTIONS = {
             "possessive forms",
         ]
     },
+    "acronym": {
+        "French": [
+            "Repeat the acronym uppercased",
+        ],
+        "Spanish": [
+            "Repeat the acronym uppercased",
+        ],
+        "English": [
+            "possessive forms",
+        ]
+    },
     "adj": {
         "French": [
             "formes de genre et de nombre",
