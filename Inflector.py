@@ -135,4 +135,3 @@ if __name__ == "__main__":
             of.write(
                 f"idx: {i}, {prompts[i]['language']}, {prompts[i]['pos']}, {prompts[i]['term']}, {prompts[i].get('tense', '-')}\t{prompts[i]['output']}\t{prompts[i]['ud']}\n"
             )
-
