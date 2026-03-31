@@ -71,7 +71,7 @@ if __name__ == "__main__":
     # Tokenize the static prompt prefix once since it's the same for all entries
     PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX, return_tensors=None)["input_ids"]
 
-    prompts = []
+    samples = []
 
     with open(args.tsv, 'r') as f:
         nlines = 0
@@ -79,10 +79,10 @@ if __name__ == "__main__":
             nlines += 1
             term, pos, ud = line.strip().split('\t')
             new_prompts = generate_sample(args.language, pos, term, ud, tokenizer, PROMPT_PREFIX_IDS)
-            prompts += new_prompts
+            samples += new_prompts
 
-    print(f"Generated {len(prompts)} prompts from {nlines} glossary lines. Starting generation...")
-    print(f"Example prompt:\n{prompts[0]['prompt']}")
+    print(f"Generated {len(samples)} prompts from {nlines} glossary lines. Starting generation...")
+    print(f"Example prompt:\n{samples[0]['prompt']}")
     import sys
     sys.exit(1)
 
@@ -122,10 +122,8 @@ if __name__ == "__main__":
         stop=args.stop,
     )
 
-    batch_prompts = [
-        TokensPrompt(prompt_token_ids=p["prompt_ids"])
-        for p in prompts
-    ]
+    batch_prompts = [TokensPrompt(prompt_token_ids=p["prompt_ids"]) for p in samples]
+
     tic = time.perf_counter()
     outputs = llm.generate(batch_prompts, sampling_params=sampling_params)
     toc = time.perf_counter()
@@ -134,7 +132,9 @@ if __name__ == "__main__":
     with open(args.out, "w") as of:
         for i, output in enumerate(outputs):
             print(f"Output[{i}]: {output.outputs[0].text.strip()}")
-            prompts[i]["output"] = get_list_from_string(output.outputs[0].text.strip())
+            sample = samples[i]
+            sample["output"] = get_list_from_string(output.outputs[0].text.strip())
+            
             of.write(
-                f"idx: {i}, {prompts[i]['language']}, {prompts[i]['pos']}, {prompts[i]['term']}, {prompts[i].get('tense', '-')}\t{prompts[i]['output']}\t{prompts[i]['ud']}\n"
+                f"{sample['language']}, {sample['pos']}, {sample['term']}, {sample['inflection']}\t{sample['output']}\t{sample['ud']}\n"
             )
