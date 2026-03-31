@@ -34,8 +34,6 @@ Output: ['speak', 'speaks', 'spoke', 'spoken', 'speaking']
 Input: Spanish verb \'granizar\', imperativo
 Output: []
 
-Inflect:
-
 Input: """
 
 
