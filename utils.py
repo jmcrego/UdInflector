@@ -1,4 +1,20 @@
 
+def get_dtype_for_gpu():
+    import torch
+    if torch.cuda.is_available():
+        gpu_name = torch.cuda.get_device_name(0)
+        print(f"Running on GPU: {gpu_name}")
+        if "V100" in gpu_name:
+            return 'float16'
+        elif "A100" in gpu_name or "H100" in gpu_name:
+            return 'bfloat16'
+        else:
+            print("Unknown GPU type, defaulting to float16")
+            return 'float16'
+    print("No GPU detected, defaulting to float16")
+    return 'float16'
+
+
 PROMPT_PREFIX = """You are a professional linguist specializing in term inflection (including verb conjugation).
 
 Task:

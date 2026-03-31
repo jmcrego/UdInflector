@@ -1,6 +1,6 @@
 
 import ast
-from utils import PROMPT_PREFIX, INFLECTIONS
+from utils import PROMPT_PREFIX, INFLECTIONS, get_dtype_for_gpu
 
 def generate_sample(language: str, pos: str, term: str, ud: str, tokenizer, prompt_prefix_ids):
 
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Multilingual Batched Conjugation Generator", formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('tsv', type=str, help="Path to TSV file with terms to inflect (columns: term, pos)")
     parser.add_argument('--language', type=str, required=True, choices=['English', 'French', 'Spanish'], help="Language (e.g. English, French, Spanish)")
-    parser.add_argument('--out', type=str, default="conjugation_outputs.jsonl", help="Output Jsonl file to save conjugations/inflections")
+    parser.add_argument('--out', type=str, default="conjugation_outputs.tsv", help="Output Jsonl file to save conjugations/inflections")
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
     parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt (output only)")
     parser.add_argument('--max_model_len', type=int, default=512, help="Maximum sequence length for model input (prompt + output)")
@@ -81,27 +81,15 @@ if __name__ == "__main__":
             new_prompts = generate_sample(args.language, pos, term, ud, tokenizer, PROMPT_PREFIX_IDS)
             samples += new_prompts
 
-    # print(f"Generated {len(samples)} prompts from {nlines} glossary lines. Starting generation...")
+    print(f"Generated {len(samples)} prompts from {nlines} glossary lines. Starting generation...")
+
     # print(f"Example prompt:\n{samples[0]['prompt']}")
     # import sys
     # sys.exit(1)
 
-    #check if running on V100, A100 or H100 and set dtype accordingly
+    #check if running on V100, A100 or H100 and set dtype accordingly    
     if args.dtype == 'auto':
-        import torch
-        if torch.cuda.is_available():
-            gpu_name = torch.cuda.get_device_name(0)
-            print(f"Running on GPU: {gpu_name}")
-            if "V100" in gpu_name:
-                args.dtype = 'float16'
-            elif "A100" in gpu_name or "H100" in gpu_name:
-                args.dtype = 'bfloat16'
-            else:
-                print("Unknown GPU type, defaulting to float16")
-                args.dtype = 'float16'
-        else:
-            print("No GPU detected, defaulting to float16")
-            args.dtype = 'float16'
+        args.dtype = get_dtype_for_gpu()
 
     # generate conjugations/inflections in batches 
     from vllm import LLM, SamplingParams, TokensPrompt
