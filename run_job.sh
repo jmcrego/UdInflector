@@ -19,6 +19,9 @@
 #copy data from macbook:
 #scp -v -3 UD-enfr.tsv ujt99zo@jean-zay.idris.fr:/linkhome/rech/genata01/ujt99zo/work/josep/UdInflector/
 
+#python SystranUD2glossary.py resources/ud-enfr_fr.dic resources/ud-enfr_en.dic --oname resources/UD --lang1 fr --lang2 en
+#python SystranUD2glossary.py resources/ud-enfr_en.dic resources/ud-enfr_fr.dic --oname resources/UD --lang1 en --lang2 fr
+
 module purge
 #
 module load arch/h100 #this module must be loaded before pytorch-gpu                                                                                                                                                                                    
