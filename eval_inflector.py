@@ -75,11 +75,13 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Parse XML glossary file and extract inflections as JSON.", formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument('refs_file', type=str, help='Path to the hyps XML file')
-    parser.add_argument('hyps_file', type=str, help='Path to the refs TSV file')
-    parser.epilog = """- The XML file should have entries with <source>term (pos)</source> and <inflected>inflection</inflected> tags.
-- Example usage: python parse_xml.py glossary.xml > inflections.jsonl
-- Output will be a JSONL file with each line containing a JSON object with 'term' and 'inflections' (list of inflected forms)."""
+    parser.add_argument('refs_file', type=str, help='Path to the refs XML file (Systran codging engine output)')
+    parser.add_argument('hyps_file', type=str, help='Path to the hyps TSV file')
+    parser.epilog = """
+- The XML file should have entries with <source>term (pos)</source> and <inflected>inflection</inflected> tags.
+- Example usage: python eval_inflector.py glossary.xml glossary.tsv
+- Output will be a JSONL file with each line containing a JSON object with 'term' and 'inflections' (list of inflected forms).
+"""
     args = parser.parse_args()
     hyp2infl = parseXML(args.refs_file)
     ref2infl = parseTSV(args.hyps_file)
