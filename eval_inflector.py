@@ -26,8 +26,8 @@ def parseXML(file):
             continue
 
         # detect pos in : <entry ID="12" pos="verb" confidence="99" status="coded">
-        elif re.match(r"<entry.*pos=\"(.*)\".*>", line):
-            pos = re.findall(r"<entry.*pos=\"(.*)\".*>", line)[0]
+        elif re.match(r"<entry.*pos=\"([^\"]*)\".*>", line):
+            pos = re.findall(r"<entry.*pos=\"([^\"]*)\".*>", line)[0]
             continue
 
         # detect: </entry>
