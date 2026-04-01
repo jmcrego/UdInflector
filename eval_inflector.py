@@ -28,7 +28,7 @@ def parseXML(file):
             lem = fix_lem(lem, pos)
             pos = fix_pos(pos)
             if "(" in lem:
-                lem = lem.split("(")[0].strip()
+                lem = lem[:lem.find("(")].strip()
 
             print(f"XML2 Term: {lem} ({pos})")
             continue
