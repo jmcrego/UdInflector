@@ -1,21 +1,34 @@
 
 import ast
-from utils import PROMPT_PREFIX, INFLECTIONS, get_dtype_for_gpu
+from utils import PROMPT_PREFIX, REQUESTS, get_dtype_for_gpu
 from utils import fix_term
 
-def generate_sample(language: str, pos: str, term: str, ud: str, tokenizer, prompt_prefix_ids):
+
+def read_tsv(path, language):
+    samples = []
+    with open(args.tsv, 'r') as f:
+        nlines = 0
+        for line in f:
+            nlines += 1
+            pos, lem1, lem2 = line.strip().split('\t')
+            new_samples = generate_sample(language, pos, lem1, lem2, tokenizer, PROMPT_PREFIX_IDS)
+            samples += new_samples
+    print(f"Generated {len(samples)} prompts from {nlines} UD pairs.")
+    return samples
+
+def generate_sample(language: str, pos: str, lem1: str, lem2: str, tokenizer, prompt_prefix_ids):
 
     prompts = []
-    if pos in INFLECTIONS and language in INFLECTIONS[pos]:
-         for inflection in INFLECTIONS[pos][language]:
-            dynamic_text = f"Input: {language} {pos} '{term}'\nRequested forms: {inflection}\nOutput:"
+    if pos in REQUESTS and language in REQUESTS[pos]:
+         for request in REQUESTS[pos][language]:
+            dynamic_text = f"Input: {language} {pos} '{lem1}'\nRequested forms: {request}\nOutput:"
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
             d = {
-                "language": language, 
-                "pos": pos, 
-                "term": term, 
-                "ud": ud,
-                "inflection": inflection, 
+                "language": language,
+                "pos": pos,
+                "lem": lem1,
+                "ud": f"{lem1} ({pos}) ||| {lem2}",
+                "request": request,
                 "prompt": PROMPT_PREFIX + dynamic_text,
                 "prompt_ids": prompt_prefix_ids + dynamic_text_ids,
             }
@@ -75,17 +88,7 @@ if __name__ == "__main__":
     # Tokenize the static prompt prefix once since it's the same for all entries
     PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX, return_tensors=None)["input_ids"]
 
-    samples = []
-
-    with open(args.tsv, 'r') as f:
-        nlines = 0
-        for line in f:
-            nlines += 1
-            term, pos, ud = line.strip().split('\t')
-            new_prompts = generate_sample(args.language, pos, term, ud, tokenizer, PROMPT_PREFIX_IDS)
-            samples += new_prompts
-
-    print(f"Generated {len(samples)} prompts from {nlines} glossary lines. Starting generation...")
+    samples = read_tsv(args.tsv, language=args.language)
 
     #check if running on V100, A100 or H100 and set dtype accordingly    
     if args.dtype == 'auto':
@@ -119,7 +122,7 @@ if __name__ == "__main__":
     with open(args.out, "w") as of:
         for i, (sample, output) in enumerate(zip(samples, outputs)):
             output_list = get_list_from_string(output.outputs[0].text.strip())
-            request = f"{i} {sample['language']}, {sample['pos']}, {sample['term']}, {sample['inflection']}"
-            of.write(f"{sample['ud']}\t{output_list}\t{request}\n")
-            print(f"{sample['ud']}\t{output_list}\t{request}")
+            request_info = f"{i} {sample['language']}, {sample['pos']}, {sample['lem1']}, {sample['request']}"
+            of.write(f"{sample['ud']}\t{output_list}\t{request_info}\n")
+            print(f"{sample['ud']}\t{output_list}\t{request_info}\n")
 

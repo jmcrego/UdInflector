@@ -75,7 +75,7 @@ Output: []
 """
 
 
-INFLECTIONS = {
+REQUESTS = {
     "verb": {
         "French": [
             "infinitif, participe présent, participe passé",
