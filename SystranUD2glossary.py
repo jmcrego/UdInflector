@@ -26,7 +26,7 @@ def load_tsv_file(path, language=None):
             if len(parts) != 3:
                 continue
             #Anna proper noun        feminine        {4845}
-            if language == "fr" and parts[0] == "Anna proper noun" and parts[1] == "feminime":
+            if language == "fr" and parts[0] == "Anna proper noun" and parts[1] == "feminine":
                 parts[0] = "Anna"
                 parts[1] = "proper noun"
                 print(f"replaced: {parts[0]} {parts[1]}", file=sys.stderr)
