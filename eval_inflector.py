@@ -21,9 +21,9 @@ def parseXML(file):
             continue
 
 
-        # detect pos in : <source>royaume (adj)</source>
+        # detect lem pos in : <source>royaume (adj)</source>
         elif re.match(r"<source>(.*) \((.*)\)</source>", line):
-            lem, pos = re.findall(r"<source>(.*) \((.*)\)</source>", line)[0][1]
+            lem, pos = re.findall(r"<source>(.*) \((.*)\)</source>", line)[0]
             continue
 
         # detect: </entry>
