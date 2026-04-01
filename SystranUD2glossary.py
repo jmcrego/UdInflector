@@ -29,6 +29,7 @@ def load_tsv_file(path, language=None):
             if language == "fr" and parts[0] == "Anna proper noun" and parts[1] == "feminime":
                 parts[0] = "Anna"
                 parts[1] = "proper noun"
+                print(f"replaced: {parts[0]} {parts[1]}", file=sys.stderr)
 
             lem, pos = parts[0], parts[1] #discard third column (note)
             pos = fix_pos(pos)
