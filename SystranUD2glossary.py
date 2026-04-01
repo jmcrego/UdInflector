@@ -8,7 +8,7 @@ def fix_pos(pos):
         return "proper noun"
     return pos
 
-def load_tsv_file(path):
+def load_tsv_file(path, language=None):
     fms = []
     with open(path, encoding="utf-8") as f:
         for line in f:
@@ -19,14 +19,16 @@ def load_tsv_file(path):
                 continue
             term, pos = parts[0], parts[1] #discard third column (note)
             pos = fix_pos(pos)
+            if language == "English" and pos == "verb" and term.startswith("to "):
+                term = term[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
             fms.append((term, pos))
     print(f"Loaded {len(fms)} entries from {path}", file=sys.stderr)
     return fms
     
 def uds_to_glossary(ud1, ud2, oname, lang1, lang2):
 
-    ud1 = load_tsv_file(ud1)
-    ud2 = load_tsv_file(ud2)
+    ud1 = load_tsv_file(ud1, language=lang1)
+    ud2 = load_tsv_file(ud2, language=lang2)
 
     if len(ud1) != len(ud2):
         print("Warning: UD files have different number of entries", file=sys.stderr)
