@@ -82,7 +82,6 @@ if __name__ == "__main__":
         for line in f:
             nlines += 1
             term, pos, ud = line.strip().split('\t')
-            term, lemma, pos = fix_term(term)
             new_prompts = generate_sample(args.language, pos, term, ud, tokenizer, PROMPT_PREFIX_IDS)
             samples += new_prompts
 
