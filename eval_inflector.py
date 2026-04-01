@@ -9,8 +9,7 @@ from SystranUD2glossary import fix_pos, fix_lem
 def parseXML(file):
     term2inflections = defaultdict(list)
 
-    curr_term = None
-    curr_inflections = set()
+    inflections = set()
 
     for line in open(file, encoding="utf-8"):
         line = line.lower().strip()
@@ -18,32 +17,25 @@ def parseXML(file):
         # detect: <inflected.*>implement</inflected>
         if re.match(r"<inflected.*>(.*)</inflected>", line):
             inflection = re.findall(r"<inflected.*>(.*)</inflected>", line)[0]
-            curr_inflections.add(inflection)
+            inflections.add(inflection)
             continue
 
         # detect: <natural_lemma>put on</natural_lemma>
         elif re.match(r"<natural_lemma>(.*)</natural_lemma>", line):
-            curr_lem = re.findall(r"<natural_lemma>(.*)</natural_lemma>", line)[0]
+            lem = re.findall(r"<natural_lemma>(.*)</natural_lemma>", line)[0]
             continue
 
         # detect pos in : <entry ID="12" pos="verb" confidence="99" status="coded">
         elif re.match(r"<entry.*pos=\"(.*)\".*>", line):
-            curr_pos = re.findall(r"<entry.*pos=\"(.*)\".*>", line)[0]
+            pos = re.findall(r"<entry.*pos=\"(.*)\".*>", line)[0]
             continue
-
-        # detect: <source>implement (verb)</source>
-        # elif re.match(r"<source>(.*)</source>", line):
-        #     curr_term = re.findall(r"<source>(.*)</source>", line)[0]
-        #     curr_term, lemma, pos = fix_term(curr_term)
-        #     continue
 
         # detect: </entry>
         elif line == "</entry>":
-            # print(out)
-            pos = fix_pos(curr_pos)
-            lem = fix_lem(curr_lem, pos)
-            term2inflections[f"{lem} ({pos})"] = curr_inflections
-            curr_inflections = set()
+            pos = fix_pos(pos)
+            lem = fix_lem(lem, pos)
+            term2inflections[f"{lem} ({pos})"] = inflections
+            inflections = set()
             continue
 
 
