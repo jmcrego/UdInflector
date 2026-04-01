@@ -26,7 +26,7 @@ def parseXML(file):
             lem, pos = re.findall(r"<source>(.*) \((.*)\).*</source>", line)[0]
             lem = fix_lem(lem, pos)
             pos = fix_pos(pos)
-            if lem == "anna proper noun" and pos == "feminine":
+            if lem == "anna (proper noun)" and pos == "feminine":
                 lem = "anna"
                 pos = "proper noun"
             continue
