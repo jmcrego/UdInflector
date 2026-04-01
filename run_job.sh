@@ -19,8 +19,8 @@
 #copy data from macbook:
 #scp -v -3 UD-enfr.tsv ujt99zo@jean-zay.idris.fr:/linkhome/rech/genata01/ujt99zo/work/josep/UdInflector/
 
-#python SystranUD2glossary.py resources/ud-enfr_fr.dic resources/ud-enfr_en.dic --oname resources/UD --lang1 fr --lang2 en
-#python SystranUD2glossary.py resources/ud-enfr_en.dic resources/ud-enfr_fr.dic --oname resources/UD --lang1 en --lang2 fr
+#python SystranUD2glossary.py resources/ud-enfr_fr.dic resources/ud-enfr_en.dic --oname resources/ud --lang1 fr --lang2 en
+#python SystranUD2glossary.py resources/ud-enfr_en.dic resources/ud-enfr_fr.dic --oname resources/ud --lang1 en --lang2 fr
 
 module purge
 #
@@ -29,7 +29,7 @@ module load pytorch-gpu/py3/2.6.0
 
 MODEL=/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B #Qwen3-32B Qwen3-8B
 
-PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python Inflector.py resources/UD.fr2en.tsv --model $MODEL --language French
-PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python Inflector.py resources/UD.en2fr.tsv --model $MODEL --language English
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python Inflector.py resources/ud-fr2en.tsv --model $MODEL --language French
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python Inflector.py resources/ud-en2fr.tsv --model $MODEL --language English
 
 
