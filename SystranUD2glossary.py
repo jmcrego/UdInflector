@@ -32,7 +32,7 @@ def uds_to_glossary(ud1, ud2, oname, lang1, lang2):
         print("Warning: UD files have different number of entries", file=sys.stderr)
         sys.exit(1)
 
-    with open(f"{oname}.{lang1}2{lang2}.tsv", "w", encoding="utf-8") as out1, open(f"{oname}.{lang2}2{lang1}.tsv", "w", encoding="utf-8") as out2:
+    with open(f"{oname}-{lang1}{lang2}.tsv", "w", encoding="utf-8") as out1, open(f"{oname}-{lang2}{lang1}.tsv", "w", encoding="utf-8") as out2:
         for (term1, pos1), (term2, pos2) in zip(ud1, ud2):
             if pos1 != pos2:
                 print(f"Warning: POS mismatch ({pos1} != {pos2}) for terms '{term1}' and '{term2}'", file=sys.stderr)  
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     parse = argparse.ArgumentParser(description="Convert two parallel Systran UD files to TSV glossary format.", formatter_class=argparse.RawTextHelpFormatter)
     parse.add_argument("ud1", help="First Systran UD file")
     parse.add_argument("ud2", help="Second Systran UD file")
-    parse.add_argument("--oname", default="UD-glossary", help="Output file prefix name (creates [oname].[lang1]2[lang2].tsv and [oname].[lang2]2[lang1].tsv)")
+    parse.add_argument("--oname", default="ud", help="Output file prefix name (creates [oname]-[lang1][lang2].tsv and [oname]-[lang2][lang1].tsv)")
     parse.add_argument("--lang1", default="en", help="language tag in ud1 (default: en)")
     parse.add_argument("--lang2", default="fr", help="language tag in ud2 (default: fr)")
     parse.epilog = """* Systran UD line format is: ^term \\t pos \\t note$. 
@@ -58,4 +58,4 @@ if __name__ == "__main__":
     args = parse.parse_args()
     
     uds_to_glossary(args.ud1, args.ud2, args.oname, args.lang1, args.lang2)
-    print(f"Done! Generated {args.oname}.{args.lang1}2{args.lang2}.tsv and {args.oname}.{args.lang2}2{args.lang1}.tsv", file=sys.stderr)
+    print(f"Done! Generated {args.oname}-{args.lang1}{args.lang2}.tsv and {args.oname}-{args.lang2}{args.lang1}.tsv", file=sys.stderr)
