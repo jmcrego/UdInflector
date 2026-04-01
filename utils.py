@@ -36,6 +36,10 @@ Input: French verb \'parler\'
 Forms: participe passé
 Output: ['parlé', 'parlée', 'parlés', 'parlées']
 
+Input: French verb \'grouper\'
+Forms: subjonctif imparfait
+Output: ['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
+
 Input: English noun \'box\'
 Forms: number and possessive forms
 Output: ['box', 'boxes', "box's", "boxes'"]

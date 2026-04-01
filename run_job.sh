@@ -17,11 +17,11 @@
 ##SBATCH -A eut@v100
 
 #copy data from macbook:
-#scp -v -3 UD-enfr.tsv ujt99zo@jean-zay.idris.fr:/linkhome/rech/genata01/ujt99zo/work/josep/UdInflector/
+#scp -v -3 ud-enfr_{en,fr}.{dic,xml} ujt99zo@jean-zay.idris.fr:/linkhome/rech/genata01/ujt99zo/work/josep/UdInflector/
 
 # Build glossaries with entries : term_src \t POS \t term_src (pos) ||| term_tgt
-#python SystranUD2glossary.py resources/ud-enfr_fr.dic resources/ud-enfr_en.dic --oname resources/ud --lang1 fr --lang2 en
-#python SystranUD2glossary.py resources/ud-enfr_en.dic resources/ud-enfr_fr.dic --oname resources/ud --lang1 en --lang2 fr
+# python SystranUD2glossary.py resources/ud-enfr_fr.dic resources/ud-enfr_en.dic --oname resources/ud --lang1 fr --lang2 en
+# python SystranUD2glossary.py resources/ud-enfr_en.dic resources/ud-enfr_fr.dic --oname resources/ud --lang1 en --lang2 fr
 
 module purge
 #
