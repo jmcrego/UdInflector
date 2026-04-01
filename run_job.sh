@@ -24,7 +24,6 @@
 
 # Build glossaries with entries : POS \t term_src \t term_tgt
 # python SystranUD2glossary.py resources/ud-enfr_fr.dic resources/ud-enfr_en.dic --oname resources/ud --lang1 fr --lang2 en
-# python SystranUD2glossary.py resources/ud-enfr_en.dic resources/ud-enfr_fr.dic --oname resources/ud --lang1 en --lang2 fr
 
 module purge
 #
@@ -33,9 +32,9 @@ module load pytorch-gpu/py3/2.6.0
 
 MODEL=/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B #Qwen3-32B Qwen3-8B
 
+#python Inflector.py resources/ud-fren.tsv --model $MODEL --language French
 #
-python Inflector.py resources/ud-fren.tsv --model $MODEL --language French
-#python Inflector.py resources/ud-enfr.tsv --model $MODEL --language English
+python Inflector.py resources/ud-enfr.tsv --model $MODEL --language English
 
 # Evaluation
 # python eval_inflector.py resources/ud-enfr_en.fixed.xml resources/ud-enfr.tsv.inflections.tsv --verbose > resources/ud-enfr.tsv.inflections.tsv.eval
