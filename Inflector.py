@@ -1,7 +1,6 @@
 
 import ast
 from utils import PROMPT_PREFIX, REQUESTS, get_dtype_for_gpu
-from utils import fix_term
 
 
 def read_tsv(path, language):
