@@ -4,6 +4,13 @@ import ast
 import re
 from collections import defaultdict
 
+def fix_lemma_in_term(curr_term):
+    curr_term = curr_term.lower()
+    if curr_term.startswith("to ") and curr_term.endswith("(verb)"):
+        curr_term = curr_term[3:] # remove "to " from verb infinitive form in English (e.g. "to speak (verb)" -> "speak (verb)")
+    
+    return curr_term
+
 def fix_pos_in_term(curr_term):
     curr_term = curr_term.lower()
     if curr_term.find("(") != -1 and curr_term.find(")") != -1:
@@ -13,9 +20,6 @@ def fix_pos_in_term(curr_term):
         pos = curr_term[begin+1:end]
         if pos.startswith("proper noun"):
             curr_term = curr_term[:begin] + "(proper noun)"
-
-    if curr_term.startswith("to ") and curr_term.endswith("(verb)"):
-        curr_term = curr_term[3:] # remove "to " from verb infinitive form in English (e.g. "to speak (verb)" -> "speak (verb)")
     
     return curr_term
 
@@ -38,11 +42,13 @@ def parseXML(file):
         if re.match(r"<inflected.*>(.*)</inflected>", line):
             inflection = re.findall(r"<inflected.*>(.*)</inflected>", line)[0]
             curr_inflections.add(inflection)
+            continue
 
         # detect: <source>implement (verb)</source>
         elif re.match(r"<source>(.*)</source>", line):
             curr_term = re.findall(r"<source>(.*)</source>", line)[0]
             curr_term = fix_pos_in_term(curr_term)
+            curr_term = fix_lemma_in_term(curr_term)
             continue
 
         # detect: </entry>
@@ -51,6 +57,8 @@ def parseXML(file):
             term2inflections[curr_term] = curr_inflections
             curr_term = None
             curr_inflections = set()
+            continue
+
 
     print(f"(XML) Read {len(term2inflections)} terms")
     return term2inflections
