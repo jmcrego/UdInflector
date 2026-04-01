@@ -8,6 +8,12 @@ def fix_pos(pos):
         return "proper noun"
     return pos
 
+def fix_to(term, pos, language):
+    if language == "en" and pos == "verb" and term.startswith("to "):
+        term = term[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
+    return term
+
+
 def load_tsv_file(path, language=None):
     fms = []
     with open(path, encoding="utf-8") as f:
@@ -19,8 +25,7 @@ def load_tsv_file(path, language=None):
                 continue
             term, pos = parts[0], parts[1] #discard third column (note)
             pos = fix_pos(pos)
-            if language == "en" and pos == "verb" and term.startswith("to "):
-                term = term[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
+            term = fix_to(term, pos, language)
             fms.append((term, pos))
     print(f"Loaded {len(fms)} entries from {path}", file=sys.stderr)
     return fms
