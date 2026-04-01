@@ -22,8 +22,8 @@ def parseXML(file):
 
 
         # detect lem pos in : <source>royaume (adj)</source>
-        elif re.match(r"<source>(.*) \((.*)\).*</source>", line):
-            lem, pos = re.findall(r"<source>(.*) \((.*)\).*</source>", line)[0]
+        elif re.match(r"<source>([^\ ]*) \(([^\)]*)\).*</source>", line):
+            lem, pos = re.findall(r"<source>([^\ ]*) \(([^\)]*)\).*</source>", line)[0]
             print(f"XML1 Term: {lem} ({pos})")
             lem = fix_lem(lem, pos)
             pos = fix_pos(pos)
