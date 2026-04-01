@@ -61,7 +61,7 @@ if __name__ == "__main__":
 * ud1 and ud2 must have the same number of lines (stop otherwise).
 * corresponding entries (same line number) are considered translations of each other.
 * corresponding entries (same line number) must have the same POS tag in both files (discarded entry otherwise).
-* Example usage: python SystranUD2glossary.py resources/ud-enfr_en.dic resources/ud-enfr_fr.dic -oname resources/UD -lang1 en -lang2 fr"""
+* Example usage: python SystranUD2glossary.py resources/ud-enfr_en.dic resources/ud-enfr_fr.dic --oname resources/ud --lang1 en --lang2 fr"""
     args = parse.parse_args()
     
     uds_to_glossary(args.ud1, args.ud2, args.oname, args.lang1, args.lang2)
