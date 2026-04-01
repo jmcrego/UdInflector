@@ -20,14 +20,14 @@ def parseXML(file):
             inflections.add(inflection)
             continue
 
-        # detect: <natural_lemma>put on</natural_lemma>
+        # detect lem in: <natural_lemma>put on</natural_lemma>
         elif re.match(r"<natural_lemma>(.*)</natural_lemma>", line):
             lem = re.findall(r"<natural_lemma>(.*)</natural_lemma>", line)[0]
             continue
 
-        # detect pos in : <entry ID="12" pos="verb" confidence="99" status="coded">
-        elif re.match(r"<entry.*pos=\"([^\"]*)\".*>", line):
-            pos = re.findall(r"<entry.*pos=\"([^\"]*)\".*>", line)[0]
+        # detect pos in : <source>royaume (adj)</source>
+        elif re.match(r"<source>.*\((.*)\)</source>", line):
+            pos = re.findall(r"<source>.*\((.*)\)</source>", line)[0]
             continue
 
         # detect: </entry>
