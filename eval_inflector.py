@@ -35,6 +35,7 @@ def parseXML(file):
             pos = fix_pos(pos)
             lem = fix_lem(lem, pos)
             term2inflections[f"{lem} ({pos})"] = inflections
+            print(f"Term: {lem} ({pos}) -> Inflections: {inflections}")
             inflections = set()
             continue
 
