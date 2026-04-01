@@ -90,7 +90,7 @@ def evaluate(ref2infl, hyp2infl, verbose=False):
     # total_int_inflections = 0
     # total_hyp_inflections = 0
     # total_ref_inflections = 0
-    # for term in intersection:
+    for term in intersection:
         infl_ref = set(ref2infl[term])
         infl_hyp = set(hyp2infl[term])
         total_tp += len(infl_ref & infl_hyp)
