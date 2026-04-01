@@ -13,6 +13,10 @@ def fix_pos_in_term(curr_term):
         pos = curr_term[begin+1:end]
         if pos.startswith("proper noun"):
             curr_term = curr_term[:begin] + "(proper noun)"
+
+    if curr_term.startswith("to ") and curr_term.endswith("(verb)"):
+        curr_term = curr_term[3:] # remove "to " from verb infinitive form in English (e.g. "to speak (verb)" -> "speak (verb)")
+    
     return curr_term
 
 def fix_pos(pos):
