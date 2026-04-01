@@ -4,7 +4,7 @@ import argparse
 
 def fix_pos(pos):
     pos = pos.lower()
-    if pos.startswith("proper noun"):
+    if "proper noun" in pos:
         return "proper noun"
     return pos
 
