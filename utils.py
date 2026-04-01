@@ -21,7 +21,8 @@ Task:
 - Output ONLY a Python list with the required conjugated/inflected forms of the term.
 - Guide your conjugation/inflection based on the part of speech (POS) and language-specific rules for the given term.
 - Only provide inflections that exist in the given language.
-- Do NOT include pronouns, explanations, or extra text.
+- Do NOT include pronouns, articles, determiners, explanations, or any extra text.
+- With expressions or verbal phrases, only inflect the main verb and keep the rest of the expression unchanged.
 - Ensure correct spelling, accents, and irregular forms.
 - Preserve the natural grammatical order of forms: base → derived forms; masculine → feminine; singular → plural. For verbs, also follow the standard tense sequence for the language.
 - If the term is not inflectable as required, return an empty list.
@@ -29,39 +30,43 @@ Task:
 Examples:
 
 Input: French verb \'parler\'
-Forms: present indicative
+Requested forms: present indicative
 Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
 
 Input: French verb \'parler\'
-Forms: participe passé
+Requested forms: participe passé
 Output: ['parlé', 'parlée', 'parlés', 'parlées']
 
 Input: French verb \'grouper\'
-Forms: subjonctif imparfait
+Requested forms: subjonctif imparfait
 Output: ['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
 
 Input: English noun \'box\'
-Forms: number and possessive forms
+Requested forms: number and possessive forms
 Output: ['box', 'boxes', "box's", "boxes'"]
 
 Input: English adj \'big\'
-Forms: comparative/superlative forms
+Requested forms: comparative/superlative forms
 Output: ['big', 'bigger', 'biggest']
 
 Input: Spanish adj \'bonito\'
-Forms: formas de género y número
+Requested forms: formas de género y número
 Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
 
 Input: English verb \'speak\'
-Forms: base form, 3rd person singular present, simple past, past participle, present participle (-ing)
+Requested forms: base form, 3rd person singular present, simple past, past participle, present participle (-ing)
 Output: ['speak', 'speaks', 'spoke', 'spoken', 'speaking']
 
+Input: English verb \'to put on\'
+Requested forms: base form, 3rd person singular present, simple past, past participle, present participle (-ing)
+Output: ['put on', 'puts on', 'put on', 'put on', 'putting on']
+
 Input: English acronym \'NASA\'
-Forms: possessive forms
+Requested forms: possessive forms
 Output: ['NASA', "NASA's", "NASAs'", "NASAs"]
 
 Input: Spanish verb \'granizar\'
-Forms: imperativo
+Requested forms: imperativo
 Output: []
 
 """

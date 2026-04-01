@@ -7,7 +7,7 @@ def generate_sample(language: str, pos: str, term: str, ud: str, tokenizer, prom
     prompts = []
     if pos in INFLECTIONS and language in INFLECTIONS[pos]:
          for inflection in INFLECTIONS[pos][language]:
-            dynamic_text = f"Input: {language} {pos} '{term}'\nForms: {inflection}\nOutput:"
+            dynamic_text = f"Input: {language} {pos} '{term}'\nRequested forms: {inflection}\nOutput:"
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
             d = {
                 "language": language, 
