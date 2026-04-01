@@ -109,7 +109,7 @@ INFLECTIONS = {
             "lowercase, UPPERCASE and Truecase",
         ],
         "English": [
-            "lowercase, UPPERCASE, Truecase and possessive forms",
+            "possessive forms",
         ]
     },
     "acronym": {
@@ -120,7 +120,7 @@ INFLECTIONS = {
             "lowercase, UPPERCASE and Truecase",
         ],
         "English": [
-            "lowercase, UPPERCASE, Truecase and possessive forms",
+            "possessive forms",
         ]
     },
     "adj": {
