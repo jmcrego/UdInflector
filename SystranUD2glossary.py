@@ -18,6 +18,7 @@ def fix_lem(lem, pos, language):
 
 def load_tsv_file(path, language=None):
     fms = []
+    POSes = set()
     with open(path, encoding="utf-8") as f:
         for line in f:
             if line.startswith("#"):
@@ -29,13 +30,14 @@ def load_tsv_file(path, language=None):
             if language == "fr" and parts[0] == "Anna proper noun" and parts[1] == "feminine":
                 parts[0] = "Anna"
                 parts[1] = "proper noun"
-                print(f"replaced: {parts[0]} {parts[1]}", file=sys.stderr)
 
             lem, pos = parts[0], parts[1] #discard third column (note)
             pos = fix_pos(pos)
             lem = fix_lem(lem, pos, language)
             fms.append((lem, pos))
+            POSes.add(pos)
     print(f"Loaded {len(fms)} entries from {path}", file=sys.stderr)
+    print(f"POS tags in {path}: {POSes}", file=sys.stderr)
     return fms
     
 def uds_to_glossary(ud1, ud2, oname, lang1, lang2):
