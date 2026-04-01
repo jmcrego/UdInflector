@@ -3,8 +3,7 @@ import sys
 import ast
 import re
 from collections import defaultdict
-from utils import fix_term
-
+=
 def parseXML(file):
     term2inflections = defaultdict(list)
 
@@ -20,17 +19,26 @@ def parseXML(file):
             curr_inflections.add(inflection)
             continue
 
-        # detect: <source>implement (verb)</source>
-        elif re.match(r"<source>(.*)</source>", line):
-            curr_term = re.findall(r"<source>(.*)</source>", line)[0]
-            curr_term, lemma, pos = fix_term(curr_term)
+        # detect: <natural_lemma>put on</natural_lemma>
+        elif re.match(r"<natural_lemma>(.*)</natural_lemma>", line):
+            curr_lem = re.findall(r"<natural_lemma>(.*)</natural_lemma>", line)[0]
             continue
+
+        # detect pos in : <entry ID="12" pos="verb" confidence="99" status="coded">
+        elif re.match(r"<entry.*pos=\"(.*)\".*>", line):
+            curr_pos = re.findall(r"<entry.*pos=\"(.*)\".*>", line)[0]
+            continue
+
+        # detect: <source>implement (verb)</source>
+        # elif re.match(r"<source>(.*)</source>", line):
+        #     curr_term = re.findall(r"<source>(.*)</source>", line)[0]
+        #     curr_term, lemma, pos = fix_term(curr_term)
+        #     continue
 
         # detect: </entry>
         elif line == "</entry>":
             # print(out)
-            term2inflections[curr_term] = curr_inflections
-            curr_term = None
+            term2inflections[f"{curr_lem} ({curr_pos})"] = curr_inflections
             curr_inflections = set()
             continue
 
@@ -40,20 +48,22 @@ def parseXML(file):
 
 
 def parseTSV(file):
-    # idx: 0, French, verb, caractériser, infinitif / gérondif / participe
-    # ['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
     # caractériser (verb) ||| to characterize
+    # ['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
+    # idx: 0, French, verb, caractériser, infinitif / gérondif / participe
 
     term2inflections = defaultdict(list)
 
     for line in open(file, encoding="utf-8"):
+
         toks = line.lower().strip().split("\t")
+
         if len(toks) != 3:
             continue
-        inflections = ast.literal_eval(toks[1]) #['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
+
         ud = toks[0] #caractériser (verb) ||| to characterize
-        term = ud.split("|||")[0].strip()
-        term, lemma, pos = fix_term(term)
+        term = ud.split("|||")[0].strip() #caractériser (verb)
+        inflections = ast.literal_eval(toks[1]) #['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
 
         for inflection in inflections:
             term2inflections[term].append(inflection)
