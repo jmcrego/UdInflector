@@ -19,7 +19,7 @@ def load_tsv_file(path, language=None):
                 continue
             term, pos = parts[0], parts[1] #discard third column (note)
             pos = fix_pos(pos)
-            if language == "English" and pos == "verb" and term.startswith("to "):
+            if language == "en" and pos == "verb" and term.startswith("to "):
                 term = term[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
             fms.append((term, pos))
     print(f"Loaded {len(fms)} entries from {path}", file=sys.stderr)
