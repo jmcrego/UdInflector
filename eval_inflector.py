@@ -104,7 +104,8 @@ def evaluate(ref2infl, hyp2infl, verbose=False):
     global_recall = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 1.0
     global_f1 = 2 * global_precision * global_recall / (global_precision + global_recall) if (global_precision + global_recall) > 0 else 0.0
     global_accuracy = total_tp / (total_tp + total_fp + total_fn) if (total_tp + total_fp + total_fn) > 0 else 1.0
-    print(f"Global Acc: {global_accuracy:.3f} P: {global_precision:.3f} R: {global_recall:.3f} F1: {global_f1:.3f} | #hyp_infl: {total_hyp_inflections} | #ref_inf: {total_ref_inflections} | #int_infl: {total_int_inflections}")
+    print(f"Global Acc: {global_accuracy:.3f} P: {global_precision:.3f} R: {global_recall:.3f} F1: {global_f1:.3f}")
+    print(f"Inflections: #hyp: {total_hyp_inflections} #ref: {total_ref_inflections} #intersection: {total_int_inflections}")
 
     if verbose:
         # Missing terms in hyps
