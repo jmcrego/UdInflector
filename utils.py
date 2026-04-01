@@ -29,43 +29,43 @@ Task:
 
 Examples:
 
-Input: French verb \'parler\'
+Input: French verb 'parler'
 Requested forms: present indicative
 Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
 
-Input: French verb \'parler\'
+Input: French verb 'parler'
 Requested forms: participe passé
 Output: ['parlé', 'parlée', 'parlés', 'parlées']
 
-Input: French verb \'grouper\'
+Input: French verb 'grouper'
 Requested forms: subjonctif imparfait
 Output: ['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
 
-Input: English noun \'box\'
+Input: English noun 'box'
 Requested forms: number and possessive forms
 Output: ['box', 'boxes', "box's", "boxes'"]
 
-Input: English adj \'big\'
+Input: English adj 'big'
 Requested forms: comparative/superlative forms
 Output: ['big', 'bigger', 'biggest']
 
-Input: Spanish adj \'bonito\'
+Input: Spanish adj 'bonito'
 Requested forms: formas de género y número
 Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
 
-Input: English verb \'speak\'
+Input: English verb 'speak'
 Requested forms: base form, 3rd person singular present, simple past, past participle, present participle (-ing)
 Output: ['speak', 'speaks', 'spoke', 'spoken', 'speaking']
 
-Input: English verb \'to put on\'
+Input: English verb 'to put on'
 Requested forms: base form, 3rd person singular present, simple past, past participle, present participle (-ing)
 Output: ['put on', 'puts on', 'put on', 'put on', 'putting on']
 
-Input: English acronym \'NASA\'
+Input: English acronym 'NASA'
 Requested forms: possessive forms
 Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
 
-Input: Spanish verb \'granizar\'
+Input: Spanish verb 'granizar'
 Requested forms: imperativo
 Output: []
 
