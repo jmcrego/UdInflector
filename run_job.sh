@@ -23,6 +23,16 @@
 # python SystranUD2glossary.py resources/ud-enfr_fr.dic resources/ud-enfr_en.dic --oname resources/ud --lang1 fr --lang2 en
 # python SystranUD2glossary.py resources/ud-enfr_en.dic resources/ud-enfr_fr.dic --oname resources/ud --lang1 en --lang2 fr
 
+# 
+python fix_xml.py < resources/ud-enfr_fr.xml > resources/ud-enfr_fr.fixed.xml   
+# 
+python fix_xml.py < resources/ud-enfr_en.xml > resources/ud-enfr_en.fixed.xml 
+
+# 
+python fix_tsv.py < resources/ud-fren.tsv > resources/ud-fren.fixed.tsv 
+# 
+python fix_tsv.py < resources/ud-enfr.tsv > resources/ud-enfr.fixed.tsv 
+
 module purge
 #
 module load arch/h100 #this module must be loaded before pytorch-gpu                                                                                                                                                                                    
@@ -30,9 +40,9 @@ module load pytorch-gpu/py3/2.6.0
 
 MODEL=/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B #Qwen3-32B Qwen3-8B
 
-PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python Inflector.py resources/ud-fren.tsv --model $MODEL --language French
-PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python Inflector.py resources/ud-enfr.tsv --model $MODEL --language English
+#PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python Inflector.py resources/ud-fren.fixed.tsv --model $MODEL --language French
+#PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python Inflector.py resources/ud-enfr.fixed.tsv --model $MODEL --language English
 
 # Evaluation
-# python eval_inflector.py resources/ud-enfr_en.xml resources/ud-enfr.tsv.inflections.tsv --verbose > resources/ud-enfr.tsv.inflections.tsv.eval
-# python eval_inflector.py resources/ud-enfr_fr.xml resources/ud-enfr.tsv.inflections.tsv --verbose > resources/ud-enfr.tsv.inflections.tsv.eval
+# python eval_inflector.py resources/ud-enfr_en.fixed.xml resources/ud-enfr.fixed.tsv.inflections.tsv --verbose > resources/ud-enfr.fixed.tsv.inflections.tsv.eval
+# python eval_inflector.py resources/ud-enfr_fr.fixed.xml resources/ud-enfr.fixed.tsv.inflections.tsv --verbose > resources/ud-enfr.fixed.tsv.inflections.tsv.eval
