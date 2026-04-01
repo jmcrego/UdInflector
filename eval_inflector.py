@@ -3,7 +3,8 @@ import sys
 import ast
 import re
 from collections import defaultdict
-from utils import fix_term
+from SystranUD2glossary import fix_pos, fix_lem
+
 
 def parseXML(file):
     term2inflections = defaultdict(list)
@@ -39,9 +40,9 @@ def parseXML(file):
         # detect: </entry>
         elif line == "</entry>":
             # print(out)
-            term = f"{curr_lem} ({curr_pos})"
-            term = fix_term(term)
-            term2inflections[term] = curr_inflections
+            pos = fix_pos(curr_pos)
+            lem = fix_lem(curr_lem, pos, language)
+            term2inflections[f"{lem} ({pos})"] = curr_inflections
             curr_inflections = set()
             continue
 
