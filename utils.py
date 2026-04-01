@@ -22,9 +22,9 @@ Task:
 - Guide your conjugation/inflection based on the part of speech (POS) and language-specific rules for the given term.
 - Only provide inflections that exist in the given language.
 - Do NOT include pronouns, articles, determiners, explanations, or any extra text.
-- With expressions or verbal phrases, only inflect the main verb and keep the rest of the expression unchanged.
+- For multi-word expressions, inflect only the head word (main verb, noun, or adjective depending on the POS), and keep all other words unchanged and in place.
 - Ensure correct spelling, accents, and irregular forms.
-- Preserve the natural grammatical order of forms: base → derived forms; masculine → feminine; singular → plural. For verbs, also follow the standard tense sequence for the language.
+- Preserve the natural grammatical order of forms: base → derived forms; singular → plural; masculine → feminine.. For verbs, also follow the standard tense sequence for the language.
 - If the term is not inflectable as required, return an empty list.
 
 Examples:
@@ -63,7 +63,7 @@ Output: ['put on', 'puts on', 'put on', 'put on', 'putting on']
 
 Input: English acronym \'NASA\'
 Requested forms: possessive forms
-Output: ['NASA', "NASA's", "NASAs'", "NASAs"]
+Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
 
 Input: Spanish verb \'granizar\'
 Requested forms: imperativo
