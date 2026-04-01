@@ -103,13 +103,13 @@ def evaluate(ref2infl, hyp2infl, verbose=False):
     if verbose:
         # Missing terms in hyps
         print("\nMissing terms in hyps:")
-        for term in set(ref2infl.keys()) - set(hyp2infl.keys()):
-            print(f"  {term}")
+        missing_terms = set(ref2infl.keys()) - set(hyp2infl.keys())
+        print(", ".join(missing_terms))
 
         # Missing terms in refs
         print("\nMissing terms in refs:")
-        for term in set(hyp2infl.keys()) - set(ref2infl.keys()):
-            print(f"  {term}")
+        missing_terms = set(hyp2infl.keys()) - set(ref2infl.keys())
+        print(", ".join(missing_terms))
 
         for term in set(ref2infl.keys()) | set(hyp2infl.keys()):
             if term not in ref2infl:
