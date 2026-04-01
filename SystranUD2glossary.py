@@ -8,10 +8,10 @@ def fix_pos(pos):
         return "proper noun"
     return pos
 
-def fix_lem(lem, pos, language):
-    if language == "en" and pos == "verb" and lem.startswith("to "):
+def fix_lem(lem, pos, language=None):
+    if (language is None or language == "en") and pos == "verb" and lem.startswith("to "):
         lem = lem[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
-    if language == "fr" and pos == "verb" and lem.startswith("se "):
+    if (language is None or language == "fr") and pos == "verb" and lem.startswith("se "):
         lem = lem[3:] # remove "se " from verb infinitive form in French (e.g. "se laver" -> "laver")
     return lem
 

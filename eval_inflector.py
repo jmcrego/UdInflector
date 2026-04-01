@@ -41,7 +41,7 @@ def parseXML(file):
         elif line == "</entry>":
             # print(out)
             pos = fix_pos(curr_pos)
-            lem = fix_lem(curr_lem, pos, language)
+            lem = fix_lem(curr_lem, pos)
             term2inflections[f"{lem} ({pos})"] = curr_inflections
             curr_inflections = set()
             continue
