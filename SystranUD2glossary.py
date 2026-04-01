@@ -8,10 +8,14 @@ def fix_pos(pos):
         return "proper noun"
     return pos
 
-def fix_to(term, pos, language):
-    if language == "en" and pos == "verb" and term.startswith("to "):
-        term = term[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
-    return term
+def fix_lem_pos(lem, pos, language):
+    if language == "en" and pos == "verb" and lem.startswith("to "):
+        lem = lem[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
+    if language == "fr" and pos == "verb" and lem.startswith("se "):
+        lem = lem[3:] # remove "se " from verb infinitive form in French (e.g. "se laver" -> "laver")
+    if lem.find(" ") != -1 and pos in ["verb", "noun", "adj"]:
+        pos = pos + ' phrase'
+    return lem, pos
 
 
 def load_tsv_file(path, language=None):
@@ -23,10 +27,10 @@ def load_tsv_file(path, language=None):
             parts = line.strip().split("\t")
             if len(parts) != 3:
                 continue
-            term, pos = parts[0], parts[1] #discard third column (note)
+            lem, pos = parts[0], parts[1] #discard third column (note)
             pos = fix_pos(pos)
-            term = fix_to(term, pos, language)
-            fms.append((term, pos))
+            lem, pos = fix_lem_pos(lem, pos, language)
+            fms.append((lem, pos))
     print(f"Loaded {len(fms)} entries from {path}", file=sys.stderr)
     return fms
     
@@ -44,8 +48,8 @@ def uds_to_glossary(ud1, ud2, oname, lang1, lang2):
             if pos1 != pos2:
                 print(f"Warning: POS mismatch ({pos1} != {pos2}) for terms '{term1}' and '{term2}'", file=sys.stderr)  
                 continue
-            out1.write(f"{term1}\t{pos1}\t{term1} ({pos1}) ||| {term2}\n")
-            out2.write(f"{term2}\t{pos2}\t{term2} ({pos2}) ||| {term1}\n")
+            out1.write(f"{term1}\t{pos1}\t{term2}\t{pos2}\n")
+            out2.write(f"{term2}\t{pos2}\t{term1}\t{pos1}\n")
 
 
 
