@@ -120,7 +120,7 @@ def evaluate(ref2infl, hyp2infl, verbose=False):
             Refs_noHyps = set(ref2infl[term]) - set(hyp2infl[term])
             Hyps_noRefs = set(hyp2infl[term]) - set(ref2infl[term])
             if len(Refs_noHyps) > 0 or len(Hyps_noRefs) > 0:
-                out = [f" * Term: {term}"]
+                out = [f" * {term}"]
                 # print(f"\n* Term: {term}")
                 if len(Refs_noHyps) > 0:
                     out.append(f"Missing_in_hyps: {Refs_noHyps}")
