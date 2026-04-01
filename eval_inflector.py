@@ -123,10 +123,10 @@ def evaluate(ref2infl, hyp2infl, verbose=False):
                 out = [f" * Term: {term}"]
                 # print(f"\n* Term: {term}")
                 if len(Refs_noHyps) > 0:
-                    out.append("Missing in hyps: " + ", ".join(Refs_noHyps))
+                    out.append(f"Missing_in_hyps: {Refs_noHyps}")
                     # print(f"  Missing in hyps: {Refs_noHyps}")
                 if len(Hyps_noRefs) > 0:
-                    out.append("Missing in refs: " + ", ".join(Hyps_noRefs))
+                    out.append(f"Missing_in_refs: {Hyps_noRefs}")
                     # print(f"  Missing in refs: {Hyps_noRefs}")
                 print("\t".join(out))
 
