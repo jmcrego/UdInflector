@@ -52,6 +52,10 @@ Input: English verb \'speak\'
 Forms: base form, 3rd person singular present, simple past, past participle, present participle (-ing)
 Output: ['speak', 'speaks', 'spoke', 'spoken', 'speaking']
 
+Input: English acronym \'NASA\'
+Forms: possessive forms
+Output: ['NASA', "NASA's", "NASAs'", "NASAs"]
+
 Input: Spanish verb \'granizar\'
 Forms: imperativo
 Output: []
@@ -99,24 +103,24 @@ INFLECTIONS = {
     },
     "proper noun": {
         "French": [
-            "Repeat the proper noun with an uppercase first letter",
+            "lowercase, UPPERCASE and Truecase",
         ],
         "Spanish": [
-            "Repeat the proper noun with an uppercase first letter",
+            "lowercase, UPPERCASE and Truecase",
         ],
         "English": [
-            "possessive forms",
+            "lowercase, UPPERCASE, Truecase and possessive forms",
         ]
     },
     "acronym": {
         "French": [
-            "Repeat the acronym uppercased",
+            "lowercase, UPPERCASE and Truecase",
         ],
         "Spanish": [
-            "Repeat the acronym uppercased",
+            "lowercase, UPPERCASE and Truecase",
         ],
         "English": [
-            "possessive forms",
+            "lowercase, UPPERCASE, Truecase and possessive forms",
         ]
     },
     "adj": {
