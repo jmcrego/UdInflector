@@ -87,18 +87,24 @@ def evaluate(ref2infl, hyp2infl, verbose=False):
     total_tp = 0
     total_fp = 0
     total_fn = 0
+    total_int_inflections = 0
+    total_hyp_inflections = 0
+    total_ref_inflections = 0
     for term in intersection:
         infl_ref = set(ref2infl[term])
         infl_hyp = set(hyp2infl[term])
         total_tp += len(infl_ref & infl_hyp)
         total_fp += len(infl_hyp - infl_ref)
         total_fn += len(infl_ref - infl_hyp)
+        total_int_inflections += len(infl_ref & infl_hyp)
+        total_hyp_inflections += len(infl_hyp)
+        total_ref_inflections += len(infl_ref)
 
     global_precision = total_tp / (total_tp + total_fp) if (total_tp + total_fp) > 0 else 1.0
     global_recall = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 1.0
     global_f1 = 2 * global_precision * global_recall / (global_precision + global_recall) if (global_precision + global_recall) > 0 else 0.0
     global_accuracy = total_tp / (total_tp + total_fp + total_fn) if (total_tp + total_fp + total_fn) > 0 else 1.0
-    print(f"Global Acc: {global_accuracy:.3f} P: {global_precision:.3f} R: {global_recall:.3f} F1: {global_f1:.3f}")
+    print(f"Global Acc: {global_accuracy:.3f} P: {global_precision:.3f} R: {global_recall:.3f} F1: {global_f1:.3f} | #hyp_infl: {total_hyp_inflections} | #ref_inf: {total_ref_inflections} | #int_infl: {total_int_inflections}")
 
     if verbose:
         # Missing terms in hyps
