@@ -35,7 +35,7 @@ def parseXML(file):
             # pos = fix_pos(pos)
             # lem = fix_lem(lem, pos)
             term2inflections[f"{lem} ({pos})"] = inflections
-            # print(f"Term: {lem} ({pos}) -> Inflections: {inflections}")
+            print(f"XML Term: {lem} ({pos}) -> Inflections: {inflections}")
             inflections = set()
             continue
 
@@ -61,7 +61,7 @@ def parseTSV(file):
         ud = toks[0] #caractériser (verb) ||| to characterize
         term = ud.split("|||")[0].strip() #caractériser (verb)
         inflections = ast.literal_eval(toks[1]) #['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
-        # print(f"Term: {term} -> Inflections: {inflections}")
+        print(f"TSV Term: {term} -> Inflections: {inflections}")
         term2inflections[term] += inflections
     
     print(f"(TSV) Read {len(term2inflections)} terms")
