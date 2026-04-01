@@ -147,3 +147,22 @@ INFLECTIONS = {
         ]
     }        
 }
+
+def fix_term(curr_term):
+    curr_term = curr_term.lower()
+    lemma = None
+    pos = None
+    if curr_term.find("(") != -1 and curr_term.find(")") != -1:
+        begin = curr_term.find("(")
+        end = curr_term.find(")")        
+        pos = curr_term[begin+1:end]
+        if pos.startswith("proper noun"):
+            pos = "(proper noun)"
+        lemma = curr_term[:begin].strip()
+        if lemma.startswith("to ") and pos == "verb":
+            lemma = lemma[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
+        if lemma.find(" ") != -1 and pos in ["verb", "noun", "adj"]:
+            pos = pos + ' phrase'
+        curr_term = f"{lemma} ({pos})"
+    return curr_term, lemma, pos
+

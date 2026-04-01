@@ -3,23 +3,7 @@ import sys
 import ast
 import re
 from collections import defaultdict
-
-
-def fix_term(curr_term):
-    curr_term = curr_term.lower()
-    if curr_term.find("(") != -1 and curr_term.find(")") != -1:
-        begin = curr_term.find("(")
-        end = curr_term.find(")")        
-        pos = curr_term[begin+1:end]
-        if pos.startswith("proper noun"):
-            pos = "(proper noun)"
-        lemma = curr_term[:begin].strip()
-        if lemma.startswith("to ") and pos == "verb":
-            lemma = lemma[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
-        if lemma.find(" ") != -1 and pos in ["verb", "noun", "adj"]:
-            pos = pos + ' phrase'
-        curr_term = f"{lemma} ({pos})"
-    return curr_term
+from utils import fix_term
 
 def parseXML(file):
     term2inflections = defaultdict(list)
@@ -39,7 +23,7 @@ def parseXML(file):
         # detect: <source>implement (verb)</source>
         elif re.match(r"<source>(.*)</source>", line):
             curr_term = re.findall(r"<source>(.*)</source>", line)[0]
-            curr_term = fix_term(curr_term)
+            curr_term, lemma, pos = fix_term(curr_term)
             continue
 
         # detect: </entry>
@@ -69,7 +53,7 @@ def parseTSV(file):
         inflections = ast.literal_eval(toks[1]) #['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
         ud = toks[0] #caractériser (verb) ||| to characterize
         term = ud.split("|||")[0].strip()
-        term = fix_term(term)
+        term, lemma, pos = fix_term(term)
 
         for inflection in inflections:
             term2inflections[term].append(inflection)

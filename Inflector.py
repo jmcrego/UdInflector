@@ -1,11 +1,9 @@
 
 import ast
 from utils import PROMPT_PREFIX, INFLECTIONS, get_dtype_for_gpu
+from utils import fix_term
 
 def generate_sample(language: str, pos: str, term: str, ud: str, tokenizer, prompt_prefix_ids):
-
-    if pos == 'verb' and language == 'English' and term.startswith("to "):
-        term = term[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
 
     prompts = []
     if pos in INFLECTIONS and language in INFLECTIONS[pos]:
@@ -84,6 +82,7 @@ if __name__ == "__main__":
         for line in f:
             nlines += 1
             term, pos, ud = line.strip().split('\t')
+            term, lemma, pos = fix_term(term)
             new_prompts = generate_sample(args.language, pos, term, ud, tokenizer, PROMPT_PREFIX_IDS)
             samples += new_prompts
 
