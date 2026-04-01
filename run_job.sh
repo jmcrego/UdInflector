@@ -19,15 +19,12 @@
 #copy data from macbook:
 #scp -v -3 ud-enfr_{en,fr}.{dic,xml} ujt99zo@jean-zay.idris.fr:/linkhome/rech/genata01/ujt99zo/work/josep/UdInflector/
 
-# Build glossaries with entries : term_src \t POS \t term_src (pos) ||| term_tgt
-# python SystranUD2glossary.py resources/ud-enfr_fr.dic resources/ud-enfr_en.dic --oname resources/ud --lang1 fr --lang2 en
-# python SystranUD2glossary.py resources/ud-enfr_en.dic resources/ud-enfr_fr.dic --oname resources/ud --lang1 en --lang2 fr
-
 # python fix_xml.py < resources/ud-enfr_fr.xml > resources/ud-enfr_fr.fixed.xml   
 # python fix_xml.py < resources/ud-enfr_en.xml > resources/ud-enfr_en.fixed.xml 
 
-# python fix_tsv.py < resources/ud-fren.tsv > resources/ud-fren.fixed.tsv 
-# python fix_tsv.py < resources/ud-enfr.tsv > resources/ud-enfr.fixed.tsv 
+# Build glossaries with entries : POS \t term_src \t term_tgt
+# python SystranUD2glossary.py resources/ud-enfr_fr.dic resources/ud-enfr_en.dic --oname resources/ud --lang1 fr --lang2 en
+# python SystranUD2glossary.py resources/ud-enfr_en.dic resources/ud-enfr_fr.dic --oname resources/ud --lang1 en --lang2 fr
 
 module purge
 #

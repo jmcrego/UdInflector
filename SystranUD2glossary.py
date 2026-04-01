@@ -8,14 +8,12 @@ def fix_pos(pos):
         return "proper noun"
     return pos
 
-def fix_lem_pos(lem, pos, language):
+def fix_lem(lem, pos, language):
     if language == "en" and pos == "verb" and lem.startswith("to "):
         lem = lem[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
     if language == "fr" and pos == "verb" and lem.startswith("se "):
         lem = lem[3:] # remove "se " from verb infinitive form in French (e.g. "se laver" -> "laver")
-    if lem.find(" ") != -1 and pos in ["verb", "noun", "adj"]:
-        pos = pos + ' phrase'
-    return lem, pos
+    return lem
 
 
 def load_tsv_file(path, language=None):
@@ -27,9 +25,14 @@ def load_tsv_file(path, language=None):
             parts = line.strip().split("\t")
             if len(parts) != 3:
                 continue
+            #Anna proper noun        feminine        {4845}
+            if language == "fr" and parts[0] == "Anna proper noun" and parts[1] == "feminime":
+                parts[0] = "Anna"
+                parts[1] = "proper noun"
+
             lem, pos = parts[0], parts[1] #discard third column (note)
             pos = fix_pos(pos)
-            lem, pos = fix_lem_pos(lem, pos, language)
+            lem = fix_lem(lem, pos, language)
             fms.append((lem, pos))
     print(f"Loaded {len(fms)} entries from {path}", file=sys.stderr)
     return fms
