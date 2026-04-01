@@ -13,6 +13,8 @@ def fix_lem(lem, pos, language=None):
         lem = lem[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
     if (language is None or language == "fr") and pos == "verb" and lem.startswith("se "):
         lem = lem[3:] # remove "se " from verb infinitive form in French (e.g. "se laver" -> "laver")
+    if (language is None or language == "fr") and pos == "verb" and lem.startswith("s'"):
+        lem = lem[2:] # remove "s'" from verb infinitive form in French (e.g. "s'habiller" -> "habiller")
     return lem
 
 
