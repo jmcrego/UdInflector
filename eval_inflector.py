@@ -3,7 +3,8 @@ import sys
 import ast
 import re
 from collections import defaultdict
-=
+from utils import fix_term
+
 def parseXML(file):
     term2inflections = defaultdict(list)
 
@@ -38,7 +39,9 @@ def parseXML(file):
         # detect: </entry>
         elif line == "</entry>":
             # print(out)
-            term2inflections[f"{curr_lem} ({curr_pos})"] = curr_inflections
+            term = f"{curr_lem} ({curr_pos})"
+            term = fix_term(term)
+            term2inflections[term] = curr_inflections
             curr_inflections = set()
             continue
 
