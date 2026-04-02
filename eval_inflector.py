@@ -7,7 +7,7 @@ from SystranUD2glossary import fix_pos, fix_lem
 
 import unicodedata
 
-def normalize_string(s):
+def normalize(s):
     return unicodedata.normalize('NFKD', s) \
         .encode('ascii', 'ignore') \
         .decode('ascii')
@@ -19,7 +19,7 @@ def parseXML(file, normalize_string=False):
 
     for line in open(file, encoding="utf-8"):
         if normalize_string:
-            line = normalize_string(line)
+            line = normalize(line)
         line = line.lower().strip()
 
         # detect: <inflected.*>implement</inflected>
@@ -62,7 +62,7 @@ def parseTSV(file, normalize_string=False):
 
     for line in open(file, encoding="utf-8"):
         if normalize_string:
-            line = normalize_string(line)
+            line = normalize(line)
         toks = line.lower().strip().split("\t")
 
         if len(toks) != 3:
