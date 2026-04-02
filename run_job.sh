@@ -35,6 +35,6 @@ NAME=Qwen3-8B
 
 # Evaluation
 # 
-python eval_inflector.py resources/ud-enfr_en.fixed.xml resources/ud-enfr.tsv.$NAME.inflections.tsv --verbose > resources/ud-enfr.tsv.$NAME.inflections.tsv.eval
+python eval_inflector.py resources/ud-enfr_en.xml resources/ud-enfr.tsv.$NAME.inflections.tsv --verbose > resources/ud-enfr.tsv.$NAME.inflections.tsv.eval
 # 
-python eval_inflector.py resources/ud-enfr_fr.fixed.xml resources/ud-enfr.tsv.$NAME.inflections.tsv --verbose > resources/ud-fren.tsv.$NAME.inflections.tsv.eval
+python eval_inflector.py resources/ud-enfr_fr.xml resources/ud-enfr.tsv.$NAME.inflections.tsv --verbose > resources/ud-fren.tsv.$NAME.inflections.tsv.eval

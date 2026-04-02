@@ -66,6 +66,7 @@ def parseTSV(file):
         term2inflections[term] += inflections
     
     print(f"(TSV) Read {len(term2inflections)} terms")
+    print(f"term: {'visualisation (noun)'} -> inflections: {term2inflections['visualisation (noun)']}")
     return term2inflections
 
 def evaluate(ref2infl, hyp2infl, verbose=False):
