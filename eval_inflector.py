@@ -62,6 +62,14 @@ def parseTSV(file):
         ud = toks[0] #caractériser (verb) ||| to characterize
         term = ud.split("|||")[0].strip() #caractériser (verb)
         inflections = ast.literal_eval(toks[1]) #['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
+        # Normalize inflections to a list to avoid type errors with +=
+        if isinstance(inflections, (tuple, set)):
+            inflections = list(inflections)
+        elif isinstance(inflections, str):
+            inflections = [inflections]
+        elif not isinstance(inflections, list):
+            # Unexpected type; skip this line to avoid corrupting term2inflections
+            continue
         # print(f"TSV Term: {term} -> Inflections: {inflections}")
         term2inflections[term] += inflections
     
