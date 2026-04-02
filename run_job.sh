@@ -32,9 +32,10 @@ module load pytorch-gpu/py3/2.6.0
 
 MODEL=/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B #Qwen3-32B Qwen3-8B
 
-#python Inflector.py resources/ud-fren.tsv --model $MODEL --language French
 #
-python Inflector.py resources/ud-enfr.tsv --model $MODEL --language English
+python inflect.py resources/ud-fren.tsv --model $MODEL --language French
+#
+python inflect.py resources/ud-enfr.tsv --model $MODEL --language English
 
 # Evaluation
 # python eval_inflector.py resources/ud-enfr_en.fixed.xml resources/ud-enfr.tsv.inflections.tsv --verbose > resources/ud-enfr.tsv.inflections.tsv.eval
