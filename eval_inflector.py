@@ -12,13 +12,13 @@ def normalize_string(s):
         .encode('ascii', 'ignore') \
         .decode('ascii')
 
-def parseXML(file, normalize_accents=False):
+def parseXML(file, normalize_string=False):
     term2inflections = defaultdict(list)
 
     inflections = set()
 
     for line in open(file, encoding="utf-8"):
-        if normalize_accents:
+        if normalize_string:
             line = normalize_string(line)
         line = line.lower().strip()
 
@@ -53,15 +53,15 @@ def parseXML(file, normalize_accents=False):
     return term2inflections
 
 
-def parseTSV(file, normalize_accents=False):
+def parseTSV(file, normalize_string=False):
     # caractériser (verb) ||| to characterize
-    # ['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
+    # ['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
     # idx: 0, French, verb, caractériser, infinitif / gérondif / participe
 
     term2inflections = defaultdict(list)
 
     for line in open(file, encoding="utf-8"):
-        if normalize_accents:
+        if normalize_string:
             line = normalize_string(line)
         toks = line.lower().strip().split("\t")
 
@@ -156,13 +156,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="The script evaluates the performance of an inflection generator by comparing its output against a reference dataset.", formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('refs_file', type=str, help='Path to the refs XML file (Systran codging engine output)')
     parser.add_argument('hyps_file', type=str, help='Path to the hyps TSV file (UDInflector output)')
-    parser.add_argument('--normalize_accents', action='store_true', help='Normalize accents in terms before evaluation')
+    parser.add_argument('--normalize_string', action='store_true', help='Normalize accents in terms before evaluation')
     parser.add_argument('--verbose', action='store_true', help='Print detailed evaluations for each term')
     parser.epilog = """
 - The XML file should have entries with <source>term (pos)</source> and <inflected>inflection</inflected> tags.
 - Example usage: python eval_inflector.py glossary.xml glossary.tsv
 """
     args = parser.parse_args()
-    ref2infl = parseXML(args.refs_file, args.normalize_accents)
-    hyp2infl = parseTSV(args.hyps_file, args.normalize_accents)
+    ref2infl = parseXML(args.refs_file, args.normalize_string)
+    hyp2infl = parseTSV(args.hyps_file, args.normalize_string)
     evaluate(ref2infl, hyp2infl, args.verbose)
