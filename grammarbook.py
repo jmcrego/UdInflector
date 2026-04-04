@@ -20,7 +20,7 @@ OVERLAP = 1
 DPI = 200
 
 # vLLM settings
-MODEL_PATH = os.getenv("MODEL_PATH", "/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-VL-8B-Instruct")
+MODEL_PATH = "/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-VL-8B-Instruct"
 MAX_MODEL_LEN = 8192
 GPU_MEMORY_UTILIZATION = 0.90
 DTYPE = "auto"
