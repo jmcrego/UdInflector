@@ -1,6 +1,7 @@
 import fitz  # PyMuPDF
 import os
 import sys
+import time
 from typing import List
 from PIL import Image
 from vllm import LLM, SamplingParams
@@ -197,12 +198,16 @@ def main():
         raise
 
     print("Converting PDF to images...")
+    tic = time.time()
     images = pdf_to_images(PDF_PATH, OUT_DIR, DPI)
+    print(f"Done pdf-to-png conversion in {time.time() - tic:.2f}s. Total pages: {len(images)}")
 
     print(f"Running batched inference for {len(images)} pages...")
+    tic = time.time()
     generate_pages_batched(llm, images)
+    print(f"Done Generation in {time.time() - tic:.2f}s.")
 
-    print(f"Done → per-page text files in {OUT_DIR}/page_####.txt")
+    print(f"Results in {OUT_DIR}/page_????.txt")
 
 
 if __name__ == "__main__":
