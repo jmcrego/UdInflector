@@ -2,3 +2,5 @@ transformers
 vllm
 scikit-learn
 google-genai
+pillow
+pymupdf
