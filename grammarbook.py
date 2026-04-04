@@ -110,10 +110,14 @@ FRENCH LANGUAGE:
 
 GRAMMAR BOOK STRUCTURE:
 - Example sentences (usually in italics): transcribe them normally.
-- Conjugation tables and paradigm grids: Convert them into explicit, linear text. For example:
-    indicatif présent: je conduis; tu conduis; il/elle conduit; nous conduisons; vous conduisez; ils/elles conduisent
 - Numbered or lettered lists: preserve the numbering exactly.
 - Figures and diagrams: if they contain visible text, transcribe that text in the correct reading order.
+- Tables (conjugation, inflection, etc.): 
+  - Convert them into explicit, linear text. For example:
+    indicatif présent: je conduis; tu conduis; il/elle conduit; nous conduisons; vous conduisez; ils/elles conduisent
+  - When a table represents relationships (e.g., suffix → meaning → example),
+    convert each row into a linear explicit expression using the format: term → property → example
+  - Do not preserve table layout if it hides relationships.
 
 FORMATTING RULES:
 - Do NOT use markdown, HTML, or special symbols not present in the original.
