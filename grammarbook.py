@@ -18,7 +18,7 @@ OUT_DIR = PDF_PATH.replace(".pdf", "_images")
 DPI = 200
 
 # vLLM settings
-MODEL_PATH = "/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-VL-32B-Instruct/"
+MODEL_PATH = "/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-VL-32B-Instruct"
 MODEL_PATH = "/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen2.5-VL-32B-Instruct"
 MAX_MODEL_LEN = 8192
 GPU_MEMORY_UTILIZATION = 0.90
@@ -127,7 +127,7 @@ def generate_pages_batched(llm: LLM, page_paths: List[str]):
         outputs = llm.generate(mm_prompts, sampling_params=sampling_params)
         for i, out in enumerate(outputs):
             page_idx = start + i
-            txt_path = page_paths[page_idx].replace(".png", ".txt")
+            txt_path = page_paths[page_idx].replace(".png", f"{os.path.basename(MODEL_PATH)}.txt")
             generated_token_ids = out.outputs[0].token_ids
             generated_text = tokenizer.decode(generated_token_ids, skip_special_tokens=True)
             with open(txt_path, "w", encoding="utf-8") as f:
