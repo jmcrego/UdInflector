@@ -154,13 +154,13 @@ def main():
             ) from e
         raise
 
-    print("📄 Converting PDF to images...")
+    print("Converting PDF to images...")
     images = pdf_to_images(PDF_PATH, OUT_DIR, DPI)
 
-    print(f"🤖 Running batched inference for {len(images)} pages...")
+    print(f"Running batched inference for {len(images)} pages...")
     generate_pages_batched(llm, images)
 
-    print(f"✅ Done → per-page text files in {OUT_DIR}/page_####.txt")
+    print(f"Done → per-page text files in {OUT_DIR}/page_####.txt")
 
 
 if __name__ == "__main__":
