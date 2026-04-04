@@ -117,6 +117,8 @@ GRAMMAR BOOK STRUCTURE:
     indicatif présent: je conduis; tu conduis; il/elle conduit; nous conduisons; vous conduisez; ils/elles conduisent
   - When a table represents relationships (e.g., suffix → meaning → example),
     convert each row into a linear explicit expression using the format: term → property → example
+    defini normal: (sing. masc.) le monde; (sing. fém.) la terre; (plur. masc.) les astres; (plur. fém.) les planètes
+    défini élide: (sing. masc.) l'univers, l'horizon; (sing. fém.) l'aurore, l'habileté
   - Do not preserve table layout if it hides relationships.
 
 FORMATTING RULES:
