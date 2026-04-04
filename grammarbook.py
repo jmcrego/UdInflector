@@ -15,7 +15,7 @@ if len(sys.argv) != 2:
 PDF_PATH = sys.argv[1]  # Path to input PDF
 OUT_PATH = PDF_PATH.replace(".pdf", ".txt")
 OUTPUT_DIR = PDF_PATH.replace(".pdf", "_images")
-CHUNK_SIZE = 5
+CHUNK_SIZE = 4
 OVERLAP = 1
 DPI = 200
 
@@ -28,7 +28,7 @@ MAX_MODEL_LEN = 8192
 GPU_MEMORY_UTILIZATION = 0.90
 DTYPE = "auto"
 MAX_TOKENS = 4000
-GEN_BATCH_SIZE = 4
+GEN_BATCH_SIZE = 3
 
 # =========================
 # STEP 1: PDF → IMAGES
