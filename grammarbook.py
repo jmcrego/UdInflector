@@ -122,7 +122,8 @@ OUTPUT:
 # =========================
 def build_mm_prompt(image_paths: List[str]):
     images = load_images(image_paths)
-    image_placeholders = "\n".join(["<image>" for _ in images])
+    image_token = "<|vision_start|><|image_pad|><|vision_end|>"
+    image_placeholders = "\n".join([image_token for _ in images])
     prompt_text = f"{image_placeholders}\n\n{PROMPT}" if images else PROMPT
 
     return {
