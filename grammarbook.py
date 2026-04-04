@@ -15,21 +15,22 @@ if len(sys.argv) != 2:
 PDF_PATH = sys.argv[1]  # Path to input PDF
 OUT_PATH = PDF_PATH.replace(".pdf", ".txt")
 OUT_DIR = PDF_PATH.replace(".pdf", "_images")
-DPI = 200
+DPI = 150
 
 # vLLM settings
 MODEL_PATH = "/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen2.5-VL-32B-Instruct"
-MAX_MODEL_LEN = 4096
+# MODEL_PATH = "/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-VL-32B-Instruct"
+MAX_MODEL_LEN = 8192
 GPU_MEMORY_UTILIZATION = 0.98
 DTYPE = "auto"
-MAX_TOKENS = 1024
-GEN_BATCH_SIZE = 1
+MAX_TOKENS = 2048
+GEN_BATCH_SIZE = 4
 MAX_IMAGE_SIDE = 1024
 
 # =========================
 # STEP 1: PDF → IMAGES
 # =========================
-def pdf_to_images(pdf_path, output_dir, dpi=200):
+def pdf_to_images(pdf_path, output_dir, dpi=150):
     os.makedirs(output_dir, exist_ok=True)
     doc = fitz.open(pdf_path)
     paths = []
@@ -126,7 +127,7 @@ def generate_pages_batched(llm: LLM, page_paths: List[str]):
         outputs = llm.generate(mm_prompts, sampling_params=sampling_params)
         for i, out in enumerate(outputs):
             page_idx = start + i
-            txt_path = page_paths[page_idx].replace(".png", f"{os.path.basename(MODEL_PATH)}.txt")
+            txt_path = page_paths[page_idx].replace(".png", f".{os.path.basename(MODEL_PATH)}.txt")
             generated_token_ids = out.outputs[0].token_ids
             generated_text = tokenizer.decode(generated_token_ids, skip_special_tokens=True)
             with open(txt_path, "w", encoding="utf-8") as f:
@@ -144,6 +145,7 @@ def main():
             max_model_len=MAX_MODEL_LEN,
             gpu_memory_utilization=GPU_MEMORY_UTILIZATION,
             trust_remote_code=True,
+            max_num_seqs=GEN_BATCH_SIZE,
         )
     except ValueError as e:
         if "model type `qwen3_vl`" in str(e):
