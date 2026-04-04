@@ -18,13 +18,12 @@ OUT_DIR = PDF_PATH.replace(".pdf", "_images")
 DPI = 200
 
 # vLLM settings
-MODEL_PATH = "/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-VL-32B-Instruct"
 MODEL_PATH = "/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen2.5-VL-32B-Instruct"
-MAX_MODEL_LEN = 8192
-GPU_MEMORY_UTILIZATION = 0.90
+MAX_MODEL_LEN = 4096
+GPU_MEMORY_UTILIZATION = 0.98
 DTYPE = "auto"
-MAX_TOKENS = 4000
-GEN_BATCH_SIZE = 2
+MAX_TOKENS = 1024
+GEN_BATCH_SIZE = 1
 MAX_IMAGE_SIDE = 1024
 
 # =========================
