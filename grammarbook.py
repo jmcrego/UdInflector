@@ -14,9 +14,7 @@ if len(sys.argv) != 2:
 # =========================
 PDF_PATH = sys.argv[1]  # Path to input PDF
 OUT_PATH = PDF_PATH.replace(".pdf", ".txt")
-OUTPUT_DIR = PDF_PATH.replace(".pdf", "_images")
-CHUNK_SIZE = 1
-OVERLAP = 0
+OUT_DIR = PDF_PATH.replace(".pdf", "_images")
 DPI = 200
 
 # vLLM settings
@@ -48,22 +46,7 @@ def pdf_to_images(pdf_path, output_dir, dpi=200):
     return paths
 
 # =========================
-# STEP 2: CHUNKING
-# =========================
-def chunk_with_overlap(images: List[str], chunk_size: int, overlap: int):
-    step = chunk_size - overlap
-    chunks = []
-
-    for i in range(0, len(images), step):
-        chunk = images[i:i + chunk_size]
-        if not chunk:
-            continue
-        chunks.append(chunk)
-
-    return chunks
-
-# =========================
-# STEP 3: IMAGE → PIL
+# STEP 2: IMAGE → PIL
 # =========================
 def load_images(paths: List[str]):
     images = []
@@ -76,10 +59,10 @@ def load_images(paths: List[str]):
     return images
 
 # =========================
-# STEP 4: PROMPT
+# STEP 3: PROMPT
 # =========================
 PROMPT = """
-You are given a sequence of images corresponding to consecutive pages of a French grammar book.
+You are given one image corresponding to one page of a French grammar book.
 
 Your task is to copy the content into a raw text file, without adding any interpretation, formatting, or summarization.
 
@@ -89,11 +72,6 @@ GENERAL INSTRUCTIONS:
 - Do NOT omit any content and use the EXACT wording from the images.
 - The final output must be fully understandable by a human reader.
 - Preserve the original document order exactly.
-
-PAGE STRUCTURE:
-- Indicate the beginning of each page with the tag:
-  <PAGE:N>
-- N must correspond to the page number within this chunk (starting from 1).
 
 TEXT PRESERVATION:
 - Preserve all text exactly as it appears in the images.
@@ -122,12 +100,13 @@ OUTPUT:
 """
 
 # =========================
-# STEP 5: BUILD MM PROMPTS + BATCH GENERATE
+# STEP 4: BUILD MM PROMPTS + BATCH GENERATE
 # =========================
-def build_mm_prompt(image_paths: List[str]):
-    images = load_images(image_paths)
+def build_mm_prompt(image_path: str):
+    # Load and preprocess images
+    images = load_images([image_path])
     image_token = "<|vision_start|><|image_pad|><|vision_end|>"
-    image_placeholders = "\n".join([image_token for _ in images])
+    image_placeholders = image_token
     prompt_text = f"{image_placeholders}\n\n{PROMPT}" if images else PROMPT
 
     return {
@@ -136,76 +115,22 @@ def build_mm_prompt(image_paths: List[str]):
     }
 
 
-def generate_chunks_batched(llm: LLM, chunks: List[List[str]]):
+def generate_pages_batched(llm: LLM, page_paths: List[str]):
     sampling_params = SamplingParams(
         temperature=0.0, #deterministic
         top_p=1.0, #no nucleus sampling
         max_tokens=MAX_TOKENS, #only output tokens, not prompt tokens
     )
-    all_texts = []
-    for start in range(0, len(chunks), GEN_BATCH_SIZE):
-        end = min(start + GEN_BATCH_SIZE, len(chunks))
-        print(f"🤖 Inference mini-batch with chunks {start + 1}-{end}/{len(chunks)}")
-        mm_prompts = [build_mm_prompt(chunk) for chunk in chunks[start:end]]
+    for start in range(0, len(page_paths), GEN_BATCH_SIZE):
+        end = min(start + GEN_BATCH_SIZE, len(page_paths))
+        print(f"🤖 Inference mini-batch with pages {start + 1}-{end}/{len(page_paths)}")
+        mm_prompts = [build_mm_prompt(page_path) for page_path in page_paths[start:end]]
         outputs = llm.generate(mm_prompts, sampling_params=sampling_params)
-        all_texts.extend([out.outputs[0].text for out in outputs])
-
-    return all_texts
-
-# =========================
-# STEP 6: SPLIT OUTPUT INTO PAGES
-# =========================
-def split_pages(text):
-    pages = {}
-    current_page = None
-    buffer = []
-
-    for line in text.splitlines():
-        if line.startswith("<PAGE:"):
-            if current_page is not None:
-                pages[current_page] = "\n".join(buffer).strip()
-            current_page = int(line.replace("<PAGE:", "").replace(">", "").strip())
-            buffer = []
-        else:
-            buffer.append(line)
-
-    if current_page is not None:
-        pages[current_page] = "\n".join(buffer).strip()
-
-    return pages
-
-# =========================
-# STEP 7: DEDUPLICATION
-# =========================
-def merge_chunks(chunk_outputs):
-    final_pages = {}
-
-    global_page_index = 0
-
-    for chunk_id, chunk_text in enumerate(chunk_outputs):
-        pages = split_pages(chunk_text)
-
-        for local_page, content in pages.items():
-            # Compute global page index
-            global_idx = chunk_id * (CHUNK_SIZE - OVERLAP) + (local_page - 1)
-
-            if global_idx not in final_pages:
-                final_pages[global_idx] = content
-            else:
-                # Deduplicate: keep longest version
-                if len(content) > len(final_pages[global_idx]):
-                    final_pages[global_idx] = content
-
-    # Sort pages
-    ordered = [final_pages[i] for i in sorted(final_pages.keys())]
-
-    # Rebuild final text
-    result = []
-    for i, page in enumerate(ordered):
-        result.append(f"<PAGE: {i+1}>")
-        result.append(page)
-
-    return "\n\n".join(result)
+        for i, out in enumerate(outputs):
+            page_idx = start + i
+            txt_path = page_paths[page_idx].replace(".png", ".txt")
+            with open(txt_path, "w", encoding="utf-8") as f:
+                f.write(out.outputs[0].text)
 
 # =========================
 # MAIN PIPELINE
@@ -230,23 +155,12 @@ def main():
         raise
 
     print("📄 Converting PDF to images...")
-    images = pdf_to_images(PDF_PATH, OUTPUT_DIR, DPI)
+    images = pdf_to_images(PDF_PATH, OUT_DIR, DPI)
 
-    print("🧩 Creating chunks...")
-    chunks = chunk_with_overlap(images, CHUNK_SIZE, OVERLAP)
+    print(f"🤖 Running batched inference for {len(images)} pages...")
+    generate_pages_batched(llm, images)
 
-    print(f"Total chunks: {len(chunks)}")
-
-    print(f"🤖 Running batched inference for {len(chunks)} chunks...")
-    outputs = generate_chunks_batched(llm, chunks)
-
-    print("🔁 Merging & deduplicating...")
-    final_text = merge_chunks(outputs)
-
-    with open(OUT_PATH, "w", encoding="utf-8") as f:
-        f.write(final_text)
-
-    print(f"✅ Done → {OUT_PATH}")
+    print(f"✅ Done → per-page text files in {OUT_DIR}/page_####.txt")
 
 
 if __name__ == "__main__":
