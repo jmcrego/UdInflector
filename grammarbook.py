@@ -20,7 +20,10 @@ OVERLAP = 1
 DPI = 200
 
 # vLLM settings
-MODEL_PATH = "/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-VL-8B-Instruct"
+MODEL_PATH = os.getenv(
+    "MODEL_PATH",
+    "/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen2.5-VL-7B-Instruct",
+)
 MAX_MODEL_LEN = 8192
 GPU_MEMORY_UTILIZATION = 0.90
 DTYPE = "auto"
@@ -204,13 +207,22 @@ def merge_chunks(chunk_outputs):
 # =========================
 def main():
     print(f"Loading local model with vLLM: {MODEL_PATH}")
-    llm = LLM(
-        model=MODEL_PATH,
-        dtype=DTYPE,
-        max_model_len=MAX_MODEL_LEN,
-        gpu_memory_utilization=GPU_MEMORY_UTILIZATION,
-        trust_remote_code=True,
-    )
+    try:
+        llm = LLM(
+            model=MODEL_PATH,
+            dtype=DTYPE,
+            max_model_len=MAX_MODEL_LEN,
+            gpu_memory_utilization=GPU_MEMORY_UTILIZATION,
+            trust_remote_code=True,
+        )
+    except ValueError as e:
+        if "model type `qwen3_vl`" in str(e):
+            raise SystemExit(
+                "Your transformers/vLLM stack does not support qwen3_vl yet. "
+                "Use a Qwen2.5-VL checkpoint (default in this script), or upgrade both "
+                "transformers and vLLM to versions that support Qwen3-VL."
+            ) from e
+        raise
 
     print("📄 Converting PDF to images...")
     images = pdf_to_images(PDF_PATH, OUTPUT_DIR, DPI)
