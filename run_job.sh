@@ -34,7 +34,8 @@ NAME=Qwen3-8B
 #python inflect.py resources/ud-enfr.tsv --model $MODEL --language English --out resources/ud-enfr.tsv.$NAME.inflections.tsv
 
 # Evaluation
-# 
-python evaluator.py resources/ud-enfr_en.xml resources/ud-enfr.tsv.$NAME.inflections.tsv --verbose > resources/ud-enfr.tsv.$NAME.inflections.tsv.eval
-# 
-python evaluator.py resources/ud-enfr_fr.xml resources/ud-enfr.tsv.$NAME.inflections.tsv --verbose > resources/ud-fren.tsv.$NAME.inflections.tsv.eval
+# python evaluator.py resources/ud-enfr_en.xml resources/ud-enfr.tsv.$NAME.inflections.tsv --verbose > resources/ud-enfr.tsv.$NAME.inflections.tsv.eval
+# python evaluator.py resources/ud-enfr_fr.xml resources/ud-enfr.tsv.$NAME.inflections.tsv --verbose > resources/ud-fren.tsv.$NAME.inflections.tsv.eval
+
+
+python grammarbook.py resources/Grammaire.pdf
