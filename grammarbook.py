@@ -15,8 +15,8 @@ if len(sys.argv) != 2:
 PDF_PATH = sys.argv[1]  # Path to input PDF
 OUT_PATH = PDF_PATH.replace(".pdf", ".txt")
 OUTPUT_DIR = PDF_PATH.replace(".pdf", "_images")
-CHUNK_SIZE = 2
-OVERLAP = 1
+CHUNK_SIZE = 1
+OVERLAP = 0
 DPI = 200
 
 # vLLM settings
@@ -29,6 +29,7 @@ GPU_MEMORY_UTILIZATION = 0.90
 DTYPE = "auto"
 MAX_TOKENS = 4000
 GEN_BATCH_SIZE = 2
+MAX_IMAGE_SIDE = int(os.getenv("MAX_IMAGE_SIDE", "1024"))
 
 # =========================
 # STEP 1: PDF → IMAGES
@@ -46,7 +47,6 @@ def pdf_to_images(pdf_path, output_dir, dpi=200):
 
     return paths
 
-# =========================
 # =========================
 # STEP 2: CHUNKING
 # =========================
@@ -69,7 +69,10 @@ def load_images(paths: List[str]):
     images = []
     for path in paths:
         with Image.open(path) as img:
-            images.append(img.convert("RGB"))
+            rgb = img.convert("RGB")
+            # Downscale to keep visual token count under max_model_len.
+            rgb.thumbnail((MAX_IMAGE_SIDE, MAX_IMAGE_SIDE), Image.Resampling.LANCZOS)
+            images.append(rgb)
     return images
 
 # =========================
