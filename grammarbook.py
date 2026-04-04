@@ -59,7 +59,7 @@ def load_images(paths: List[str]):
 # =========================
 # STEP 3: PROMPT
 # =========================
-PROMPT = """
+PROMPT1 = """
 You are given one image corresponding to one page of a French grammar book.
 
 Your task is to transcribe ALL visible text into plain text, with no interpretation, summarization, or reformulation.
@@ -81,6 +81,39 @@ GRAMMAR BOOK STRUCTURE:
 - Grammatical labels and abbreviations (n., v., adj., etc.): transcribe exactly as shown.
 - Conjugation tables and paradigm grids: reproduce using plain text with columns separated by "|".
 - Numbered or lettered lists: preserve the numbering exactly.
+
+FORMATTING RULES:
+- Do NOT use markdown, HTML, or special symbols not present in the original.
+- Do NOT add line breaks that are not present in the original text flow.
+- Page numbers and running headers/footers: skip them silently.
+
+OUTPUT:
+- Only the transcribed page text, nothing else.
+"""
+
+PROMPT = """
+You are given one image corresponding to one page of a French grammar book.
+
+Your task is to transcribe ALL visible text into plain text, with no interpretation, summarization, or reformulation.
+
+GENERAL INSTRUCTIONS:
+- Transcribe ALL visible text exactly as it appears, word for word.
+- Do NOT add, remove, or rephrase anything.
+- Remove silently any page numbers, running headers/footers, or text that is not part of the main content.
+- Preserve the original reading order: for two-column layouts, transcribe the left column first, then the right column.
+- The output must be fully readable as a standalone text.
+
+FRENCH LANGUAGE:
+- Preserve all French accented characters exactly.
+- Do NOT replace accented characters with unaccented ones.
+- Preserve typographic apostrophes and quotation marks (« », ‹ ›) as they appear.
+
+GRAMMAR BOOK STRUCTURE:
+- Example sentences (usually in italics): transcribe them normally.
+- Conjugation tables and paradigm grids: Convert them into explicit, linear text. For example:
+    indicatif présent: je conduis; tu conduis; il/elle conduit; nous conduisons; vous conduisez; ils/elles conduisent
+- Numbered or lettered lists: preserve the numbering exactly.
+- Figures and diagrams: if they contain visible text, transcribe that text in the correct reading order.
 
 FORMATTING RULES:
 - Do NOT use markdown, HTML, or special symbols not present in the original.
