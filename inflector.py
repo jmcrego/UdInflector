@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
     samples = read_tsv(args.tsv, col=args.col, language=args.language)
     for sample in samples[0:2]:
-        print(f"{sample}\n")
+        print(f"{sample}")
     import sys
     sys.exit(0)
 
