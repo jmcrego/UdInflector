@@ -32,7 +32,7 @@ def generate_sample(language: str, base: str):
                 d = {
                     "language": language,
                     "pos": pos,
-                    "lem": base,
+                    "base": base,
                     "request": request,
                     "dynamic_text": dynamic_text,
                 }
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     with open(args.out, "w") as of:
         for i, (sample, output) in enumerate(zip(samples, outputs)):
             output_list = get_list_from_string(output.outputs[0].text.strip())
-            request_info = f"{sample['language']}, {sample['pos']}, {sample['lem']}, {sample['request']}"
-            of.write(f"{sample['ud']}\t{output_list}\t{request_info}\n")
-            print(f"{sample['ud']}\t{output_list}\t{request_info}\n")
+            request_info = f"{sample['language']}, {sample['pos']}, {sample['base']}, {sample['request']}"
+            of.write(f"{sample['base']}\t{output_list}\t{request_info}\n")
+            print(f"{sample['base']}\t{output_list}\t{request_info}\n")
 
