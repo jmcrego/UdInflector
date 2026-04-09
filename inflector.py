@@ -88,6 +88,7 @@ if __name__ == "__main__":
         args.out = f"{args.tsv}.inflected.tsv"    
 
     samples = read_tsv(args.tsv, col=args.col, language=args.language)
+    import json
     for sample in samples[0:2]:
         print(f"{json.dumps(sample, indent=2)}")
     import sys
