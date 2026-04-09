@@ -115,10 +115,10 @@ REQUESTS = {
     },
     "proper noun": {
         "French": [
-            "lowercase, UPPERCASE and Truecase",
+            # "lowercase, UPPERCASE and Truecase",
         ],
         "Spanish": [
-            "lowercase, UPPERCASE and Truecase",
+            # "lowercase, UPPERCASE and Truecase",
         ],
         "English": [
             "possessive forms",
@@ -126,10 +126,10 @@ REQUESTS = {
     },
     "acronym": {
         "French": [
-            "lowercase, UPPERCASE and Truecase",
+            # "lowercase, UPPERCASE and Truecase",
         ],
         "Spanish": [
-            "lowercase, UPPERCASE and Truecase",
+            # "lowercase, UPPERCASE and Truecase",
         ],
         "English": [
             "possessive forms",
