@@ -8,6 +8,8 @@ def read_tsv(path, col, language):
     with open(path, 'r') as f:
         nlines = 0
         for line in f:
+            if line.startswith("#"):
+                continue
             nlines += 1
             toks = line.strip().split('\t')
             if len(toks) < col + 1:
