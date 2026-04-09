@@ -17,14 +17,14 @@ def read_tsv(path, col, language):
                 continue
             base = toks[col]
 
-            new_samples = generate_sample(language, base)
+            new_samples = generate_samples(language, base)
             samples += new_samples
     print(f"Generated {len(samples)} prompts from {nlines} UD pairs.")
     return samples
 
-def generate_sample(language: str, base: str):
+def generate_samples(language: str, base: str):
 
-    prompts = []
+    samples = []
     for pos in REQUESTS:
         if language in REQUESTS[pos]:
             for request in REQUESTS[pos][language]:
@@ -36,8 +36,8 @@ def generate_sample(language: str, base: str):
                     "request": request,
                     "dynamic_text": dynamic_text,
                 }
-            prompts.append(d)
-    return prompts
+            samples.append(d)
+    return samples
 
 def filter_list(forms: list[str]) -> list[str]:
     # use final word if multiple words
