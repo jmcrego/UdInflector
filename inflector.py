@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
     samples = read_tsv(args.tsv, col=args.col, language=args.language)
     for sample in samples[0:2]:
-        print(f"{sample}")
+        print(f"{json.dumps(sample, indent=2)}")
     import sys
     sys.exit(0)
 
