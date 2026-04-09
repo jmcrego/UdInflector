@@ -88,11 +88,9 @@ if __name__ == "__main__":
         args.out = f"{args.tsv}.inflected.tsv"    
 
     samples = read_tsv(args.tsv, col=args.col, language=args.language)
-    import json
-    for sample in samples[0:2]:
-        print(f"{json.dumps(sample, indent=2)}")
-    import sys
-    sys.exit(0)
+    # import json
+    # for sample in samples[0:2]:
+    #     print(f"{json.dumps(sample, indent=2)}")
 
     #check if running on V100, A100 or H100 and set dtype accordingly    
     if args.dtype == 'auto':

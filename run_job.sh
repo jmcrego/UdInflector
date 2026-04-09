@@ -27,8 +27,12 @@ module purge
 module load arch/h100 #this module must be loaded before pytorch-gpu                                                                                                                                                                                    
 module load pytorch-gpu/py3/2.6.0
 
-MODEL=/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-8B #Qwen3-32B Qwen3-8B
-NAME=Qwen3-8B
+MODEL=/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B #Qwen3-32B Qwen3-8B
+NAME=Qwen3-32B
+
+#
+python inflector.py resources/ud-enfr_en.dic --model $MODEL --language French --out resources/ud-enfr_en.dic.$NAME.tsv
+
 
 #python inflect.py resources/ud-fren.tsv --model $MODEL --language French --out resources/ud-fren.tsv.$NAME.inflected.tsv
 #python inflect.py resources/ud-enfr.tsv --model $MODEL --language English --out resources/ud-enfr.tsv.$NAME.inflected.tsv
