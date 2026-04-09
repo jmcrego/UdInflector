@@ -87,12 +87,13 @@ if __name__ == "__main__":
 
     samples = read_tsv(args.tsv, col=args.col, language=args.language)
     print(f"Example sample:\n{samples[0]}\n")
+    import sys
+    sys.exit(0)
 
     #check if running on V100, A100 or H100 and set dtype accordingly    
     if args.dtype == 'auto':
         args.dtype = get_dtype_for_gpu()
 
-    sys.exit(0)
 
     # Load only the LLM tokenizer
     from transformers import AutoTokenizer
