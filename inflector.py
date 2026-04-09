@@ -88,7 +88,8 @@ if __name__ == "__main__":
         args.out = f"{args.tsv}.inflected.tsv"    
 
     samples = read_tsv(args.tsv, col=args.col, language=args.language)
-    print(f"Example sample:\n{samples[0:2]}\n")
+    for sample in samples[0:2]:
+        print(f"{sample}\n")
     import sys
     sys.exit(0)
 
