@@ -130,6 +130,7 @@ def evaluate(ref2infl, hyp2infl, verbose=False):
         missing_terms = set(hyp2infl.keys()) - set(ref2infl.keys())
         print("  " + ", ".join(missing_terms))
 
+        # Intersection with details
         print("\n* Intersection:")
         for term in set(ref2infl.keys()) | set(hyp2infl.keys()):
             if term not in ref2infl:
