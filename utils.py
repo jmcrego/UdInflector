@@ -19,9 +19,13 @@ def get_dtype_for_gpu():
 PROMPT_PREFIX = """You are a professional linguist specializing in term inflection (including verb conjugation).
 
 Task:
-- Output ONLY a Python list with the required conjugated/inflected forms of the term.
+- Output ONLY a Python list with the requested conjugated/inflected forms of the term.
 - Only provide valid inflections that exist in the language, ensuring correct spelling, accents, and irregular forms.
-- If the term is not inflectable as required, return an empty list.
+- Preserve a consistent and linguistically standard ordering of forms.
+- Include the base form unless explicitly excluded by the requested_forms.
+- For multi-word expressions, inflect only the head word and keep other components unchanged.
+- Use standard modern orthography conventions for each language.
+- If the term is not inflectable as requested, return an empty list.
 
 Examples:
 
@@ -43,16 +47,19 @@ Output: ['big', 'bigger', 'biggest']
 INFLECT(language='Spanish', pos='adj', term='bonito', requested_forms='formas de género y número')
 Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
 
-INFLECT(language='English', pos='verb', term='speak', requested_forms='base form, 3rd person singular present, simple past, past participle, present participle (-ing)')
-Output: ['speak', 'speaks', 'spoke', 'spoken', 'speaking']
+INFLECT(language='English', pos='verb', term='speak', requested_forms='base form')
+Output: ['speak']
 
-INFLECT(language='English', pos='verb', term='put on', requested_forms='base form, 3rd person singular present, simple past, past participle, present participle (-ing)')
-Output: ['put on', 'puts on', 'put on', 'put on', 'putting on']
+INFLECT(language='English', pos='verb', term='speak', requested_forms='present participle (-ing)')
+Output: ['speaking']
+
+INFLECT(language='English', pos='verb', term='go back', requested_forms='simple past')
+Output: ['went back']
 
 INFLECT(language='English', pos='acronym', term='NASA', requested_forms='possessive forms')
 Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
 
-INFLECT(language='Spanish', pos='verb', term='granizar', requested_forms='imperativo')
+INFLECT(language='Spanish', pos='verb', term='granizar', requested_forms='formas de género y número')
 Output: []
 
 """
@@ -114,7 +121,9 @@ Output: []
 REQUESTS = {
     "verb": {
         "French": [
-            "infinitif, participe présent, participe passé",
+            "infinitif",
+            "participe présent",
+            "participe passé",
             "présent indicatif",
             "imparfait indicatif",
             "impératif",
@@ -125,7 +134,9 @@ REQUESTS = {
             "subjonctif imparfait"
         ],
         "Spanish": [
-            "infinitivo, gerundio, participio",
+            "infinitivo",
+            "gerundio", 
+            "participio",
             "presente indicativo",
             "pretérito indefinido",
             "imperativo",
@@ -135,7 +146,11 @@ REQUESTS = {
             "subjuntivo imperfecto"
         ],
         "English": [
-            "base form, 3rd person singular present, simple past, past participle, present participle (-ing)"
+            "base form", 
+            "3rd person singular present", 
+            "simple past", 
+            "past participle", 
+            "present participle (-ing)"
         ]
     },
     "noun": {
