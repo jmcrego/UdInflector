@@ -120,6 +120,9 @@ if __name__ == "__main__":
         for i, (sample, output) in enumerate(zip(samples, outputs)):
             output_list = get_list_from_string(output.outputs[0].text.strip())
             request_info = f"{sample['language']}, {sample['pos']}, {sample['lem']}, {sample['request']}"
-            of.write(f"{sample['ud']}\t{output_list}\t{request_info}\n")
-            print(f"{sample['ud']}\t{output_list}\t{request_info}\n")
+            str_ud = sample['ud'].replace(' ||| ', '\t')
+            str_list = ';'.join(output_list)
+            str_info = request_info
+            of.write(f"{str_ud}\t{str_list}\t{str_info}\n")
+            print(f"{str_ud}\t{str_list}\t{str_info}\n")
 
