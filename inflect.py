@@ -124,5 +124,5 @@ if __name__ == "__main__":
             str_list = ';'.join(output_list)
             str_info = request_info
             of.write(f"{str_ud}\t{str_list}\t{str_info}\n")
-            print(f"##########\n{str_ud}\t{str_info}\t{raw_output}\n")
+            print(f"{['#']*50}\n{sample['prompt']}\n{raw_output}\n")
 
