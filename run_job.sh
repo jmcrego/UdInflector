@@ -42,8 +42,10 @@ inflection(){
     python evaluator.py $refs $dict.$NAME.tsv --verbose > $dict.$NAME.tsv.eval
 }
 
-#inflection resources/ud-fren.tsv French resources/ud-enfr_fr.xml
-#inflection resources/ud-enfr.tsv English resources/ud-enfr_en.xml
+#
+inflection resources/ud-fren.tsv French resources/ud-enfr_fr.xml
+#
+inflection resources/ud-enfr.tsv English resources/ud-enfr_en.xml
 
 
 # python grammarbook.py resources/Grammaire.pdf
