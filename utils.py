@@ -14,18 +14,14 @@ def get_dtype_for_gpu():
     print("No GPU detected, defaulting to float16")
     return 'float16'
 
+#- Do NOT include pronouns, articles, determiners, explanations, or any extra text.
 
 PROMPT_PREFIX = """You are a professional linguist specializing in term inflection (including verb conjugation).
 
 Task:
 - Output ONLY a Python list with the required conjugated/inflected forms of the term.
 - Generate forms based on the part of speech (POS) and language-specific rules.
-- Do NOT include pronouns, articles, determiners, explanations, or any extra text.
 - For multi-word expressions, inflect only the head word (main verb, noun, or adjective depending on the POS) and keep all other words unchanged and in place.
-- For multi-word expressions (e.g., "put on", "take off"), always:
-  1. Identify the head word (first word),
-  2. Inflect the head word,
-  3. Append the particle/s unchanged to each form.  
 - Preserve the natural grammatical order of forms (e.g., base → derived forms; singular → plural; masculine → feminine). For verbs, follow the standard tense sequence for the language.
 - Only provide valid inflections that exist in the language, ensuring correct spelling, accents, and irregular forms.
 - If the term is not inflectable as required, return an empty list.
