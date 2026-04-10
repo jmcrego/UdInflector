@@ -20,7 +20,7 @@ def read_tsv2(path):
         nlines = 0
         for line in f:
             nlines += 1
-            language, pos, lem = line.strip().split('\t')
+            language, pos, lem = line.strip().split(';')
             new_samples = generate_sample(language, pos, lem, lem, tokenizer, PROMPT_PREFIX_IDS)
             samples += new_samples
     print(f"Generated {len(samples)} prompts from {nlines} UD pairs.")
