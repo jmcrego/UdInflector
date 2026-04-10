@@ -39,12 +39,13 @@ inflection(){
     #Inflecition
     python inflect.py $dict.tsv --model $MODEL --language $lang --out $dict.$NAME.tsv
     #Evaluation
-    # python evaluator.py $refs $dict.$NAME.tsv --verbose > $dict.$NAME.tsv.eval
+    python evaluator.py $refs $dict.$NAME.tsv --verbose > $dict.$NAME.tsv.eval
 }
 
 #inflection difficult.tsv French resources/ud-enfr_fr.xml
 
-#inflection resources/ud-fren.tsv French resources/ud-enfr_fr.xml
+#
+inflection resources/ud-fren.tsv French resources/ud-enfr_fr.xml
 #
 inflection resources/ud-enfr.tsv English resources/ud-enfr_en.xml
 
