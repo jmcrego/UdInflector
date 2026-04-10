@@ -1,6 +1,18 @@
 
 import ast
-from utils import PROMPT_PREFIX, REQUESTS, get_dtype_for_gpu
+from utils import get_dtype_for_gpu #, PROMPT_PREFIX, REQUESTS
+
+REQUESTS = {
+    "french": {
+        "verb": [
+            "base form", 
+            "3rd person singular present",
+            "simple past",
+            "past participle",
+            "present participle"
+        ]
+    }
+}
 
 
 def read_tsv(path, col, language):

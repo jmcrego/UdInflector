@@ -18,7 +18,8 @@ def generate_sample(language: str, pos: str, lem1: str, lem2: str, tokenizer, pr
     prompts = []
     if pos in REQUESTS and language in REQUESTS[pos]:
          for request in REQUESTS[pos][language]:
-            dynamic_text = f"Input: {language} {pos} '{lem1}'\nRequested forms: {request}\nOutput:"
+            #dynamic_text = f"Input: {language} {pos} '{lem1}'\nRequested forms: {request}\nOutput:"
+            dynamic_text = f"INFLECT(language='{language}', pos='{pos}', term='{lem1}', requested_forms='{request}')\nOutput="
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
             d = {
                 "language": language,
@@ -64,7 +65,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Multilingual Batched Conjugation Generator", formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('tsv', type=str, help="Path to TSV file with terms to inflect (columns: term, pos)")
     parser.add_argument('--language', type=str, required=True, choices=['English', 'French', 'Spanish'], help="Language (e.g. English, French, Spanish)")
-    parser.add_argument('--out', type=str, default=None, help="Output Jsonl file to save conjugations/inflections")
+    parser.add_argument('--out', type=str, required=True, help="Output Jsonl file to save conjugations/inflections")
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
     parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt (output only)")
     parser.add_argument('--max_model_len', type=int, default=1024, help="Maximum sequence length for model input (prompt + output)")
@@ -75,9 +76,6 @@ if __name__ == "__main__":
     parser.add_argument('--dtype', type=str, default='auto', help="Data type for model (e.g. 'auto', 'float16', 'bfloat16')")
     parser.add_argument('--gpu_memory_utilization', type=float, default=0.95, help="Fraction of GPU memory to use (0-1, e.g. 0.95 for 95%)")
     args = parser.parse_args()
-
-    if args.out is None:
-        args.out = f"{args.tsv}.inflections.tsv"    
 
     # Load only the LLM tokenizer
     from transformers import AutoTokenizer
