@@ -70,12 +70,18 @@ def parseTSV(file, normalize_string=False):
 
         ud = toks[0] #caractériser (verb) ||| to characterize
         term = ud.split("|||")[0].strip() #caractériser (verb)
-        inflections = ast.literal_eval(toks[1]) #['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
+        raw_inflections = toks[1].strip()
+        # Accept either a Python literal list or a plain delimited string.
+        try:
+            inflections = ast.literal_eval(raw_inflections) #['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
+        except (ValueError, SyntaxError):
+            inflections = [tok.strip() for tok in re.split(r"[;|]", raw_inflections) if tok.strip()]
         # Normalize inflections to a list to avoid type errors with +=
         if isinstance(inflections, (tuple, set)):
             inflections = list(inflections)
         elif isinstance(inflections, str):
-            inflections = [inflections]
+            # Some files store multiple forms in one string separated by ';'.
+            inflections = [tok.strip() for tok in inflections.split(";") if tok.strip()]
         elif not isinstance(inflections, list):
             # Unexpected type; skip this line to avoid corrupting term2inflections
             continue
