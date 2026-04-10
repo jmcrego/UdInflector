@@ -2,7 +2,6 @@
 import ast
 from utils import PROMPT_PREFIX, REQUESTS, get_dtype_for_gpu
 
-
 def read_tsv(path, language):
     samples = []
     with open(args.tsv, 'r') as f:
@@ -16,7 +15,6 @@ def read_tsv(path, language):
     return samples
 
 def generate_sample(language: str, pos: str, lem1: str, lem2: str, tokenizer, prompt_prefix_ids):
-
     prompts = []
     if pos in REQUESTS and language in REQUESTS[pos]:
          for request in REQUESTS[pos][language]:

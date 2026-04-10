@@ -21,8 +21,7 @@
 
 # Build glossaries with entries : POS \t term_src \t term_tgt
 # python SystranUD2glossary.py resources/ud-enfr_fr.dic resources/ud-enfr_en.dic --oname resources/ud --lang1 fr --lang2 en
-# 
-python SystranUD2glossary.py resources/ud-enru-ru.dct resources/ud-enru-en.dct --oname resources/ud --lang1 ru --lang2 en
+# python SystranUD2glossary.py resources/ud-enru-ru.dct resources/ud-enru-en.dct --oname resources/ud --lang1 ru --lang2 en
 
 module purge
 #
@@ -31,8 +30,6 @@ module load pytorch-gpu/py3/2.6.0
 
 MODEL=/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B #Qwen3-32B Qwen3-8B
 NAME=Qwen3-32B
-
-### python inflector.py resources/ud-enfr_en.dic --model $MODEL --language French --out resources/ud-enfr_en.dic.$NAME.tsv
 
 inflection(){
     dict=$1 #resources/ud-fren.tsv

@@ -8,6 +8,7 @@ def fix_pos(pos):
         return "proper noun"
     return pos
 
+
 def fix_lem(lem, pos, language=None):
     if (language is None or language == "en") and pos == "verb" and lem.startswith("to "):
         lem = lem[3:] # remove "to " from verb infinitive form in English (e.g. "to speak" -> "speak")
@@ -41,7 +42,8 @@ def load_tsv_file(path, language=None):
     print(f"Loaded {len(fms)} entries from {path}", file=sys.stderr)
     print(f"POS tags in {path}: {POSes}", file=sys.stderr)
     return fms
-    
+
+
 def uds_to_glossary(ud1, ud2, oname, lang1, lang2):
 
     ud1 = load_tsv_file(ud1, language=lang1)
