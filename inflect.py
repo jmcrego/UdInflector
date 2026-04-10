@@ -14,12 +14,25 @@ def read_tsv(path, language):
     print(f"Generated {len(samples)} prompts from {nlines} UD pairs.")
     return samples
 
+def read_tsv2(path):
+    samples = []
+    with open(args.tsv, 'r') as f:
+        nlines = 0
+        for line in f:
+            nlines += 1
+            language, pos, lem = line.strip().split('\t')
+            new_samples = generate_sample(language, pos, lem, lem, tokenizer, PROMPT_PREFIX_IDS)
+            samples += new_samples
+    print(f"Generated {len(samples)} prompts from {nlines} UD pairs.")
+    return samples
+
+
 def generate_sample(language: str, pos: str, lem1: str, lem2: str, tokenizer, prompt_prefix_ids):
     prompts = []
     if pos in REQUESTS and language in REQUESTS[pos]:
          for request in REQUESTS[pos][language]:
             #dynamic_text = f"Input: {language} {pos} '{lem1}'\nRequested forms: {request}\nOutput:"
-            dynamic_text = f"INFLECT(language='{language}', pos='{pos}', term='{lem1}', requested_forms='{request}')\nOutput:"
+            dynamic_text = f"INFLECT(language='{language}', pos='{pos}', term='{lem1}', request='{request}')\nOutput:"
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
             d = {
                 "language": language,

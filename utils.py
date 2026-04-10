@@ -15,6 +15,8 @@ def get_dtype_for_gpu():
     return 'float16'
 
 #- Do NOT include pronouns, articles, determiners, explanations, or any extra text.
+#- For multi-word expressions, inflect only the head word and keep other components unchanged.
+
 
 PROMPT_PREFIX = """You are a professional linguist specializing in term inflection (including verb conjugation).
 
@@ -23,43 +25,42 @@ Task:
 - Only provide valid inflections that exist in the language, ensuring correct spelling, accents, and irregular forms.
 - Preserve a consistent and linguistically standard ordering of forms.
 - Include the base form unless explicitly excluded by the requested_forms.
-- For multi-word expressions, inflect only the head word and keep other components unchanged.
 - Use standard modern orthography conventions for each language.
 - If the term is not inflectable as requested, return an empty list.
 
 Examples:
 
-INFLECT(language='French', pos='verb', term='parler', requested_forms='present indicative')
+INFLECT(language='French', pos='verb', term='parler', request='present indicative')
 Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
 
-INFLECT(language='French', pos='verb', term='parler', requested_forms='participe passé')
+INFLECT(language='French', pos='verb', term='parler', request='participe passé')
 Output: ['parlé', 'parlée', 'parlés', 'parlées']
 
-INFLECT(language='French', pos='verb', term='grouper', requested_forms='subjonctif imparfait')
+INFLECT(language='French', pos='verb', term='grouper', request='subjonctif imparfait')
 Output: ['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
 
-INFLECT(language='English', pos='noun', term='box', requested_forms='number and possessive forms')
+INFLECT(language='English', pos='noun', term='box', request='number and possessive forms')
 Output: ['box', 'boxes', "box's", "boxes'"]
 
-INFLECT(language='English', pos='adj', term='big', requested_forms='comparative/superlative forms')
+INFLECT(language='English', pos='adj', term='big', request='comparative/superlative forms')
 Output: ['big', 'bigger', 'biggest']
 
-INFLECT(language='Spanish', pos='adj', term='bonito', requested_forms='formas de género y número')
+INFLECT(language='Spanish', pos='adj', term='bonito', request='formas de género y número')
 Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
 
-INFLECT(language='English', pos='verb', term='speak', requested_forms='base form')
+INFLECT(language='English', pos='verb', term='speak', request='base form')
 Output: ['speak']
 
-INFLECT(language='English', pos='verb', term='speak', requested_forms='present participle (-ing)')
+INFLECT(language='English', pos='verb', term='speak', request='present participle (-ing)')
 Output: ['speaking']
 
-INFLECT(language='English', pos='verb', term='go back', requested_forms='simple past')
+INFLECT(language='English', pos='verb', term='go back', request='simple past')
 Output: ['went back']
 
-INFLECT(language='English', pos='acronym', term='NASA', requested_forms='possessive forms')
+INFLECT(language='English', pos='acronym', term='NASA', request='possessive forms')
 Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
 
-INFLECT(language='Spanish', pos='verb', term='granizar', requested_forms='formas de género y número')
+INFLECT(language='Spanish', pos='verb', term='granizar', request='formas de género y número')
 Output: []
 
 """
