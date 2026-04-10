@@ -47,11 +47,10 @@ def generate_sample(language: str, pos: str, lem1: str, lem2: str, tokenizer, pr
     return prompts
 
 def filter_list(forms: list[str]) -> list[str]:
-    # use final word if multiple words
-    # avoid duplicates
+    # Preserve full expressions and normalize whitespace while avoiding duplicates.
     new_forms = []
     for form in forms:
-        form = form.strip().split(" ")[-1] 
+        form = " ".join(form.strip().split())
         if form in new_forms:
             continue
         new_forms.append(form)
