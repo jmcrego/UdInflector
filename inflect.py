@@ -95,7 +95,7 @@ if __name__ == "__main__":
     # Tokenize the static prompt prefix once since it's the same for all entries
     PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX, return_tensors=None)["input_ids"]
 
-    samples = read_tsv2(args.tsv)
+    samples = read_tsv(args.tsv)
 
     #check if running on V100, A100 or H100 and set dtype accordingly    
     if args.dtype == 'auto':
