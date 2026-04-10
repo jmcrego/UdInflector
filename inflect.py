@@ -119,6 +119,7 @@ if __name__ == "__main__":
     with open(args.out, "w") as of:
         for i, (sample, output) in enumerate(zip(samples, outputs)):
             output_list = get_list_from_string(output.outputs[0].text.strip())
+            output_list.append(sample['lem'])
             request_info = f"{sample['language']}, {sample['pos']}, {sample['lem']}, {sample['request']}"
             str_ud = sample['ud']
             str_list = ';'.join(output_list)
