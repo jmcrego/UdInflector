@@ -44,7 +44,7 @@ def parseXML(file, normalize_string=False):
             # pos = fix_pos(pos)
             # lem = fix_lem(lem, pos)
             term2inflections[f"{lem} ({pos})"] = inflections
-            # print(f"XML Term: {lem} ({pos}) -> Inflections: {inflections}")
+            print(f"XML Term: {lem} ({pos}) -> Inflections: {inflections}")
             inflections = set()
             continue
 
