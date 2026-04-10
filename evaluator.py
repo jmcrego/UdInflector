@@ -54,8 +54,8 @@ def parseXML(file, normalize_string=False):
 
 
 def parseTSV(file, normalize_string=False):
-    # caractériser (verb) ||| to characterize
-    # ['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
+    # caractériser (verb) ➤ to characterize
+    # caractériser;caractérisant;caractérisé;caractérés;caractérées
     # idx: 0, French, verb, caractériser, infinitif / gérondif / participe
 
     term2inflections = defaultdict(list)
@@ -68,25 +68,14 @@ def parseTSV(file, normalize_string=False):
         if len(toks) != 3:
             continue
 
-        ud = toks[0] #caractériser (verb) ||| to characterize
-        term = ud.split("|||")[0].strip() #caractériser (verb)
+        ud = toks[0] #caractériser (verb) ➤ to characterize
+        term = ud.split(" ➤ ")[0].strip() #caractériser (verb)
         raw_inflections = toks[1].strip()
         # Accept either a Python literal list or a plain delimited string.
-        try:
-            inflections = ast.literal_eval(raw_inflections) #['caractériser', 'caractérisant', 'caractérisé', 'caractérisée', 'caractérisés', 'caractérisées']
-        except (ValueError, SyntaxError):
-            inflections = [tok.strip() for tok in re.split(r"[;|]", raw_inflections) if tok.strip()]
-        # Normalize inflections to a list to avoid type errors with +=
-        if isinstance(inflections, (tuple, set)):
-            inflections = list(inflections)
-        elif isinstance(inflections, str):
-            # Some files store multiple forms in one string separated by ';'.
-            inflections = [tok.strip() for tok in inflections.split(";") if tok.strip()]
-        elif not isinstance(inflections, list):
-            # Unexpected type; skip this line to avoid corrupting term2inflections
-            continue
+        inflections = raw_inflections.split(';') #['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
         # print(f"TSV Term: {term} -> Inflections: {inflections}")
         term2inflections[term] += inflections
+        print(f"TSV Term: {term} -> Inflections: {inflections}")
     
     print(f"(TSV) Read {len(term2inflections)} terms")
     return term2inflections

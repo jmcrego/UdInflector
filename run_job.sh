@@ -44,8 +44,7 @@ inflection(){
 
 #inflection difficult.tsv French resources/ud-enfr_fr.xml
 
-#
-inflection resources/ud-fren.tsv French resources/ud-enfr_fr.xml
+#inflection resources/ud-fren.tsv French resources/ud-enfr_fr.xml
 #inflection resources/ud-enfr.tsv English resources/ud-enfr_en.xml
 
 
