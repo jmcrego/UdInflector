@@ -116,12 +116,13 @@ if __name__ == "__main__":
 
     with open(args.out, "w") as of:
         for i, (sample, output) in enumerate(zip(samples, outputs)):
-            output_list = get_list_from_string(output.outputs[0].text.strip())
-            output_list.append(sample['lem'])
+            raw_output = output.outputs[0].text.strip()
+            output_list = get_list_from_string(raw_output)
+            # output_list.append(sample['lem'])
             request_info = f"{sample['language']}, {sample['pos']}, {sample['lem']}, {sample['request']}"
             str_ud = sample['ud']
             str_list = ';'.join(output_list)
             str_info = request_info
             of.write(f"{str_ud}\t{str_list}\t{str_info}\n")
-            print(f"{str_ud}\t{str_list}\t{str_info}\n")
+            print(f"##########\n{str_ud}\t{str_info}\t{raw_output}\n")
 
