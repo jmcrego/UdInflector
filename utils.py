@@ -25,6 +25,7 @@ Task:
 - Only provide valid inflections that exist in the language, ensuring correct spelling, accents, and irregular forms.
 - Preserve a consistent and linguistically standard ordering of forms.
 - Include the base form unless explicitly excluded by the requested_forms.
+- For multi-word expressions, inflect the whole expression.
 - Use standard modern orthography conventions for each language.
 - If the term is not inflectable as requested, return an empty list.
 

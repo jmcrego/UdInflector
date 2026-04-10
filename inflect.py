@@ -132,10 +132,8 @@ if __name__ == "__main__":
             raw_output = output.outputs[0].text.strip()
             output_list = get_list_from_string(raw_output)
             # output_list.append(sample['lem'])
-            request_info = f"{sample['language']}, {sample['pos']}, {sample['lem']}, {sample['request']}"
             str_ud = sample['ud']
             str_list = ';'.join(output_list)
-            str_info = request_info
-            of.write(f"{str_ud}\t{str_list}\t{str_info}\n")
+            of.write(f"{str_ud}\t{str_list}\t{sample['request']}\n")
             print(f"{''.join(['#']*50)}\n{sample['prompt']}\n{raw_output}\n{str_list}\n{''.join(['#']*20)}\n")
 
