@@ -7,6 +7,8 @@ from SystranUD2glossary import fix_pos, fix_lem
 
 import unicodedata
 
+DEBUG=False
+
 def normalize(s):
     return unicodedata.normalize('NFKD', s) \
         .encode('ascii', 'ignore') \
@@ -44,7 +46,8 @@ def parseXML(file, normalize_string=False):
             # pos = fix_pos(pos)
             # lem = fix_lem(lem, pos)
             term2inflections[f"{lem} ({pos})"] = inflections
-            print(f"XML Term: {lem} ({pos}) -> Inflections: {inflections}")
+            if DEBUG:
+                print(f"XML Term: {lem} ({pos}) -> Inflections: {inflections}")
             inflections = set()
             continue
 
@@ -75,7 +78,8 @@ def parseTSV(file, normalize_string=False):
         inflections = raw_inflections.split(';') #['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
         # print(f"TSV Term: {term} -> Inflections: {inflections}")
         term2inflections[term] += inflections
-        print(f"TSV Term: {term} -> Inflections: {inflections}")
+        if DEBUG:
+            print(f"TSV Term: {term} -> Inflections: {inflections}")
     
     print(f"(TSV) Read {len(term2inflections)} terms")
     return term2inflections
@@ -155,11 +159,17 @@ if __name__ == "__main__":
     parser.add_argument('hyps_file', type=str, help='Path to the hyps TSV file (UDInflector output)')
     parser.add_argument('--normalize_string', action='store_true', help='Normalize accents in terms before evaluation')
     parser.add_argument('--verbose', action='store_true', help='Print detailed evaluations for each term')
+    parser.add_argument('--debug', action='store_true', help='Print debug information during parsing')
     parser.epilog = """
 - The XML file should have entries with <source>term (pos)</source> and <inflected>inflection</inflected> tags.
 - Example usage: python eval_inflector.py glossary.xml glossary.tsv
 """
+
     args = parser.parse_args()
+
+    if args.debug:
+        DEBUG = True
+
     ref2infl = parseXML(args.refs_file, args.normalize_string)
     hyp2infl = parseTSV(args.hyps_file, args.normalize_string)
     evaluate(ref2infl, hyp2infl, args.verbose)
