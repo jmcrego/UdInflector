@@ -19,7 +19,7 @@ def generate_sample(language: str, pos: str, lem1: str, lem2: str, tokenizer, pr
     if pos in REQUESTS and language in REQUESTS[pos]:
          for request in REQUESTS[pos][language]:
             #dynamic_text = f"Input: {language} {pos} '{lem1}'\nRequested forms: {request}\nOutput:"
-            dynamic_text = f"INFLECT(language='{language}', pos='{pos}', term='{lem1}', requested_forms='{request}')\nOutput="
+            dynamic_text = f"INFLECT(language='{language}', pos='{pos}', term='{lem1}', requested_forms='{request}')\nOutput:"
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
             d = {
                 "language": language,

@@ -26,34 +26,34 @@ Task:
 Examples:
 
 INFLECT(language='French', pos='verb', term='parler', requested_forms='present indicative')
-Output=['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
+Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
 
 INFLECT(language='French', pos='verb', term='parler', requested_forms='participe passé')
-Output=['parlé', 'parlée', 'parlés', 'parlées']
+Output: ['parlé', 'parlée', 'parlés', 'parlées']
 
 INFLECT(language='French', pos='verb', term='grouper', requested_forms='subjonctif imparfait')
-Output=['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
+Output: ['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
 
 INFLECT(language='English', pos='noun', term='box', requested_forms='number and possessive forms')
-Output=['box', 'boxes', "box's", "boxes'"]
+Output: ['box', 'boxes', "box's", "boxes'"]
 
 INFLECT(language='English', pos='adj', term='big', requested_forms='comparative/superlative forms')
-Output=['big', 'bigger', 'biggest']
+Output: ['big', 'bigger', 'biggest']
 
 INFLECT(language='Spanish', pos='adj', term='bonito', requested_forms='formas de género y número')
-Output=['bonito', 'bonita', 'bonitos', 'bonitas']
+Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
 
 INFLECT(language='English', pos='verb', term='speak', requested_forms='base form, 3rd person singular present, simple past, past participle, present participle (-ing)')
-Output=['speak', 'speaks', 'spoke', 'spoken', 'speaking']
+Output: ['speak', 'speaks', 'spoke', 'spoken', 'speaking']
 
 INFLECT(language='English', pos='verb', term='put on', requested_forms='base form, 3rd person singular present, simple past, past participle, present participle (-ing)')
-Output=['put on', 'puts on', 'put on', 'put on', 'putting on']
+Output: ['put on', 'puts on', 'put on', 'put on', 'putting on']
 
 INFLECT(language='English', pos='acronym', term='NASA', requested_forms='possessive forms')
-Output=['NASA', 'NASAs', "NASA's", "NASAs'"]
+Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
 
 INFLECT(language='Spanish', pos='verb', term='granizar', requested_forms='imperativo')
-Output=[]
+Output: []
 
 """
 
