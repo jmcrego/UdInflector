@@ -24,7 +24,7 @@ def generate_sample(language: str, pos: str, lem1: str, lem2: str, tokenizer, pr
                 "language": language,
                 "pos": pos,
                 "lem": lem1,
-                "ud": f"{lem1} ({pos}) ||| {lem2}",
+                "ud": f"{lem1} ({pos}) ➤ {lem2}",
                 "request": request,
                 "prompt": PROMPT_PREFIX + dynamic_text,
                 "prompt_ids": prompt_prefix_ids + dynamic_text_ids,
@@ -120,7 +120,7 @@ if __name__ == "__main__":
         for i, (sample, output) in enumerate(zip(samples, outputs)):
             output_list = get_list_from_string(output.outputs[0].text.strip())
             request_info = f"{sample['language']}, {sample['pos']}, {sample['lem']}, {sample['request']}"
-            str_ud = sample['ud'].replace(' ||| ', '\t')
+            str_ud = sample['ud']
             str_list = ';'.join(output_list)
             str_info = request_info
             of.write(f"{str_ud}\t{str_list}\t{str_info}\n")
