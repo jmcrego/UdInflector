@@ -135,5 +135,5 @@ if __name__ == "__main__":
             str_ud = sample['ud']
             str_list = ';'.join(output_list)
             of.write(f"{str_ud}\t{str_list}\t{sample['request']}\n")
-            print(f"{''.join(['#']*50)}\n{sample['prompt']}\n{raw_output}\n{str_list}\n{''.join(['#']*20)}\n")
+            print(f"{''.join(['#']*50)}\n{sample['prompt']}\n{raw_output}\n{''.join(['#']*20)}\n")
 
