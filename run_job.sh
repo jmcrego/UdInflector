@@ -21,6 +21,8 @@
 
 # Build glossaries with entries : POS \t term_src \t term_tgt
 # python SystranUD2glossary.py resources/ud-enfr_fr.dic resources/ud-enfr_en.dic --oname resources/ud --lang1 fr --lang2 en
+# 
+python SystranUD2glossary.py resources/ud-enru-ru.dct resources/ud-enru-en.dct --oname resources/ud --lang1 ru --lang2 en
 
 module purge
 #
@@ -43,10 +45,8 @@ inflection(){
     python evaluator.py $refs $dict.$NAME.tsv --verbose > $dict.$NAME.tsv.eval
 }
 
-#
-inflection resources/ud-fren.tsv French resources/ud-enfr_fr.xml
-#
-inflection resources/ud-enfr.tsv English resources/ud-enfr_en.xml
+#inflection resources/ud-fren.tsv French resources/ud-enfr_fr.xml
+#inflection resources/ud-enfr.tsv English resources/ud-enfr_en.xml
 
 
 # python grammarbook.py resources/Grammaire.pdf
