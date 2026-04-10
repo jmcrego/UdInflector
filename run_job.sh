@@ -38,7 +38,7 @@ inflection(){
     refs=$3 #resources/ud-enfr_fr.xml
     dict=${dict%.tsv} #remove .tsv extension if any
     #Inflecition
-    #python inflect.py $dict.tsv --model $MODEL --language $lang --out $dict.$NAME.tsv
+    python inflect.py $dict.tsv --model $MODEL --language $lang --out $dict.$NAME.tsv
     #Evaluation
     python evaluator.py $refs $dict.$NAME.tsv --verbose > $dict.$NAME.tsv.eval
 }
