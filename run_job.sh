@@ -30,16 +30,23 @@ module load pytorch-gpu/py3/2.6.0
 MODEL=/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B #Qwen3-32B Qwen3-8B
 NAME=Qwen3-32B
 
+### python inflector.py resources/ud-enfr_en.dic --model $MODEL --language French --out resources/ud-enfr_en.dic.$NAME.tsv
+
+inflection(){
+    dict=$1 #resources/ud-fren.tsv
+    lang=$2 #French
+    refs=$3 #resources/ud-enfr_fr.xml
+    dict=${dict%.tsv} #remove .tsv extension if any
+    #Inflecition
+    #python inflect.py $dict.tsv --model $MODEL --language $lang --out $dict.$NAME.tsv
+    #Evaluation
+    python evaluator.py $refs $dict.$NAME.tsv --verbose > $dict.$NAME.tsv.eval
+}
+
 #
-python inflector.py resources/ud-enfr_en.dic --model $MODEL --language French --out resources/ud-enfr_en.dic.$NAME.tsv
-
-
-#python inflect.py resources/ud-fren.tsv --model $MODEL --language French --out resources/ud-fren.tsv.$NAME.inflected.tsv
-#python inflect.py resources/ud-enfr.tsv --model $MODEL --language English --out resources/ud-enfr.tsv.$NAME.inflected.tsv
-
-# Evaluation
-# python evaluator.py resources/ud-enfr_en.xml resources/ud-enfr.tsv.$NAME.inflected.tsv --verbose > resources/ud-enfr.tsv.$NAME.inflected.tsv.eval
-# python evaluator.py resources/ud-enfr_fr.xml resources/ud-enfr.tsv.$NAME.inflected.tsv --verbose > resources/ud-fren.tsv.$NAME.inflected.tsv.eval
+inflection resources/ud-fren.tsv French resources/ud-enfr_fr.xml
+#
+inflection resources/ud-enfr.tsv English resources/ud-enfr_en.xml
 
 
 # python grammarbook.py resources/Grammaire.pdf
