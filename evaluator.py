@@ -82,21 +82,22 @@ def parseTSV(file, normalize_string=False):
             continue
 
         # correction:
-        if term.startswith("more"):
+        if term.startswith("more "):
             term = term[5:]
-        if term.startswith("most"):
+        if term.startswith("most "):
             term = term[5:]
 
-
-        # term = ud.split(" ➤ ")[0].strip() #caractériser (verb)
-        # term = term.split(" (")[0].strip() #caractériser
         raw_inflections = toks[1].strip()
         # Accept either a Python literal list or a plain delimited string.
         inflections = raw_inflections.split(';') #['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
         # print(f"TSV Term: {term} -> Inflections: {inflections}")
         for infl in inflections:
             term2inflections[term].add(infl)
-        term2inflections[term].add(term) # include the base form as well
+
+        if len(inflections):
+            # include the base form as well
+            term2inflections[term].add(term) 
+
         if DEBUG:
             print(f"TSV Term: {term} -> Inflections: {inflections}")
     
