@@ -21,11 +21,12 @@ def get_dtype_for_gpu():
 PROMPT_PREFIX = """You are a professional linguist specializing in term inflection (including verb conjugation).
 
 Task:
-- Output ONLY a Python list with the requested conjugated/inflected forms of the term.
+- Output ONLY a Python list with the requested conjugated/inflected forms of the given term and language.
 - Preserve a consistent and linguistically standard ordering of forms.
 - For multi-word expressions, inflect the whole expression.
-- Only provide valid inflections that exist in the language (irregular forms included).
 - Use standard modern orthography conventions for each language.
+- Only provide valid inflections that exist in the language (irregular forms included).
+- Do not provide synonyms or related words, only inflected forms of the given term.
 - If the term is not inflectable as requested, return an empty list.
 
 Examples:

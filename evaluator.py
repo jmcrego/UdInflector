@@ -81,6 +81,12 @@ def parseTSV(file, normalize_string=False):
             print(f"Warning: skipping line in {file} because it does not match expected format: {line}", file=sys.stderr)
             continue
 
+        # correction:
+        if term.startswith("more"):
+            term = term[5:]
+        if term.startswith("most"):
+            term = term[5:]
+
 
         # term = ud.split(" ➤ ")[0].strip() #caractériser (verb)
         # term = term.split(" (")[0].strip() #caractériser
