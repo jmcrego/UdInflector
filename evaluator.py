@@ -81,8 +81,10 @@ def parseTSV(file, normalize_string=False):
             print(f"Warning: skipping line in {file} because it does not match expected format: {line}", file=sys.stderr)
             continue
 
+        # include the base form as well
+        term2inflections[term].add(term) 
+
         raw_inflections = toks[1].strip()
-        term2inflections[term].add(term)
         if len(raw_inflections) == 0:
             continue
 
@@ -91,10 +93,6 @@ def parseTSV(file, normalize_string=False):
         # print(f"TSV Term: {term} -> Inflections: {inflections}")
         for infl in inflections:
             term2inflections[term].add(infl)
-
-        if len(inflections):
-            # include the base form as well
-            term2inflections[term].add(term) 
 
         if DEBUG:
             print(f"TSV Term: {term} -> Inflections: {inflections}")
