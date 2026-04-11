@@ -75,8 +75,15 @@ def parseTSV(file, normalize_string=False):
             continue
 
         ud = toks[0] #caractériser (verb) ➤ to characterize
-        term = ud.split(" ➤ ")[0].strip() #caractériser (verb)
-        term = term.split(" (")[0].strip() #caractériser
+        if re.match(r"(.*) \((.*)\) ➤ (.*)", ud):
+            term, pos, translation = re.findall(r"(.*) +\((.*)\) ➤ (.*)", ud)[0]
+        else:
+            print(f"Warning: skipping line in {file} because it does not match expected format: {line}", file=sys.stderr)
+            continue
+
+
+        # term = ud.split(" ➤ ")[0].strip() #caractériser (verb)
+        # term = term.split(" (")[0].strip() #caractériser
         raw_inflections = toks[1].strip()
         # Accept either a Python literal list or a plain delimited string.
         inflections = raw_inflections.split(';') #['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
