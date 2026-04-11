@@ -46,27 +46,22 @@ def generate_sample(language: str, pos: str, lem1: str, lem2: str, tokenizer, pr
             prompts.append(d)
     return prompts
 
-def clean_form(form: str) -> str:
-    form = " ".join(form.strip().split())
-
-    # This is ugly... should be handled in the prompt/request design instead
-    # comparative/superlativecorrection:
-    if form.startswith("more "):
-        form = form[5:]
-    if form.startswith("most "):
-        form = form[5:]
-    return form
-
 
 def filter_list(forms: list[str]) -> list[str]:
     # Preserve full expressions and normalize whitespace while avoiding duplicates.
     new_forms = []
     for form in forms:
-        form = form.strip()
+        form = " ".join(form.strip().split()) # normalize whitespace
+
+        # This is ugly... should be handled in the prompt/request design instead
+        # comparative/superlativecorrection:
+        if form.startswith("more "):
+            form = form[5:]
+        if form.startswith("most "):
+            form = form[5:]
+
         if len(form) == 0:
             continue
-
-        form = clean_form(form)
 
         if form in new_forms:
             continue
