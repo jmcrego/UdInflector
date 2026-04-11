@@ -62,9 +62,10 @@ def filter_list(forms: list[str]) -> list[str]:
     # Preserve full expressions and normalize whitespace while avoiding duplicates.
     new_forms = []
     for form in forms:
-        form = clean_form(form)
         if len(form) == 0:
             continue
+
+        form = clean_form(form)
 
         if form in new_forms:
             continue
