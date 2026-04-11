@@ -86,13 +86,6 @@ def parseTSV(file, normalize_string=False):
         inflections = raw_inflections.split(';') #['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
         # print(f"TSV Term: {term} -> Inflections: {inflections}")
         for infl in inflections:
-
-            # comparative/superlativecorrection:
-            if infl.startswith("more "):
-                infl = infl[5:]
-            if infl.startswith("most "):
-                infl = infl[5:]
-
             term2inflections[term].add(infl)
 
         if len(inflections):
