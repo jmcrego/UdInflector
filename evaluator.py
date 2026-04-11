@@ -76,6 +76,7 @@ def parseTSV(file, normalize_string=False):
 
         ud = toks[0] #caractériser (verb) ➤ to characterize
         term = ud.split(" ➤ ")[0].strip() #caractériser (verb)
+        term = term.split(" (")[0].strip() #caractériser
         raw_inflections = toks[1].strip()
         # Accept either a Python literal list or a plain delimited string.
         inflections = raw_inflections.split(';') #['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
