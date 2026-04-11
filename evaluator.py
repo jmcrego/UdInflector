@@ -81,17 +81,18 @@ def parseTSV(file, normalize_string=False):
             print(f"Warning: skipping line in {file} because it does not match expected format: {line}", file=sys.stderr)
             continue
 
-        # correction:
-        if term.startswith("more "):
-            term = term[5:]
-        if term.startswith("most "):
-            term = term[5:]
-
         raw_inflections = toks[1].strip()
         # Accept either a Python literal list or a plain delimited string.
         inflections = raw_inflections.split(';') #['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
         # print(f"TSV Term: {term} -> Inflections: {inflections}")
         for infl in inflections:
+
+            # comparative/superlativecorrection:
+            if infl.startswith("more "):
+                infl = infl[5:]
+            if infl.startswith("most "):
+                infl = infl[5:]
+
             term2inflections[term].add(infl)
 
         if len(inflections):
