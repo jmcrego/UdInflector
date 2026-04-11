@@ -50,7 +50,7 @@ def parseXML(file, normalize_string=False):
                 term2inflections[lem].add(infl)
             term2inflections[lem].add(lem) # include the base form as well
             if DEBUG:
-                print(f"XML Term: {lem} ({pos}) -> Inflections: {inflections}")
+                print(f"XML Term: {lem} -> Inflections: {term2inflections[lem]}")
             inflections = set()
             continue
 
