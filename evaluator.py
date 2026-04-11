@@ -82,6 +82,7 @@ def parseTSV(file, normalize_string=False):
             continue
 
         raw_inflections = toks[1].strip()
+        term2inflections[term].add(infl)
         if len(raw_inflections) == 0:
             continue
 
