@@ -103,13 +103,13 @@ REQUESTS = {
     },
     "noun": {
         "French": [
-            "genre/nombre",
+            "formes de genre et de nombre",
         ],
         "Spanish": [
-            "género/número",
+            "formas de género y número",
         ],
         "English": [
-            "number/possessive",
+            "number and possessive forms",
         ]
     },
     "proper noun": {
@@ -120,7 +120,7 @@ REQUESTS = {
             "lowercase, UPPERCASE and Truecase",
         ],
         "English": [
-            "possessive",
+            "possessive forms",
         ]
     },
     "acronym": {
@@ -131,18 +131,18 @@ REQUESTS = {
             "lowercase, UPPERCASE and Truecase",
         ],
         "English": [
-            "possessive",
+            "possessive forms",
         ]
     },
     "adj": {
         "French": [
-            "genre/nombre",
+            "formes de genre et de nombre",
         ],
         "Spanish": [
-            "género/número",
+            "formas de género y número",
         ],
         "English": [
-            "comparative/superlative",
+            "comparative/superlative forms",
         ]
     }        
 }
