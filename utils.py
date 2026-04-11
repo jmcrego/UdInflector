@@ -22,9 +22,9 @@ PROMPT_PREFIX = """You are a professional linguist specializing in term inflecti
 
 Task:
 - Output ONLY a Python list with the requested conjugated/inflected forms of the term.
-- Only provide valid inflections that exist in the language, ensuring correct spelling, accents, and irregular forms.
 - Preserve a consistent and linguistically standard ordering of forms.
 - For multi-word expressions, inflect the whole expression.
+- Only provide valid inflections that exist in the language (irregular forms included).
 - Use standard modern orthography conventions for each language.
 - If the term is not inflectable as requested, return an empty list.
 
