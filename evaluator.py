@@ -15,7 +15,7 @@ def normalize(s):
         .decode('ascii')
 
 def parseXML(file, normalize_string=False):
-    term2inflections = defaultdict(list)
+    term2inflections = defaultdict(set)
 
     inflections = set()
 
@@ -45,7 +45,10 @@ def parseXML(file, normalize_string=False):
         elif line == "</entry>":
             # pos = fix_pos(pos)
             # lem = fix_lem(lem, pos)
-            term2inflections[f"{lem} ({pos})"] = inflections
+            # term2inflections[f"{lem} ({pos})"] = inflections
+            for infl in inflections:
+                term2inflections[lem].add(infl)
+            term2inflections[lem].add(lem) # include the base form as well
             if DEBUG:
                 print(f"XML Term: {lem} ({pos}) -> Inflections: {inflections}")
             inflections = set()
@@ -61,7 +64,7 @@ def parseTSV(file, normalize_string=False):
     # caractériser;caractérisant;caractérisé;caractérés;caractérées
     # idx: 0, French, verb, caractériser, infinitif / gérondif / participe
 
-    term2inflections = defaultdict(list)
+    term2inflections = defaultdict(set)
 
     for line in open(file, encoding="utf-8"):
         if normalize_string:
@@ -77,7 +80,9 @@ def parseTSV(file, normalize_string=False):
         # Accept either a Python literal list or a plain delimited string.
         inflections = raw_inflections.split(';') #['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
         # print(f"TSV Term: {term} -> Inflections: {inflections}")
-        term2inflections[term] += inflections
+        for infl in inflections:
+            term2inflections[term].add(infl)
+        term2inflections[term].add(term) # include the base form as well
         if DEBUG:
             print(f"TSV Term: {term} -> Inflections: {inflections}")
     

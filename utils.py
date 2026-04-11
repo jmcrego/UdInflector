@@ -24,7 +24,6 @@ Task:
 - Output ONLY a Python list with the requested conjugated/inflected forms of the term.
 - Only provide valid inflections that exist in the language, ensuring correct spelling, accents, and irregular forms.
 - Preserve a consistent and linguistically standard ordering of forms.
-- Include the base form unless explicitly excluded by the requested_forms.
 - For multi-word expressions, inflect the whole expression.
 - Use standard modern orthography conventions for each language.
 - If the term is not inflectable as requested, return an empty list.
@@ -66,59 +65,6 @@ Output: []
 
 """
 
-PROMPT_PREFIX_old = """You are a professional linguist specializing in term inflection (including verb conjugation).
-
-Task:
-- Output ONLY a Python list with the required conjugated/inflected forms of the term.
-- Generate forms based on the part of speech (POS) and language-specific rules.
-- For multi-word expressions, inflect only the head word (main verb, noun, or adjective depending on the POS) and keep all other words unchanged and in place.
-- Preserve the natural grammatical order of forms (e.g., base → derived forms; singular → plural; masculine → feminine). For verbs, follow the standard tense sequence for the language.
-- Only provide valid inflections that exist in the language, ensuring correct spelling, accents, and irregular forms.
-- If the term is not inflectable as required, return an empty list.
-
-Examples:
-
-Input: French verb 'parler'
-Requested forms: present indicative
-Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
-
-Input: French verb 'parler'
-Requested forms: participe passé
-Output: ['parlé', 'parlée', 'parlés', 'parlées']
-
-Input: French verb 'grouper'
-Requested forms: subjonctif imparfait
-Output: ['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
-
-Input: English noun 'box'
-Requested forms: number and possessive forms
-Output: ['box', 'boxes', "box's", "boxes'"]
-
-Input: English adj 'big'
-Requested forms: comparative/superlative forms
-Output: ['big', 'bigger', 'biggest']
-
-Input: Spanish adj 'bonito'
-Requested forms: formas de género y número
-Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
-
-Input: English verb 'speak'
-Requested forms: base form, 3rd person singular present, simple past, past participle, present participle (-ing)
-Output: ['speak', 'speaks', 'spoke', 'spoken', 'speaking']
-
-Input: English verb 'put on'
-Requested forms: base form, 3rd person singular present, simple past, past participle, present participle (-ing)
-Output: ['put on', 'puts on', 'put on', 'put on', 'putting on']
-
-Input: English acronym 'NASA'
-Requested forms: possessive forms
-Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
-
-Input: Spanish verb 'granizar'
-Requested forms: imperativo
-Output: []
-
-"""
 
 REQUESTS = {
     "verb": {
@@ -157,13 +103,13 @@ REQUESTS = {
     },
     "noun": {
         "French": [
-            "formes de genre et de nombre",
+            "genre/nombre",
         ],
         "Spanish": [
-            "formas de género y número",
+            "género/número",
         ],
         "English": [
-            "number and possessive forms",
+            "number/possessive",
         ]
     },
     "proper noun": {
@@ -174,7 +120,7 @@ REQUESTS = {
             "lowercase, UPPERCASE and Truecase",
         ],
         "English": [
-            "possessive forms",
+            "possessive",
         ]
     },
     "acronym": {
@@ -185,18 +131,18 @@ REQUESTS = {
             "lowercase, UPPERCASE and Truecase",
         ],
         "English": [
-            "possessive forms",
+            "possessive",
         ]
     },
     "adj": {
         "French": [
-            "formes de genre et de nombre",
+            "genre/nombre",
         ],
         "Spanish": [
-            "formas de género y número",
+            "género/número",
         ],
         "English": [
-            "comparative/superlative forms",
+            "comparative/superlative",
         ]
     }        
 }
