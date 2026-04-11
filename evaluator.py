@@ -82,6 +82,9 @@ def parseTSV(file, normalize_string=False):
             continue
 
         raw_inflections = toks[1].strip()
+        if len(raw_inflections) == 0:
+            continue
+
         # Accept either a Python literal list or a plain delimited string.
         inflections = raw_inflections.split(';') #['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
         # print(f"TSV Term: {term} -> Inflections: {inflections}")
