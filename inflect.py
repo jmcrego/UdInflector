@@ -63,6 +63,8 @@ def filter_list(forms: list[str]) -> list[str]:
     new_forms = []
     for form in forms:
         form = clean_form(form)
+        if len(form) == 0:
+            continue
 
         if form in new_forms:
             continue
