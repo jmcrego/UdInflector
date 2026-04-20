@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
     samples = read_tsv(args.tsv, language=args.language)
     for sample in samples:
-        print(f"{samples}\n")
+        print(f"{samples['prompt']}\n")
     import sys
     sys.exit()
 
