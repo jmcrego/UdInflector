@@ -85,7 +85,6 @@ Rules:
 - If the requested POS/forms does NOT match the term, return an empty list.
 
 Inflection constraints:
-- Preserve a consistent, linguistically standard ordering of forms.
 - Only include valid, attested inflected forms (including irregular ones).
 - Do NOT include synonyms, derivations, or related words.
 - For multi-word expressions, inflect the full expression appropriately.
@@ -97,22 +96,22 @@ Output format:
 
 Examples:
 
-INFLECT(language='French', term='parler', translation='to speak' , request='verb - present indicative')
+INFLECT(language='French', term='parler', translation='speak' , request='verb - présent indicatif (1s, 2s, 3s, 1p, 2p, 3p)')
 Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
 
-INFLECT(language='French', term='parler', translation='to speak', request='verb - participe passé')
+INFLECT(language='French', term='parler', translation='speak', request='verb - participe passé (masc sg, fem sg, masc pl, fem pl)')
 Output: ['parlé', 'parlée', 'parlés', 'parlées']
 
-INFLECT(language='French', term='grouper', translation='to group', request='verb - subjonctif imparfait')
+INFLECT(language='French', term='grouper', translation='group', request='verb - subjonctif imparfait (1s, 2s, 3s, 1p, 2p, 3p)')
 Output: ['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
 
-INFLECT(language='English', term='box', translation='caja', request='noun - number and possessive forms')
+INFLECT(language='English', term='box', translation='caja', request='noun - singular, plural, singular possessive, plural possessive')
 Output: ['box', 'boxes', "box's", "boxes'"]
 
 INFLECT(language='English', term='big', translation='grande', request='adj - comparative/superlative forms')
 Output: ['big', 'bigger', 'biggest']
 
-INFLECT(language='Spanish', term='bonito', translation='beau', request='adj - formas de género y número')
+INFLECT(language='Spanish', term='bonito', translation='beau', request='adj - masc sg, fem sg, masc pl, fem pl')
 Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
 
 INFLECT(language='English', term='speak', translation='hablar', request='verb - base form')
@@ -124,13 +123,19 @@ Output: ['speaking']
 INFLECT(language='English', term='go back', translation='volver', request='verb - simple past')
 Output: ['went back']
 
-INFLECT(language='English', term='NASA', translation='NASA', request='noun - possessive forms')
-Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
+INFLECT(language='English', term='NASA', translation='NASA', request='noun - singular possessive')
+Output: ["NASA's"]
 
-INFLECT(language='Spanish', term='granizar', translation='grêler', request='verb - formas de género y número')
+INFLECT(language='Spanish', term='granizar', translation='grêler', request='verb - masc sg, fem sg, masc pl, fem pl')
 Output: []
 
-INFLECT(language='English', term='invitation', translation='convocation', request='noun - formas de género y número')
+INFLECT(language='English', term='bear', translation='carry', request='verb - simple past')
+Output: ['bore']
+
+INFLECT(language='English', term='bear', translation='oso', request='noun - plural')
+Output: ['bears']
+
+INFLECT(language='English', term='bear', translation='oso', request='verb - past participle')
 Output: []
 
 """
@@ -140,31 +145,32 @@ REQUESTS = {
     "French": [
         "verb - infinitif",
         "verb - participe présent",
-        "verb - participe passé",
-        "verb - présent indicatif",
-        "verb - imparfait indicatif",
-        "verb - impératif",
-        "verb - futur simple",
-        "verb - subjonctif présent",
-        "verb - conditionnel présent",
-        "verb - passé simple",
-        "verb - subjonctif imparfait",
-        "noun - formes de genre et de nombre",
-        "adj - formes de genre et de nombre",
+        "verb - participe passé (masc sg, fem sg, masc pl, fem pl)",
+        "verb - présent indicatif (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - imparfait indicatif (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - impératif (2s, 1p, 2p)",
+        "verb - futur simple (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - subjonctif présent (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - conditionnel présent (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - passé simple (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - subjonctif imparfait (1s, 2s, 3s, 1p, 2p, 3p)",
+        "noun - masc sg, fem sg, masc pl, fem pl",
+        "adj - masc sg, fem sg, masc pl, fem pl",
     ],
     "Spanish": [
         "verb - infinitivo",
         "verb - gerundio", 
-        "verb - participio",
-        "verb - presente indicativo",
-        "verb - pretérito indefinido",
-        "verb - imperativo",
-        "verb - futuro simple",
-        "verb - subjuntivo presente",
-        "verb - condicional simple",
-        "verb - subjuntivo imperfecto",
-        "noun - formas de género y número",
-        "adj - formas de género y número",
+        "verb - participio (masc sg, fem sg, masc pl, fem pl)",
+        "verb - presente indicativo (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - pretérito indefinido (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - imperativo afirmativo (2s, 3s, 1p, 2p, 3p)",
+        "verb - futuro simple (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - subjuntivo presente (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - condicional simple (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - subjuntivo imperfecto (-se) (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - subjuntivo imperfecto (-ra) (1s, 2s, 3s, 1p, 2p, 3p)",
+        "noun - masc sg, fem sg, masc pl, fem pl",
+        "adj - masc sg, fem sg, masc pl, fem pl",
     ],
     "English": [
         "verb - base form", 
