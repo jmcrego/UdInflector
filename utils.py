@@ -27,11 +27,11 @@ Task:
 - The "request" parameter ALWAYS specifies:
   1) the part of speech (POS), and
   2) the exact inflectional forms to generate.
-- You MUST strictly follow the requested POS and forms.
+- You MUST strictly follow the requested POS and inflection forms.
 
 Rules:
 - Use the provided translation ONLY to disambiguate the meaning of the term.
-- If the term does not match the requested POS, or if the requested inflection is not applicable to the term, return an empty list.
+- If the term does not match the requested POS, or if the requested inflection forms are not applicable to the term, return an empty list.
 
 Inflection constraints:
 - Only include valid, attested inflected forms (including irregular ones).
@@ -120,6 +120,18 @@ REQUESTS = {
         "verb - subjuntivo imperfecto (-ra) (1s, 2s, 3s, 1p, 2p, 3p)",
         "noun - masc sg, fem sg, masc pl, fem pl",
         "adj - masc sg, fem sg, masc pl, fem pl",
+    ],
+    "Russian": [
+        "verb - infinitive",
+        "verb - adverbial participle",
+        "verb - past indicative (masc sg, fem sg, neuter sg, plural)",
+        "verb - present (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - imperative (2s, 2p)",
+        "verb - future (1s, 2s, 3s, 1p, 2p, 3p)",
+        "verb - past active participle (masc sg, fem sg, neuter sg, plural)",
+        "verb - past passive participle (masc sg, fem sg, neuter sg, plural)",
+        "noun - nominative sg, nominative pl",
+        "adj - masc sg, fem sg, neuter sg, plural (nominative)",
     ],
     "English": [
         "verb - base form", 
