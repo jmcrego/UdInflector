@@ -16,6 +16,7 @@ def normalize(s):
 
 def parseXML(file, normalize_string=False):
     term2inflections = defaultdict(set)
+
     inflections = set()
 
     for line in open(file, encoding="utf-8"):
@@ -29,6 +30,7 @@ def parseXML(file, normalize_string=False):
             inflections.add(inflection)
             continue
 
+
         # detect lem pos in : <source>royaume (adj)</source>
         elif re.match(r"<source>(.*) \((.*)\).*</source>", line):
             lem, pos = re.findall(r"<source>(.*) \((.*)\).*</source>", line)[0]
@@ -41,6 +43,9 @@ def parseXML(file, normalize_string=False):
 
         # detect: </entry>
         elif line == "</entry>":
+            # pos = fix_pos(pos)
+            # lem = fix_lem(lem, pos)
+            # term2inflections[f"{lem} ({pos})"] = inflections
             for infl in inflections:
                 term2inflections[lem].add(infl)
             term2inflections[lem].add(lem) # include the base form as well
@@ -72,19 +77,20 @@ def parseTSV(file, normalize_string=False):
         ud = toks[0] #caractériser (verb) ➤ to characterize
         if re.match(r"(.*) \((.*)\) ➤ (.*)", ud):
             term, pos, translation = re.findall(r"(.*) +\((.*)\) ➤ (.*)", ud)[0]
-        elif re.match(r"(.*) ➤ (.*)", ud):
-            term, translation = re.findall(r"(.*) ➤ (.*)", ud)[0]
         else:
             print(f"Warning: skipping line in {file} because it does not match expected format: {line}", file=sys.stderr)
             continue
 
         # include the base form as well
-        term2inflections[term].add(term)
+        term2inflections[term].add(term) 
 
         raw_inflections = toks[1].strip()
         if len(raw_inflections) == 0:
             continue
-        inflections = raw_inflections.split(';') 
+
+        # Accept either a Python literal list or a plain delimited string.
+        inflections = raw_inflections.split(';') #['caractériser', 'caractérisant', 'caractérisé', 'caractérée', 'caractérés', 'caractérées']
+        # print(f"TSV Term: {term} -> Inflections: {inflections}")
         for infl in inflections:
             term2inflections[term].add(infl)
 
