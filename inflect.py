@@ -31,13 +31,12 @@ def generate_sample(language: str, pos: str, lem1: str, lem2: str, tokenizer, pr
     prompts = []
     if pos in REQUESTS and language in REQUESTS[pos]:
          for request in REQUESTS[pos][language]:
-            #dynamic_text = f"Input: {language} {pos} '{lem1}'\nRequested forms: {request}\nOutput:"
-            dynamic_text = f"INFLECT(language='{language}', pos='{pos}', term='{lem1}', request='{request}')\nOutput:"
+            dynamic_text = f"INFLECT(language='{language}', term='{lem1}', translation='{lem2}', request='{request}')\nOutput:"
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
             d = {
                 "language": language,
-                "pos": pos,
                 "lem": lem1,
+                "translation": lem2,
                 "ud": f"{lem1} ({pos}) ➤ {lem2}",
                 "request": request,
                 "prompt": PROMPT_PREFIX + dynamic_text,
@@ -89,7 +88,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Multilingual Batched Conjugation Generator", formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('tsv', type=str, help="Path to TSV file with terms to inflect (columns: term, pos)")
     parser.add_argument('--language', type=str, required=True, choices=['English', 'French', 'Spanish'], help="Language (e.g. English, French, Spanish)")
-    parser.add_argument('--out', type=str, required=True, help="Output Jsonl file to save conjugations/inflections")
+    parser.add_argument('--out', type=str, required=True, help="Output JSONL file to save conjugations/inflections")
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
     parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt (output only)")
     parser.add_argument('--max_model_len', type=int, default=1024, help="Maximum sequence length for model input (prompt + output)")
@@ -108,6 +107,10 @@ if __name__ == "__main__":
     PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX, return_tensors=None)["input_ids"]
 
     samples = read_tsv(args.tsv, language=args.language)
+    for sample in samples:
+        print(f"{samples}\n")
+    import sys
+    sys.exit()
 
     #check if running on V100, A100 or H100 and set dtype accordingly    
     if args.dtype == 'auto':

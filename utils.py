@@ -22,6 +22,55 @@ PROMPT_PREFIX = """You are a professional linguist specializing in term inflecti
 
 Task:
 - Output ONLY a Python list with the requested conjugated/inflected forms of the given term and language.
+- Use the translation field to disambiguate the meaning of the term to conjugate/inflect.
+- Preserve a consistent and linguistically standard ordering of forms.
+- For multi-word expressions, inflect the whole expression.
+- Use standard modern orthography conventions for each language.
+- Only provide valid inflections that exist in the language (irregular forms included).
+- Do not provide synonyms or related words, only inflected forms of the given term.
+- If the term is not inflectable as requested, return an empty list.
+
+Examples:
+
+INFLECT(language='French', term='parler', translation='to speak' , request='present indicative')
+Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
+
+INFLECT(language='French', term='parler', translation='to speak', request='participe passé')
+Output: ['parlé', 'parlée', 'parlés', 'parlées']
+
+INFLECT(language='French', term='grouper', translation='to group', request='subjonctif imparfait')
+Output: ['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
+
+INFLECT(language='English', term='box', translation='caja', request='number and possessive forms')
+Output: ['box', 'boxes', "box's", "boxes'"]
+
+INFLECT(language='English', term='big', translation='grande', request='comparative/superlative forms')
+Output: ['big', 'bigger', 'biggest']
+
+INFLECT(language='Spanish', term='bonito', translation='beau', request='formas de género y número')
+Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
+
+INFLECT(language='English', term='speak', translation='hablar', request='base form')
+Output: ['speak']
+
+INFLECT(language='English', term='speak', translation='hablar', request='present participle (-ing)')
+Output: ['speaking']
+
+INFLECT(language='English', term='go back', translation='volver', request='simple past')
+Output: ['went back']
+
+INFLECT(language='English', term='NASA', translation='NASA', request='possessive forms')
+Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
+
+INFLECT(language='Spanish', term='granizar', translation='grêler', request='formas de género y número')
+Output: []
+
+"""
+
+PROMPT_PREFIX_old = """You are a professional linguist specializing in term inflection (including verb conjugation).
+
+Task:
+- Output ONLY a Python list with the requested conjugated/inflected forms of the given term and language.
 - Preserve a consistent and linguistically standard ordering of forms.
 - For multi-word expressions, inflect the whole expression.
 - Use standard modern orthography conventions for each language.
@@ -148,4 +197,84 @@ REQUESTS = {
     }        
 }
 
+REQUESTS_old = {
+    "verb": {
+        "French": [
+            "infinitif",
+            "participe présent",
+            "participe passé",
+            "présent indicatif",
+            "imparfait indicatif",
+            "impératif",
+            "futur simple",
+            "subjonctif présent",
+            "conditionnel présent",
+            "passé simple",
+            "subjonctif imparfait"
+        ],
+        "Spanish": [
+            "infinitivo",
+            "gerundio", 
+            "participio",
+            "presente indicativo",
+            "pretérito indefinido",
+            "imperativo",
+            "futuro simple",
+            "subjuntivo presente",
+            "condicional simple",
+            "subjuntivo imperfecto"
+        ],
+        "English": [
+            "base form", 
+            "3rd person singular present", 
+            "simple past", 
+            "past participle", 
+            "present participle (-ing)"
+        ]
+    },
+    "noun": {
+        "French": [
+            "formes de genre et de nombre",
+        ],
+        "Spanish": [
+            "formas de género y número",
+        ],
+        "English": [
+            "number and possessive forms",
+        ]
+    },
+    "proper noun": {
+        "French": [
+            "lowercase, UPPERCASE and Truecase",
+        ],
+        "Spanish": [
+            "lowercase, UPPERCASE and Truecase",
+        ],
+        "English": [
+            "possessive forms",
+        ]
+    },
+    "acronym": {
+        "French": [
+            "lowercase, UPPERCASE and Truecase",
+        ],
+        "Spanish": [
+            "lowercase, UPPERCASE and Truecase",
+        ],
+        "English": [
+            "possessive forms",
+        ]
+    },
+    "adj": {
+        "French": [
+            "formes de genre et de nombre",
+        ],
+        "Spanish": [
+            "formas de género y número",
+        ],
+        "English": [
+            "comparative/superlative forms",
+        ]
+    }        
+}
 
