@@ -14,12 +14,6 @@ def get_dtype_for_gpu():
     print("No GPU detected, defaulting to float16")
     return 'float16'
 
-#- Do NOT include pronouns, articles, determiners, explanations, or any extra text.
-#- For multi-word expressions, inflect only the head word and keep other components unchanged.
-
-
-
-
 PROMPT_PREFIX = """You are a professional linguist specializing in term inflection (including verb conjugation).
 
 Task:
@@ -76,6 +70,15 @@ INFLECT(language='English', term='NASA', translation='NASA', request='noun - sin
 Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
 
 INFLECT(language='Spanish', term='granizar', translation='grêler', request='noun - masc sg, fem sg, masc pl, fem pl')
+Output: []
+
+INFLECT(language='Russian', term='говорить', translation='speak', request='verb - present (1s, 2s, 3s, 1p, 2p, 3p)')
+Output: ['говорю', 'говоришь', 'говорит', 'говорим', 'говорите', 'говорят']
+
+INFLECT(language='Russian', term='писать', translation='write', request='verb - imperative (2s, 2p)')
+Output: ['пиши', 'пишите']
+
+INFLECT(language='Russian', term='читать', translation='to read', request='noun - nominative sg, nominative pl')
 Output: []
 
 INFLECT(language='English', term='bear', translation='llevar', request='verb - simple past')
