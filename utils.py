@@ -18,57 +18,6 @@ def get_dtype_for_gpu():
 #- For multi-word expressions, inflect only the head word and keep other components unchanged.
 
 
-PROMPT_PREFIX2 = """You are a professional linguist specializing in term inflection (including verb conjugation).
-
-Task:
-- Output ONLY a Python list with the requested conjugated/inflected forms of the given term and language.
-- Use the given translation to disambiguate the term meaning.
-- Preserve a consistent and linguistically standard ordering of forms.
-- For multi-word expressions, inflect the whole expression.
-- Use standard modern orthography conventions for each language.
-- Only provide valid inflections that exist in the language (irregular forms included).
-- Do not provide synonyms or related words, only inflected forms of the given term.
-- If the term is not inflectable as requested, return an empty list.
-
-Examples:
-
-INFLECT(language='French', term='parler', translation='to speak' , request='verb - present indicative')
-Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
-
-INFLECT(language='French', term='parler', translation='to speak', request='verb - participe passé')
-Output: ['parlé', 'parlée', 'parlés', 'parlées']
-
-INFLECT(language='French', term='grouper', translation='to group', request='verb - subjonctif imparfait')
-Output: ['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
-
-INFLECT(language='English', term='box', translation='caja', request='noun - number and possessive forms')
-Output: ['box', 'boxes', "box's", "boxes'"]
-
-INFLECT(language='English', term='big', translation='grande', request='adj - comparative/superlative forms')
-Output: ['big', 'bigger', 'biggest']
-
-INFLECT(language='Spanish', term='bonito', translation='beau', request='adj - formas de género y número')
-Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
-
-INFLECT(language='English', term='speak', translation='hablar', request='verb - base form')
-Output: ['speak']
-
-INFLECT(language='English', term='speak', translation='hablar', request='verb - present participle (-ing)')
-Output: ['speaking']
-
-INFLECT(language='English', term='go back', translation='volver', request='verb - simple past')
-Output: ['went back']
-
-INFLECT(language='English', term='NASA', translation='NASA', request='noun - possessive forms')
-Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
-
-INFLECT(language='Spanish', term='granizar', translation='grêler', request='verb - formas de género y número')
-Output: []
-
-INFLECT(language='English', term='invitation', translation='convocation', request='noun - formas de género y número')
-Output: []
-
-"""
 
 
 PROMPT_PREFIX = """You are a professional linguist specializing in term inflection (including verb conjugation).
@@ -82,7 +31,7 @@ Task:
 
 Rules:
 - Use the provided translation ONLY to disambiguate the meaning of the term.
-- If the requested POS/forms does NOT match the term, return an empty list.
+- If the term does not match the requested POS, or if the requested inflection is not applicable to the term, return an empty list.
 
 Inflection constraints:
 - Only include valid, attested inflected forms (including irregular ones).
@@ -123,17 +72,17 @@ Output: ['speaking']
 INFLECT(language='English', term='go back', translation='volver', request='verb - simple past')
 Output: ['went back']
 
-INFLECT(language='English', term='NASA', translation='NASA', request='noun - singular possessive')
-Output: ["NASA's"]
+INFLECT(language='English', term='NASA', translation='NASA', request='noun - singular, plural, singular possessive, plural possessive')
+Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
 
-INFLECT(language='Spanish', term='granizar', translation='grêler', request='verb - masc sg, fem sg, masc pl, fem pl')
+INFLECT(language='Spanish', term='granizar', translation='grêler', request='noun - masc sg, fem sg, masc pl, fem pl')
 Output: []
 
-INFLECT(language='English', term='bear', translation='carry', request='verb - simple past')
+INFLECT(language='English', term='bear', translation='llevar', request='verb - simple past')
 Output: ['bore']
 
-INFLECT(language='English', term='bear', translation='oso', request='noun - plural')
-Output: ['bears']
+INFLECT(language='English', term='bear', translation='oso', request='noun - masc sg, fem sg, masc pl, fem pl')
+Output: ['bear', 'bear', 'bears', 'bears']
 
 INFLECT(language='English', term='bear', translation='oso', request='verb - past participle')
 Output: []
@@ -178,7 +127,7 @@ REQUESTS = {
         "verb - simple past", 
         "verb - past participle", 
         "verb - present participle (-ing)",
-        "noun - number and possessive forms",
+        "noun - singular, plural, singular possessive, plural possessive",
         "adj - comparative/superlative forms",
     ],
 }
