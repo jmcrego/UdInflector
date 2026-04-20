@@ -107,10 +107,10 @@ if __name__ == "__main__":
     PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX, return_tensors=None)["input_ids"]
 
     samples = read_tsv(args.tsv, language=args.language)
-    for sample in samples:
-        print(f"{sample['prompt']}\n")
-    import sys
-    sys.exit()
+    # for sample in samples:
+    #     print(f"{sample['prompt']}\n")
+    # import sys
+    # sys.exit()
 
     #check if running on V100, A100 or H100 and set dtype accordingly    
     if args.dtype == 'auto':
