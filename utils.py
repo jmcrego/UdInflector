@@ -117,84 +117,42 @@ Output: []
 
 
 REQUESTS = {
-    "verb": {
-        "French": [
-            "infinitif",
-            "participe présent",
-            "participe passé",
-            "présent indicatif",
-            "imparfait indicatif",
-            "impératif",
-            "futur simple",
-            "subjonctif présent",
-            "conditionnel présent",
-            "passé simple",
-            "subjonctif imparfait"
-        ],
-        "Spanish": [
-            "infinitivo",
-            "gerundio", 
-            "participio",
-            "presente indicativo",
-            "pretérito indefinido",
-            "imperativo",
-            "futuro simple",
-            "subjuntivo presente",
-            "condicional simple",
-            "subjuntivo imperfecto"
-        ],
-        "English": [
-            "base form", 
-            "3rd person singular present", 
-            "simple past", 
-            "past participle", 
-            "present participle (-ing)"
-        ]
-    },
-    "noun": {
-        "French": [
-            "formes de genre et de nombre",
-        ],
-        "Spanish": [
-            "formas de género y número",
-        ],
-        "English": [
-            "number and possessive forms",
-        ]
-    },
-    "proper noun": {
-        "French": [
-            "lowercase, UPPERCASE and Truecase",
-        ],
-        "Spanish": [
-            "lowercase, UPPERCASE and Truecase",
-        ],
-        "English": [
-            "possessive forms",
-        ]
-    },
-    "acronym": {
-        "French": [
-            "lowercase, UPPERCASE and Truecase",
-        ],
-        "Spanish": [
-            "lowercase, UPPERCASE and Truecase",
-        ],
-        "English": [
-            "possessive forms",
-        ]
-    },
-    "adj": {
-        "French": [
-            "formes de genre et de nombre",
-        ],
-        "Spanish": [
-            "formas de género y número",
-        ],
-        "English": [
-            "comparative/superlative forms",
-        ]
-    }        
+    "French": [
+        "infinitif",
+        "participe présent",
+        "participe passé",
+        "présent indicatif",
+        "imparfait indicatif",
+        "impératif",
+        "futur simple",
+        "subjonctif présent",
+        "conditionnel présent",
+        "passé simple",
+        "subjonctif imparfait",
+        "formes de genre et de nombre",
+    ],
+    "Spanish": [
+        "infinitivo",
+        "gerundio", 
+        "participio",
+        "presente indicativo",
+        "pretérito indefinido",
+        "imperativo",
+        "futuro simple",
+        "subjuntivo presente",
+        "condicional simple",
+        "subjuntivo imperfecto",
+        "formas de género y número",
+    ],
+    "English": [
+        "base form", 
+        "3rd person singular present", 
+        "simple past", 
+        "past participle", 
+        "present participle (-ing)",
+        "number and possessive forms",
+        "comparative/superlative forms",
+    ],
 }
 
 REQUESTS_old = {

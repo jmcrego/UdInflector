@@ -58,8 +58,10 @@ def uds_to_glossary(ud1, ud2, oname, lang1, lang2):
             if pos1 != pos2: # and pos1 not in pos2 and pos2 not in pos1:
                 print(f"Warning: POS mismatch ({pos1} != {pos2}) for terms '{term1}' and '{term2}'", file=sys.stderr)  
                 continue
-            out1.write(f"{pos1}\t{term1}\t{term2}\n")
-            out2.write(f"{pos2}\t{term2}\t{term1}\n")
+            # out1.write(f"{pos1}\t{term1}\t{term2}\n")
+            # out2.write(f"{pos2}\t{term2}\t{term1}\n")
+            out1.write(f"{term1}\t{term2}\n")
+            out2.write(f"{term2}\t{term1}\n")
 
 
 
