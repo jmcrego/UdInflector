@@ -8,23 +8,23 @@ def read_tsv(path, language):
         nlines = 0
         for line in f:
             nlines += 1
-            pos, lem1, lem2 = line.strip().split('\t')
-            new_samples = generate_sample(language, pos, lem1, lem2, tokenizer, PROMPT_PREFIX_IDS)
+            term1, term2 = line.strip().split('\t')
+            new_samples = generate_sample(language, term1, term2, tokenizer, PROMPT_PREFIX_IDS)
             samples += new_samples
     print(f"Generated {len(samples)} prompts from {nlines} UD pairs.")
     return samples
 
-def generate_sample(language: str, pos: str, lem1: str, lem2: str, tokenizer, prompt_prefix_ids):
+def generate_sample(language: str, term1: str, term2: str, tokenizer, prompt_prefix_ids):
     prompts = []
     if language in REQUESTS:
          for request in REQUESTS[language]:
-            dynamic_text = f"INFLECT(language='{language}', term='{lem1}', translation='{lem2}', request='{request}')\nOutput:"
+            dynamic_text = f"INFLECT(language='{language}', term='{term1}', translation='{term2}', request='{request}')\nOutput:"
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
             d = {
                 "language": language,
-                "lem": lem1,
-                "translation": lem2,
-                "ud": f"{lem1} ➤ {lem2}",
+                "lem": term1,
+                "translation": term2,
+                "ud": f"{term1} ➤ {term2}",
                 "request": request,
                 "prompt": PROMPT_PREFIX + dynamic_text,
                 "prompt_ids": prompt_prefix_ids + dynamic_text_ids,
