@@ -44,7 +44,7 @@ OUTPUT FORMAT:
 - Return ONLY a valid Python list of strings, NOTHING else.
 """
 
-PROMPT_EXAMPLES = {
+EXAMPLES = {
     "French": """
 EXAMPLES:
 
