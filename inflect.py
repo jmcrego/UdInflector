@@ -1,20 +1,20 @@
 
 import ast
-from utils import PROMPT_PREFIX, REQUESTS, get_dtype_for_gpu
+from utils import PROMPT_PREFIX, EXAMPLES, REQUESTS, get_dtype_for_gpu
 
-def read_tsv(path, language):
+def read_tsv(path: str, language: str, prompt_prefix_ids: list[int], tokenizer) -> list[dict]:
     samples = []
-    with open(args.tsv, 'r') as f:
+    with open(path, 'r') as f:
         nlines = 0
         for line in f:
             nlines += 1
             term1, term2 = line.strip().split('\t')
-            new_samples = generate_sample(language, term1, term2, tokenizer, PROMPT_PREFIX_IDS)
+            new_samples = generate_sample(language, term1, term2, prompt_prefix_ids, tokenizer)
             samples += new_samples
     print(f"Generated {len(samples)} prompts from {nlines} UD pairs.")
     return samples
 
-def generate_sample(language: str, term1: str, term2: str, tokenizer, prompt_prefix_ids):
+def generate_sample(language: str, term1: str, term2: str, prompt_prefix_ids: list[int], tokenizer) -> list[dict]:
     prompts = []
     if language in REQUESTS:
          for request in REQUESTS[language]:
@@ -22,11 +22,10 @@ def generate_sample(language: str, term1: str, term2: str, tokenizer, prompt_pre
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
             d = {
                 "language": language,
-                "lem": term1,
+                "term": term1,
                 "translation": term2,
                 "ud": f"{term1} ➤ {term2}",
                 "request": request,
-                "prompt": PROMPT_PREFIX + dynamic_text,
                 "prompt_ids": prompt_prefix_ids + dynamic_text_ids,
             }
             prompts.append(d)
@@ -92,10 +91,10 @@ if __name__ == "__main__":
     from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     # Tokenize the static prompt prefix once since it's the same for all entries
-    PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX, return_tensors=None)["input_ids"]
-    print(f"Tokenized PROMPT_PREFIX into {len(PROMPT_PREFIX_IDS)} tokens")
+    PROMPT_PREFIX_IDS = tokenizer(PROMPT_PREFIX + EXAMPLES[args.language], return_tensors=None)["input_ids"]
+    print(f"Tokenized PROMPT_PREFIX_IDS into {len(PROMPT_PREFIX_IDS)} tokens")
 
-    samples = read_tsv(args.tsv, language=args.language)
+    samples = read_tsv(args.tsv, language=args.language, prompt_prefix_ids=PROMPT_PREFIX_IDS, tokenizer=tokenizer)
 
     #check if running on V100, A100 or H100 and set dtype accordingly    
     if args.dtype == 'auto':
