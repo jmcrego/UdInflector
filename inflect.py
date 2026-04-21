@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
     with open(args.out, "w") as of:
         for i, (sample, output) in enumerate(zip(samples, outputs)):
-            ud = sample['term1'] + " ➤ " + sample['term2']
+            ud = sample['term'] + " ➤ " + sample['translation']
             out = parse_output(output.outputs[0].text.strip())
             req = sample['request']
             of.write(f"{ud}\t{out}\t{req}\n")
