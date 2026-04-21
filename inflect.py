@@ -18,12 +18,14 @@ def generate_sample(language: str, term1: str, term2: str, prompt_prefix_ids: li
     prompts = []
     if language in REQUESTS:
          for request in REQUESTS[language]:
-            dynamic_text = f"INFLECT(language='{language}', term='{term1}', translation='{term2}', request='{request}')\nOutput:"
+            pos, request = request.split(" - ")
+            dynamic_text = f"INFLECT(language='{language}', term='{term1}', translation='{term2}', pos='{pos}', request='{request}')\nOutput:"
             dynamic_text_ids = tokenizer(dynamic_text, return_tensors=None)["input_ids"]
             d = {
                 "language": language,
                 "term": term1,
                 "translation": term2,
+                "pos": pos,
                 "request": request,
                 "prompt_ids": prompt_prefix_ids + dynamic_text_ids,
             }
@@ -125,7 +127,8 @@ if __name__ == "__main__":
     with open(args.out, "w") as of:
         for i, (sample, output) in enumerate(zip(samples, outputs)):
             ud = sample['term'] + " ➤ " + sample['translation']
-            out = parse_output(output.outputs[0].text.strip())
             req = sample['request']
-            of.write(f"{ud}\t{out}\t{req}\n")
+            pos = sample['pos']
+            out = parse_output(output.outputs[0].text.strip())
+            of.write(f"{ud}\t{out}\t{pos} - {req}\n")
 
