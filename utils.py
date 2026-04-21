@@ -20,16 +20,16 @@ TASK:
 - Given:
   1) a <term>,
   2) a <language> (which determines the inflectional system and resolves cross-linguistic ambiguity),
-  3) a <translation> (used only to disambiguate meaning),
-  4) a <part-of-speech> used ONLY as a validity constraint,
+  3) a <translation> (used ONLY to disambiguate meaning),
+  4) a <part-of-speech> (used ONLY as a validity constraint),
   5) and a <request> specifying the exact inflectional paradigm,
 - Generate the requested inflected forms of the term.
 
 RULES:
-- If the term is not attested in the given language with the given part of speech, return an empty list.
+- If the term is not attested in the given language with the given part-of-speech, return an empty list.
 - If the requested inflectional paradigm is not fully applicable to the term in the given language, return an empty list.
 - You MUST strictly follow the requested inflectional paradigm.
-- Do NOT derive, reinterpret, or convert the term into another part of speech.
+- Do NOT derive, reinterpret, or convert the term into another part-of-speech.
 - Use the language to determine the inflectional system and resolve ambiguity.
 - Use the translation only to disambiguate meaning.
 - Do NOT return partial results.
@@ -49,118 +49,118 @@ EXAMPLES = {
     "French": """
 EXAMPLES:
 
-INFLECT(language='French', term='parler', translation='speak' , request='verb - présent indicatif (1s, 2s, 3s, 1p, 2p, 3p)')
+INFLECT(language='French', term='parler', translation='speak' , pos='verb', request='présent indicatif (1s, 2s, 3s, 1p, 2p, 3p)')
 Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
 
-INFLECT(language='French', term='parler', translation='speak', request='verb - participe passé (masc sg, fem sg, masc pl, fem pl)')
+INFLECT(language='French', term='parler', translation='speak', pos='verb', request='participe passé (masc sg, fem sg, masc pl, fem pl)')
 Output: ['parlé', 'parlée', 'parlés', 'parlées']
 
-INFLECT(language='French', term='grouper', translation='juntar', request='verb - subjonctif imparfait (1s, 2s, 3s, 1p, 2p, 3p)')
+INFLECT(language='French', term='grouper', translation='juntar', pos='verb', request='subjonctif imparfait (1s, 2s, 3s, 1p, 2p, 3p)')
 Output: ['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
 
-INFLECT(language='French', term='être', translation='be', request='verb - présent indicatif (1s, 2s, 3s, 1p, 2p, 3p)')
+INFLECT(language='French', term='être', translation='be', pos='verb', request='présent indicatif (1s, 2s, 3s, 1p, 2p, 3p)')
 Output: ['suis', 'es', 'est', 'sommes', 'êtes', 'sont']
 
-INFLECT(language='French', term='aller', translation='go', request='verb - futur simple (1s, 2s, 3s, 1p, 2p, 3p)')
+INFLECT(language='French', term='aller', translation='go', pos='verb', request='futur simple (1s, 2s, 3s, 1p, 2p, 3p)')
 Output: ['irai', 'iras', 'ira', 'irons', 'irez', 'iront']
 
-INFLECT(language='French', term='beau', translation='beautiful', request='adj - masc sg, fem sg, masc pl, fem pl')
+INFLECT(language='French', term='beau', translation='beautiful', pos='adj', request='masc sg, fem sg, masc pl, fem pl')
 Output: ['beau', 'belle', 'beaux', 'belles']
 
-INFLECT(language='French', term='chat', translation='cat', request='noun - masc sg, fem sg, masc pl, fem pl')
+INFLECT(language='French', term='chat', translation='cat', pos='noun', request='masc sg, fem sg, masc pl, fem pl')
 Output: ['chat', 'chatte', 'chats', 'chattes']
 
-INFLECT(language='French', term='bouteille', translation='bottle', request='adj - masc sg, fem sg, masc pl, fem pl')
+INFLECT(language='French', term='bouteille', translation='bottle', pos='adj', request='masc sg, fem sg, masc pl, fem pl')
 Output: []
 """,
 
     "English": """
 EXAMPLES:
 
-INFLECT(language='English', term='box', translation='caja', request='noun - singular, plural')
+INFLECT(language='English', term='box', translation='caja', pos='noun', request='singular, plural')
 Output: ['box', 'boxes']
 
-INFLECT(language='English', term='box', translation='caja', request='noun - singular possessive, plural possessive')
+INFLECT(language='English', term='box', translation='caja', pos='noun', request='singular possessive, plural possessive')
 Output: ["box's", "boxes'"]
 
-INFLECT(language='English', term='big', translation='grande', request='adj - comparative/superlative forms')
+INFLECT(language='English', term='big', translation='grande', pos='adj', request='comparative/superlative forms')
 Output: ['big', 'bigger', 'biggest']
 
-INFLECT(language='English', term='speak', translation='hablar', request='verb - base form')
+INFLECT(language='English', term='speak', translation='hablar', pos='verb', request='base form')
 Output: ['speak']
 
-INFLECT(language='English', term='speak', translation='hablar', request='verb - present participle (-ing)')
+INFLECT(language='English', term='speak', translation='hablar', pos='verb', request='present participle (-ing)')
 Output: ['speaking']
 
-INFLECT(language='English', term='go back', translation='volver', request='verb - simple past')
+INFLECT(language='English', term='go back', translation='volver', pos='verb', request='simple past')
 Output: ['went back']
 
-INFLECT(language='English', term='NASA', translation='NASA', request='noun - singular, plural')
+INFLECT(language='English', term='NASA', translation='NASA', pos='noun', request='singular, plural')
 Output: ['NASA']
 
-INFLECT(language='English', term='NASA', translation='NASA', request='noun - singular possessive, plural possessive')
+INFLECT(language='English', term='NASA', translation='NASA', pos='noun', request='singular possessive, plural possessive')
 Output: ["NASA's"]
 
-INFLECT(language='English', term='bear', translation='llevar', request='verb - simple past')
+INFLECT(language='English', term='bear', translation='llevar', pos='verb', request='simple past')
 Output: ['bore']
 
-INFLECT(language='English', term='bear', translation='oso', request='noun - masc sg, fem sg, masc pl, fem pl')
+INFLECT(language='English', term='bear', translation='oso', pos='noun', request='masc sg, fem sg, masc pl, fem pl')
 Output: ['bear', 'bear', 'bears', 'bears']
 
-INFLECT(language='English', term='bear', translation='oso', request='verb - past participle')
+INFLECT(language='English', term='bear', translation='oso', pos='verb', request='past participle')
 Output: []
 
-INFLECT(language='English', term='learn', translation='aprender', request='verb - past participle')
+INFLECT(language='English', term='learn', translation='aprender', pos='verb', request='past participle')
 Output: ['learned', 'learnt']
 """,
 
     "Spanish": """
 EXAMPLES:
 
-INFLECT(language='Spanish', term='bonito', translation='beau', request='adj - masc sg, fem sg, masc pl, fem pl')
+INFLECT(language='Spanish', term='bonito', translation='beau', pos='adj', request='masc sg, fem sg, masc pl, fem pl')
 Output: ['bonito', 'bonita', 'bonitos', 'bonitas']
 
-INFLECT(language='Spanish', term='granizar', translation='grêler', request='noun - masc sg, fem sg, masc pl, fem pl')
+INFLECT(language='Spanish', term='granizar', translation='grêler', pos='verb', request='masc sg, fem sg, masc pl, fem pl')
 Output: []
 
-INFLECT(language='Spanish', term='hablar', translation='speak', request='verb - presente indicativo (1s, 2s, 3s, 1p, 2p, 3p)')
+INFLECT(language='Spanish', term='hablar', translation='speak', pos='verb', request='presente indicativo (1s, 2s, 3s, 1p, 2p, 3p)')
 Output: ['hablo', 'hablas', 'habla', 'hablamos', 'habláis', 'hablan']
 
-INFLECT(language='Spanish', term='ir', translation='go', request='verb - futuro simple (1s, 2s, 3s, 1p, 2p, 3p)')
+INFLECT(language='Spanish', term='ir', translation='go', pos='verb', request='futuro simple (1s, 2s, 3s, 1p, 2p, 3p)')
 Output: ['iré', 'irás', 'irá', 'iremos', 'iréis', 'irán']
 
-INFLECT(language='Spanish', term='hablar', translation='speak', request='verb - participio (masc sg, fem sg, masc pl, fem pl)')
+INFLECT(language='Spanish', term='hablar', translation='speak', pos='verb', request='participio (masc sg, fem sg, masc pl, fem pl)')
 Output: ['hablado', 'hablada', 'hablados', 'habladas']
 
-INFLECT(language='Spanish', term='comer', translation='eat', request='verb - gerundio')
+INFLECT(language='Spanish', term='comer', translation='eat', pos='verb', request='gerundio')
 Output: ['comiendo']
 
-INFLECT(language='Spanish', term='casa', translation='house', request='noun - masc sg, fem sg, masc pl, fem pl')
+INFLECT(language='Spanish', term='casa', translation='house', pos='noun', request='masc sg, fem sg, masc pl, fem pl')
 Output: ['casa', 'casa', 'casas', 'casas']
 
-INFLECT(language='Spanish', term='rápidamente', translation='quickly', request='adj - masc sg, fem sg, masc pl, fem pl')
+INFLECT(language='Spanish', term='rápidamente', translation='quickly', pos='adj', request='masc sg, fem sg, masc pl, fem pl')
 Output: []
 """,
 
     "Russian": """
 EXAMPLES:
 
-INFLECT(language='Russian', term='говорить', translation='speak', request='verb - present (1s, 2s, 3s, 1p, 2p, 3p)')
+INFLECT(language='Russian', term='говорить', translation='speak', pos='verb', request='present (1s, 2s, 3s, 1p, 2p, 3p)')
 Output: ['говорю', 'говоришь', 'говорит', 'говорим', 'говорите', 'говорят']
 
-INFLECT(language='Russian', term='писать', translation='write', request='verb - imperative (2s, 2p)')
+INFLECT(language='Russian', term='писать', translation='write', pos='verb', request='imperative (2s, 2p)')
 Output: ['пиши', 'пишите']
 
-INFLECT(language='Russian', term='читать', translation='read', request='noun - nominative sg, nominative pl')
+INFLECT(language='Russian', term='читать', translation='read', pos='noun', request='nominative sg, nominative pl')
 Output: []
 
-INFLECT(language='Russian', term='делать', translation='do', request='verb - past indicative (masc sg, fem sg, neuter sg, plural)')
+INFLECT(language='Russian', term='делать', translation='do', pos='verb', request='past indicative (masc sg, fem sg, neuter sg, plural)')
 Output: ['делал', 'делала', 'делало', 'делали']
 
-INFLECT(language='Russian', term='прочитать', translation='read (perfective)', request='verb - past active participle (masc sg, fem sg, neuter sg, plural)')
+INFLECT(language='Russian', term='прочитать', translation='read (perfective)', pos='verb', request='past active participle (masc sg, fem sg, neuter sg, plural)')
 Output: ['прочитавший', 'прочитавшая', 'прочитавшее', 'прочитавшие']
 
-INFLECT(language='Russian', term='новый', translation='new', request='adj - masc sg, fem sg, neuter sg, plural (nominative)')
+INFLECT(language='Russian', term='новый', translation='new', pos='adj', request='masc sg, fem sg, neuter sg, plural (nominative)')
 Output: ['новый', 'новая', 'новое', 'новые']""",
 }
 
