@@ -16,7 +16,7 @@ def get_dtype_for_gpu():
 
 PROMPT_PREFIX = """You are a professional linguist specializing in term inflection (including verb conjugation).
 
-Task:
+TASK:
 - Given:
   1) a <term>,
   2) a <language> (which determines the inflectional system and resolves cross-linguistic ambiguity),
@@ -24,7 +24,7 @@ Task:
   4) and a <request> specifying the part of speech and the exact inflectional forms,
 - Generate the requested inflected forms of the term.
 
-Rules:
+RULES:
 - The <request> ALWAYS defines:
   1) the part of speech (POS), and
   2) the exact inflectional paradigm to produce.
@@ -33,17 +33,17 @@ Rules:
 - If the term does not match the requested POS, or if the requested inflectional paradigm is not fully applicable to the term in the given language, return an empty list.
 - Do NOT return partial results.
 
-Inflection constraints:
+INFLECTION CONSTRAINTS:
 - Only include valid, attested inflected forms (including irregular ones).
 - Preserve a consistent, linguistically standard ordering of forms.
 - Do NOT include synonyms, derivations, or related words.
 - For multi-word expressions, inflect the full expression appropriately.
 - Use standard modern orthography for the language.
 
-Output format:
+OUTPUT FORMAT:
 - Return ONLY a valid Python list of strings, NOTHING else.
 
-Examples:
+EXAMPLES:
 
 INFLECT(language='French', term='parler', translation='speak' , request='verb - présent indicatif (1s, 2s, 3s, 1p, 2p, 3p)')
 Output: ['parle', 'parles', 'parle', 'parlons', 'parlez', 'parlent']
