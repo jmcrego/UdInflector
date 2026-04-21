@@ -21,8 +21,8 @@ TASK:
   1) a <term>,
   2) a <language> (which determines the inflectional system and resolves cross-linguistic ambiguity),
   3) a <translation> (used only to disambiguate meaning),
-  4) and a <request> specifying the exact inflectional paradigm,
-  5) and a <part-of-speech> used ONLY as a validity constraint,
+  4) a <part-of-speech> used ONLY as a validity constraint,
+  5) and a <request> specifying the exact inflectional paradigm,
 - Generate the requested inflected forms of the term.
 
 RULES:
