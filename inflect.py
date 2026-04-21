@@ -130,5 +130,5 @@ if __name__ == "__main__":
             req = sample['request']
             pos = sample['pos']
             out = parse_output(output.outputs[0].text.strip())
-            of.write(f"{ud}\t{out}\t{pos} - {req}\n")
+            of.write(f"{ud}\t{out}\t{pos}\t{req}\n")
 
