@@ -48,8 +48,11 @@ Output: ['parlé', 'parlée', 'parlés', 'parlées']
 INFLECT(language='French', term='grouper', translation='group', request='verb - subjonctif imparfait (1s, 2s, 3s, 1p, 2p, 3p)')
 Output: ['groupasse', 'groupasses', 'groupât', 'groupassions', 'groupassiez', 'groupassent']
 
-INFLECT(language='English', term='box', translation='caja', request='noun - singular, plural, singular possessive, plural possessive')
-Output: ['box', 'boxes', "box's", "boxes'"]
+INFLECT(language='English', term='box', translation='caja', request='noun - singular, plural')
+Output: ['box', 'boxes']
+
+INFLECT(language='English', term='box', translation='caja', request='noun - singular possessive, plural possessive')
+Output: ["box's", "boxes'"]
 
 INFLECT(language='English', term='big', translation='grande', request='adj - comparative/superlative forms')
 Output: ['big', 'bigger', 'biggest']
@@ -66,8 +69,11 @@ Output: ['speaking']
 INFLECT(language='English', term='go back', translation='volver', request='verb - simple past')
 Output: ['went back']
 
-INFLECT(language='English', term='NASA', translation='NASA', request='noun - singular, plural, singular possessive, plural possessive')
-Output: ['NASA', 'NASAs', "NASA's", "NASAs'"]
+INFLECT(language='English', term='NASA', translation='NASA', request='noun - singular, plural')
+Output: ['NASA']
+
+INFLECT(language='English', term='NASA', translation='NASA', request='noun - singular possessive, plural possessive')
+Output: ["NASA's"]
 
 INFLECT(language='Spanish', term='granizar', translation='grêler', request='noun - masc sg, fem sg, masc pl, fem pl')
 Output: []
@@ -78,7 +84,7 @@ Output: ['говорю', 'говоришь', 'говорит', 'говорим',
 INFLECT(language='Russian', term='писать', translation='write', request='verb - imperative (2s, 2p)')
 Output: ['пиши', 'пишите']
 
-INFLECT(language='Russian', term='читать', translation='to read', request='noun - nominative sg, nominative pl')
+INFLECT(language='Russian', term='читать', translation='read', request='noun - nominative sg, nominative pl')
 Output: []
 
 INFLECT(language='English', term='bear', translation='llevar', request='verb - simple past')
@@ -142,7 +148,8 @@ REQUESTS = {
         "verb - simple past", 
         "verb - past participle", 
         "verb - present participle (-ing)",
-        "noun - singular, plural, singular possessive, plural possessive",
+        "noun - singular, plural",
+        "noun - singular possessive, plural possessive",
         "adj - comparative/superlative forms",
     ],
 }
