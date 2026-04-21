@@ -128,11 +128,6 @@ if __name__ == "__main__":
 
     with open(args.out, "w") as of:
         for i, (sample, output) in enumerate(zip(samples, outputs)):
-            raw_output = output.outputs[0].text.strip()
-            output_list = get_list_from_string(raw_output)
-            # output_list.append(sample['lem'])
-            str_ud = sample['ud']
-            str_list = ';'.join(output_list)
-            of.write(f"{str_ud}\t{str_list}\t{sample['request']}\n")
-            # print(f"{''.join(['#']*50)}\n{sample['prompt']}\n{raw_output}\n{''.join(['#']*20)}\n")
+            output_list = get_list_from_string(output.outputs[0].text.strip())
+            of.write(f"{sample['ud']}\t{';'.join(output_list)}\t{sample['request']}\n")
 
