@@ -64,6 +64,7 @@ def get_list_from_string(text: str) -> list[str]:
                 return filter_list(data)
     except Exception as e:
         pass
+    print(f"Output is not a valid list: {text}")
     return []
 
 # ------------------------------
@@ -77,7 +78,7 @@ if __name__ == "__main__":
     parser.add_argument('--language', type=str, required=True, choices=['English', 'French', 'Spanish'], help="Language (e.g. English, French, Spanish)")
     parser.add_argument('--out', type=str, required=True, help="Output JSONL file to save conjugations/inflections")
     parser.add_argument('--model', type=str, default='/lustre/fsmisc/dataset/HuggingFace_Models/Qwen/Qwen3-32B', help="Path to LLM model")
-    parser.add_argument('--max_tokens', type=int, default=256, help="Maximum tokens to generate for each prompt (output only)")
+    parser.add_argument('--max_tokens', type=int, default=512, help="Maximum tokens to generate for each prompt (output only)")
     parser.add_argument('--max_model_len', type=int, default=1024, help="Maximum sequence length for model input (prompt + output)")
     parser.add_argument('--max_num_seqs', type=int, default=512, help="Maximum number of sequences to generate per prompt (batch size)")
     parser.add_argument('--temperature', type=float, default=0.0, help="Sampling temperature for generation (0 for deterministic)")
