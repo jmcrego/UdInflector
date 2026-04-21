@@ -102,6 +102,9 @@ Output: ['bear', 'bear', 'bears', 'bears']
 INFLECT(language='English', term='bear', translation='oso', request='verb - past participle')
 Output: []
 
+INFLECT(language='English', term='learn', translation='aprender', request='verb - past participle')
+Output: ['learned', 'learnt']
+
 """
 
 
