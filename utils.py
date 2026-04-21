@@ -30,6 +30,7 @@ RULES:
   2) the exact inflectional paradigm to produce.
 - You MUST strictly follow the requested POS and forms.
 - Use the language to determine the inflectional system and resolve ambiguity. Use the translation only to disambiguate meaning.
+- The term must already exist in the given language as a lemma of the requested POS. Do NOT derive, reinterpret, or convert it into another part of speech.
 - If the term does not match the requested POS, or if the requested inflectional paradigm is not fully applicable to the term in the given language, return an empty list.
 - Do NOT return partial results.
 
