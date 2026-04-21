@@ -26,7 +26,7 @@ TASK:
 
 RULES:
 - You MUST strictly follow the requested POS and inflectional paradigm.
-- If the term does not exist in the given language as a lemma of the requested POS, return an empty list.
+- If the term is not attested in the given language with the requested POS, return an empty list.
 - If the requested inflectional paradigm is not fully applicable to the term in the given language, return an empty list.
 - Do NOT derive, reinterpret, or convert the term into another part of speech.
 - Use the language to determine the inflectional system and resolve ambiguity.
