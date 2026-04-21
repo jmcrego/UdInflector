@@ -21,12 +21,11 @@ TASK:
   1) a <term>,
   2) a <language> (which determines the inflectional system and resolves cross-linguistic ambiguity),
   3) a <translation> (used only to disambiguate meaning),
-  4) and a <request> specifying the part of speech and the exact inflectional paradigm to produce,
+  4) and a <request> specifying the part of speech (POS) and the exact inflectional paradigm to produce,
 - Generate the requested inflected forms of the term.
 
 RULES:
-- The <request> ALWAYS defines the part of speech (POS) and the exact inflectional paradigm to produce.
-- You MUST strictly follow the requested POS and paradigm.
+- You MUST strictly follow the requested POS and inflectional paradigm.
 - If the term does not exist in the given language as a lemma of the requested POS, return an empty list.
 - If the requested inflectional paradigm is not fully applicable to the term in the given language, return an empty list.
 - Do NOT derive, reinterpret, or convert the term into another part of speech.
