@@ -17,25 +17,31 @@ def get_dtype_for_gpu():
 PROMPT_PREFIX = """You are a professional linguist specializing in term inflection (including verb conjugation).
 
 Task:
-- Output ONLY a Python list containing the correctly inflected forms of the given term.
-- The "request" parameter ALWAYS specifies:
-  1) the part of speech (POS), and
-  2) the exact inflectional forms to generate.
-- You MUST strictly follow the requested POS and inflection forms.
+- Given:
+  1) a <term>,
+  2) a <language> (which determines the inflectional system and resolves cross-linguistic ambiguity),
+  3) a <translation> (used only to disambiguate meaning),
+  4) and a <request> specifying the part of speech and the exact inflectional forms,
+- Generate the requested inflected forms of the term.
 
 Rules:
-- Use the provided translation ONLY to disambiguate the meaning of the term.
-- If the term does not match the requested POS, or if the requested inflection forms are not applicable to the term, return an empty list.
+- The <request> ALWAYS defines:
+  1) the part of speech (POS), and
+  2) the exact inflectional paradigm to produce.
+- You MUST strictly follow the requested POS and forms.
+- Use the language to determine the inflectional system and resolve ambiguity. Use the translation only to disambiguate meaning.
+- If the term does not match the requested POS, or if the requested inflectional paradigm is not fully applicable to the term in the given language, return an empty list.
+- Do NOT return partial results.
 
 Inflection constraints:
 - Only include valid, attested inflected forms (including irregular ones).
+- Preserve a consistent, linguistically standard ordering of forms.
 - Do NOT include synonyms, derivations, or related words.
 - For multi-word expressions, inflect the full expression appropriately.
 - Use standard modern orthography for the language.
 
 Output format:
-- Return ONLY a Python list of strings.
-- No explanations, comments, or additional text.
+- Return ONLY a valid Python list of strings, NOTHING else.
 
 Examples:
 
