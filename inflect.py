@@ -24,7 +24,6 @@ def generate_sample(language: str, term1: str, term2: str, prompt_prefix_ids: li
                 "language": language,
                 "term": term1,
                 "translation": term2,
-                "ud": f"{term1} ➤ {term2}",
                 "request": request,
                 "prompt_ids": prompt_prefix_ids + dynamic_text_ids,
             }
@@ -33,38 +32,36 @@ def generate_sample(language: str, term1: str, term2: str, prompt_prefix_ids: li
 
 
 def filter_list(forms: list[str]) -> list[str]:
-    # Preserve full expressions and normalize whitespace while avoiding duplicates.
     new_forms = []
     for form in forms:
-        form = " ".join(form.strip().split()) # normalize whitespace
-
-        # This is ugly... should be handled in the prompt/request design instead
-        # comparative/superlativecorrection:
+        # normalize whitespace
+        form = " ".join(form.strip().split()) 
+        # comparative/superlative correction # This is ugly... should be handled in the prompt/request design instead
         if form.startswith("more "):
             form = form[5:]
         if form.startswith("most "):
             form = form[5:]
-
+        # Avoid empty forms
         if len(form) == 0:
             continue
-
+        # Avoid duplicates while preserving order
         if form in new_forms:
             continue
         new_forms.append(form)
     return new_forms
 
 
-def get_list_from_string(text: str) -> list[str]:
+def parse_output(text: str) -> str:
     try:
         data_filtered = text.strip()
         if data_filtered.startswith('[') and data_filtered.endswith(']'):
             data = ast.literal_eval(data_filtered)
             if isinstance(data, list) and all(isinstance(item, str) for item in data):
-                return filter_list(data)
+                return ';'.join(filter_list(data))
     except Exception as e:
         pass
     print(f"Output is not a valid list: {text}")
-    return []
+    return ""
 
 # ------------------------------
 # Example usage
@@ -127,6 +124,8 @@ if __name__ == "__main__":
 
     with open(args.out, "w") as of:
         for i, (sample, output) in enumerate(zip(samples, outputs)):
-            output_list = get_list_from_string(output.outputs[0].text.strip())
-            of.write(f"{sample['ud']}\t{';'.join(output_list)}\t{sample['request']}\n")
+            ud = sample['term1'] + " ➤ " + sample['term2']
+            out = parse_output(output.outputs[0].text.strip())
+            req = sample['request']
+            of.write(f"{ud}\t{out}\t{req}\n")
 
